@@ -1,6 +1,11 @@
-import React from 'react';
-import HelloScreen from './src/api/screens/hello';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import AppNavigator from "./src/api/navigation/AppNavigator";
 
 export default function App() {
-  return <HelloScreen />;
+  return (
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
+  );
 }

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import {
   ImageBackground,
@@ -6,6 +7,7 @@ import {
   Text,
   Animated,
   TouchableOpacity,
+  PanResponder
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
@@ -17,9 +19,15 @@ import {
     withTiming
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 
 
   export default function HelloScreen() {
+    const buttonScale = useRef(new Animated.Value(1)).current;
+  const navigation = useNavigation();
+  const buttonY = useRef(new Animated.Value(0)).current;
+  const [isNavigating, setIsNavigating] = React.useState(false);
   const titleOpacity = useRef(new Animated.Value(0)).current;
   const titleTranslate = useRef(new Animated.Value(20)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
@@ -68,6 +76,61 @@ import { Ionicons } from "@expo/vector-icons";
     ]).start();
   }, []);
 
+
+const pan = useRef(
+  PanResponder.create({
+
+    onStartShouldSetPanResponder: () => true,
+
+    onPanResponderMove: (evt, gestureState) => {
+
+  let y = gestureState.dy;
+
+  if (y < 0 && y > -90) {
+
+    buttonY.setValue(y);
+
+
+
+  }
+
+},
+
+
+    onPanResponderRelease: (evt, gestureState) => {
+
+      if (gestureState.dy < -80) {
+
+        setIsNavigating(true);
+
+        Animated.timing(buttonY,{
+  toValue:-90,
+  duration:300,
+  useNativeDriver:true,
+
+        }).start(()=>{
+
+          navigation.navigate("Login");
+
+        });
+
+
+      } else {
+
+        // връщане обратно
+        Animated.spring(buttonY,{
+          toValue:0,
+          useNativeDriver:true,
+          friction:6
+        }).start();
+
+      }
+
+    }
+
+  })
+).current;
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -111,20 +174,40 @@ import { Ionicons } from "@expo/vector-icons";
           Escape the ordinary
         </Animated.Text>
       </View>
-      <View style={styles.gocontainer}>
-    <Ionicons name="chevron-up"
-          size={30}
-          color="#D98C8C"
-          style={{ marginTop: 25 }} />
-    <Ionicons name="chevron-up"
-          size={30}
-          color="#D98C8C"
-          style={{ marginTop: -18 }} />
+      <LinearGradient
+  colors={[
+    "rgba(245, 241, 209, 0.05)",
+    "rgba(137, 154, 92, 0.4)"
+  ]}
+  style={styles.gocontainer}
+  locations={[0.16, 0.58]}
+>
 
-    <TouchableOpacity style={styles.button}>
-        <Text>Go!</Text>
-    </TouchableOpacity>
-</View>
+
+    <Ionicons name="chevron-up-outline"
+          size={27}
+          color="rgba(217, 140, 140, 0.65)"
+          style={{ marginTop: 25 }} />
+    <Ionicons name="chevron-up-outline"
+          size={30}
+          color="rgba(217, 140, 140, 1.0)"
+          style={{ marginTop: -15 }} />
+<Animated.View
+  {...pan.panHandlers}
+  style={[
+    styles.button,
+    {
+      transform:[
+        {translateY: buttonY},
+      ]
+    }
+  ]}
+>
+<Text style={styles.buttonText}>
+Go!
+</Text>
+</Animated.View>
+</LinearGradient>
     </View>
   );
 }
@@ -169,29 +252,34 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     marginTop: 70,
   },
-   gocontainer: {
-     position: "absolute",
-  right: 20,
+  gocontainer: {
+  position: "absolute",
   bottom: 40,
-
-  width: 110,
-  height: 280,
+  alignSelf: "center",
+  width: 100,
+  height: 200,
   borderRadius: 55,
   backgroundColor: "rgba(255,255,255,0.18)",
-
   alignItems: "center",
   justifyContent: "space-between",
   paddingVertical: 20,
-  },
+   overflow: "hidden",
+},
 
   button: {
-    width: 95,
-    height: 95,
+    width: 100,
+    height: 100,
     borderRadius: 47.5,
-    backgroundColor: "#A7B96A",
-
+    backgroundColor: "rgba(131, 150, 85, 0.8)",
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonText: {
+    fontFamily: "Inter",
+    fontSize: 50,
+    fontWeight: "300",
+    fontStyle: "italic",
+    color: "#F5F1D1",
   },
 });
   
