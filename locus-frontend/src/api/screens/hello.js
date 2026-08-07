@@ -16,6 +16,7 @@ import {
     withSequence,
     withTiming
 } from "react-native-reanimated";
+import { Ionicons } from "@expo/vector-icons";
 
 
   export default function HelloScreen() {
@@ -110,7 +111,20 @@ import {
           Escape the ordinary
         </Animated.Text>
       </View>
+      <View style={styles.gocontainer}>
+    <Ionicons name="chevron-up"
+          size={30}
+          color="#D98C8C"
+          style={{ marginTop: 25 }} />
+    <Ionicons name="chevron-up"
+          size={30}
+          color="#D98C8C"
+          style={{ marginTop: -18 }} />
 
+    <TouchableOpacity style={styles.button}>
+        <Text>Go!</Text>
+    </TouchableOpacity>
+</View>
     </View>
   );
 }
@@ -154,6 +168,30 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "400",
     marginTop: 70,
+  },
+   gocontainer: {
+     position: "absolute",
+  right: 20,
+  bottom: 40,
+
+  width: 110,
+  height: 280,
+  borderRadius: 55,
+  backgroundColor: "rgba(255,255,255,0.18)",
+
+  alignItems: "center",
+  justifyContent: "space-between",
+  paddingVertical: 20,
+  },
+
+  button: {
+    width: 95,
+    height: 95,
+    borderRadius: 47.5,
+    backgroundColor: "#A7B96A",
+
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
   
