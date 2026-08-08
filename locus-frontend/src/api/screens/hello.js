@@ -20,159 +20,96 @@ import {
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import HelloText from "../components/HelloText";
 
 
 
   export default function HelloScreen() {
-    const buttonScale = useRef(new Animated.Value(1)).current;
   const navigation = useNavigation();
-  const buttonY = useRef(new Animated.Value(0)).current;
-  const [isNavigating, setIsNavigating] = React.useState(false);
-  const titleOpacity = useRef(new Animated.Value(0)).current;
-  const titleTranslate = useRef(new Animated.Value(20)).current;
-  const logoOpacity = useRef(new Animated.Value(0)).current;
-  const logoTranslate = useRef(new Animated.Value(20)).current;
-  const subtitleOpacity = useRef(new Animated.Value(0)).current;
-  const subtitleTranslate = useRef(new Animated.Value(20)).current;
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.parallel([
-        Animated.timing(titleOpacity, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(titleTranslate, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(logoOpacity, {
-          toValue: 1,
-          duration: 700,
-          useNativeDriver: true,
-        }),
-        Animated.timing(logoTranslate, {
-          toValue: 0,
-          duration: 700,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(subtitleOpacity, {
-          toValue: 1,
-          duration: 900,
-          useNativeDriver: true,
-        }),
-        Animated.timing(subtitleTranslate, {
-          toValue: 0,
-          duration: 900,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]).start();
-  }, []);
+const buttonY = useRef(new Animated.Value(0)).current;
 
+const screenOpacity = useRef(new Animated.Value(1)).current;
+const screenScale = useRef(new Animated.Value(1)).current;
+
+const [isNavigating, setIsNavigating] = React.useState(false);
+
+
+const handleGoToLogin = () => {
+  if (isNavigating) return;
+
+  setIsNavigating(true);
+
+  Animated.parallel([
+    
+    Animated.timing(screenOpacity, {
+      toValue: 0,
+      duration: 550,
+      useNativeDriver: true,
+    }),
+
+
+    Animated.timing(screenScale, {
+      toValue: 1.04,
+      duration: 550,
+      useNativeDriver: true,
+    }),
+
+   
+    Animated.timing(buttonY, {
+      toValue: -90,
+      duration: 450,
+      useNativeDriver: true,
+    }),
+  ]).start(({ finished }) => {
+    if (finished) {
+      navigation.navigate("Login");
+    }
+  });
+};
 
 const pan = useRef(
   PanResponder.create({
-
-    onStartShouldSetPanResponder: () => true,
+    onStartShouldSetPanResponder: () => !isNavigating,
 
     onPanResponderMove: (evt, gestureState) => {
+      const y = gestureState.dy;
 
-  let y = gestureState.dy;
-
-  if (y < 0 && y > -90) {
-
-    buttonY.setValue(y);
-
-
-
-  }
-
-},
-
+      if (y < 0 && y > -90) {
+        buttonY.setValue(y);
+      }
+    },
 
     onPanResponderRelease: (evt, gestureState) => {
-
       if (gestureState.dy < -80) {
-
-        setIsNavigating(true);
-
-        Animated.timing(buttonY,{
-  toValue:-90,
-  duration:300,
-  useNativeDriver:true,
-
-        }).start(()=>{
-
-          navigation.navigate("Login");
-
-        });
-
-
+        handleGoToLogin();
       } else {
-
-        // връщане обратно
-        Animated.spring(buttonY,{
-          toValue:0,
-          useNativeDriver:true,
-          friction:6
+        Animated.spring(buttonY, {
+          toValue: 0,
+          useNativeDriver: true,
+          friction: 7,
+          tension: 45,
         }).start();
-
       }
-
-    }
-
+    },
   })
 ).current;
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("../components/photos/background.png")}
-        style={styles.background}
-        resizeMode="cover"
-      >
+   <Animated.View style={[ 
+    styles.container, 
+    { opacity: screenOpacity, 
+    transform: [{ scale: screenScale }], 
+    }, 
+    ]} 
+    > 
+    <ImageBackground source={require("../components/photos/background.png")} 
+    style={styles.background} 
+    resizeMode="cover" >
       <View style={styles.overlay} />
       </ImageBackground>
       <View style={styles.header}>
-        <Animated.Text
-          style={[
-            styles.title,
-            {
-              opacity: titleOpacity,
-              transform: [{ translateY: titleTranslate }],
-            },
-          ]}
-        >
-          Welcome
-        </Animated.Text>
-        <Animated.Image
-          source={require("../components/photos/logo Locus 1.png")}
-          style={[
-            styles.logo,
-            {
-              opacity: logoOpacity,
-              transform: [{ translateY: logoTranslate }],
-            },
-          ]}
-        />
-        <Animated.Text
-          style={[
-            styles.subtitle,
-            {
-              opacity: subtitleOpacity,
-              transform: [{ translateY: subtitleTranslate }],
-            },
-          ]}
-        >
-          Escape the ordinary
-        </Animated.Text>
+         <HelloText />
       </View>
       <LinearGradient
   colors={[
@@ -208,10 +145,9 @@ Go!
 </Text>
 </Animated.View>
 </LinearGradient>
-    </View>
+</Animated.View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -233,25 +169,7 @@ const styles = StyleSheet.create({
     left: 27,
     zIndex: 1,
   },
-  title: {
-    fontFamily: "Inter",
-    color: "#F5F1D1",
-    fontSize: 64,
-    fontWeight: "300",
-  },
-  logo: {
-    position: "absolute",
-    top: 70,
-    width: 282,
-    height: 74,
-  },
-  subtitle: {
-    fontFamily: "Inter",
-    color: "#F5F1D1",
-    fontSize: 24,
-    fontWeight: "400",
-    marginTop: 70,
-  },
+
   gocontainer: {
   position: "absolute",
   bottom: 40,
