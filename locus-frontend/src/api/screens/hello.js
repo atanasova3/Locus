@@ -22,7 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import HelloText from "../components/HelloText";
 
-
+<HelloText animated={true} />
 
   export default function HelloScreen() {
   const navigation = useNavigation();
@@ -165,14 +165,14 @@ const styles = StyleSheet.create({
   },
   header: {
     position: "absolute",
-    top: 210,
-    left: 27,
+    top: "20%",
+    left: "5%",
     zIndex: 1,
   },
 
   gocontainer: {
   position: "absolute",
-  bottom: 40,
+  bottom: "5%",
   alignSelf: "center",
   width: 100,
   height: 200,
