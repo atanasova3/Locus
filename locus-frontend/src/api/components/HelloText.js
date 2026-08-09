@@ -32,7 +32,7 @@ export default function HelloText({ animated = true }) {
       return;
     }
 
-    // Анимация само когато animated = true
+    
     Animated.parallel([
       Animated.parallel([
         Animated.timing(titleOpacity, {
@@ -89,7 +89,7 @@ return (
         },
       ]}
     >
-      Welcome
+      Welcome to
     </Animated.Text>
 
     <Animated.Image
