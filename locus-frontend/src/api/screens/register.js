@@ -7,13 +7,45 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert, //za greshki izvestqvane (posle shte mahna komentarite, prosto sum bavna i zabravqm)
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 import HelloText from "../components/HelloText";
 
-export default function LoginScreen() {
+export default function RegisterScreen({ navigation }) {
    const [showPassword, setShowPassword] = useState(false);
+// state promenlivi
+   const [username, setUsername] = useState("");
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+
+   const handleRegister = () => { //izprashtame kum backend
+    if (!username || !email || !password) { //validirame dali vs e ppopulneno
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
+    }
+    try {
+      const response = await fetch("http://192.168.1.100:5000/register", { //trqq sloja ip na kompa
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert("Success", "Registration successful!");
+        navigation.navigate("Login");
+      } else {
+        Alert.alert("Error", data.message || "Registration failed.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "An error occurred. Please try again later.");
+      console.error("Registration error:", error);
+    }
+  };
+
   return (
     
     <ImageBackground
@@ -32,6 +64,9 @@ export default function LoginScreen() {
           style={styles.input}
           placeholder="Enter Username"
           placeholderTextColor="rgb(245, 241, 209, 0.6)"
+          value={username} //state
+          onChangeText={setUsername} 
+          autoCapitalize="none" // za vseki sluchai
         />
 
         <Text style={styles.label}>E-mail</Text>
@@ -40,6 +75,9 @@ export default function LoginScreen() {
           placeholder="Enter E-mail"
           placeholderTextColor="rgb(245, 241, 209, 0.6)"
           keyboardType="email-address"
+          value ={email} //state
+          onChangeText={setEmail} 
+          autoCapitalize="none"
         />
 
         <Text style={styles.label}>Password</Text>
@@ -50,6 +88,9 @@ export default function LoginScreen() {
             placeholder="Enter Password"
             placeholderTextColor="rgb(245, 241, 209, 0.6)"
             secureTextEntry={!showPassword}
+            value={password} //state
+            onChangeText={setPassword} 
+            autoCapitalize="none"
           />
 
           <TouchableOpacity
@@ -90,7 +131,7 @@ export default function LoginScreen() {
             Have an account?
           </Text>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress= {() => navigation.navigate("Login")}>
             <Text style={styles.registerText}> Login</Text>
           </TouchableOpacity>
         </View>
