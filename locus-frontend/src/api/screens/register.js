@@ -7,7 +7,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert, //za greshki izvestqvane (posle shte mahna komentarite, prosto sum bavna i zabravqm)
+  Alert, //za greshki izvestqvane (posle shte mahna komentarite, prosto sum bavna i zabravqm hahahaha)
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
@@ -20,7 +23,7 @@ export default function RegisterScreen({ navigation }) {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 
-   const handleRegister = () => { //izprashtame kum backend
+   const handleRegister = async () => { //izprashtame kum backend
     if (!username || !email || !password) { //validirame dali vs e ppopulneno
       Alert.alert("Error", "Please fill in all fields.");
       return;
@@ -54,11 +57,23 @@ export default function RegisterScreen({ navigation }) {
       resizeMode="cover"
     >
       <View style={styles.overlay} />
+
+<KeyboardAvoidingView
+  style={styles.container}
+  behavior={Platform.OS === "ios" ? "padding" : "height"}
+>
+  <ScrollView
+    contentContainerStyle={styles.scrollContent}
+    showsVerticalScrollIndicator={false}
+    keyboardShouldPersistTaps="handled"
+  >
     <View style={styles.header}>
-        <HelloText animated={false} />
-      </View>
-      <Text style={styles.text}>Register</Text>
-      <View style={styles.content}>
+      <HelloText animated={false} />
+    </View>
+
+    <Text style={styles.text}>Register</Text>
+
+    <View style={styles.content}>
         <Text style={styles.label}>Username</Text>
         <TextInput
           style={styles.input}
@@ -136,7 +151,10 @@ export default function RegisterScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-      </View>
+       </View>
+  </ScrollView>
+</KeyboardAvoidingView>
+      
     </ImageBackground>
   );
 }
@@ -151,28 +169,32 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
 
-  header: {
-    position: "absolute",
-    top: "10%",
-    left: "5%",
-    right: "5%",
-  },
-  text: {
-  position: "absolute",
-  left: 0,
-  right: 0,
-  top: "33%",
+ container: {
+  flex: 1,
+},
+
+scrollContent: {
+  flexGrow: 1,
+  paddingHorizontal: "5%",
+  paddingTop: "25%",
+  paddingBottom: 30,
+},
+
+header: {
+  marginBottom: 40,
+},
+
+text: {
   textAlign: "center",
-  textAlignVertical: "center",
   fontSize: 40,
   fontWeight: "500",
   color: "#CF928A",
+  marginBottom: 35,
 },
+
 content: {
-    flex: 1,
-    paddingHorizontal: "5%",
-    top: "42%",
-  },
+  width: "100%",
+},
 
   label: {
     color: "#F5F1D1",

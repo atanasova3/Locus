@@ -42,7 +42,7 @@ const [keyboardHeight, setKeyboardHeight] = useState(0);
 }, []);
 
   const handleChange = (text, index) => {
-    // Само цифри
+    
     const digit = text.replace(/[^0-9]/g, "").slice(-1);
 
     const newCode = [...code];
@@ -50,20 +50,19 @@ const [keyboardHeight, setKeyboardHeight] = useState(0);
 
     setCode(newCode);
 
-    // Отиваме към следващото поле
+  
     if (digit && index < CODE_LENGTH - 1) {
       inputs.current[index + 1]?.focus();
     }
 
-    // Ако е въведен целият код
+    
     if (digit && index === CODE_LENGTH - 1) {
       const fullCode = newCode.join("");
 
       if (fullCode.length === CODE_LENGTH) {
         console.log("CODE:", fullCode);
 
-        // Тук можеш да провериш кода
-        // verifyCode(fullCode);
+
       }
     }
   };
@@ -88,7 +87,7 @@ const [keyboardHeight, setKeyboardHeight] = useState(0);
 
     console.log("Verifying:", fullCode);
 
-    // API request тук
+    
   };
 
  return (

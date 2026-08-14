@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   ImageBackground,
@@ -7,95 +6,114 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 import HelloText from "../components/HelloText";
 
 export default function LoginScreen() {
-   const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    
     <ImageBackground
       source={require("../components/photos/background.png")}
       style={styles.background}
       resizeMode="cover"
     >
       <View style={styles.overlay} />
-    <View style={styles.header}>
-        <HelloText animated={false} />
-      </View>
-      <Text style={styles.text}>Login</Text>
-      <View style={styles.content}>
-        <Text style={styles.label}>Username</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Username"
-          placeholderTextColor="rgb(245, 241, 209, 0.6)"
-        />
 
-        <Text style={styles.label}>E-mail</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter E-mail"
-          placeholderTextColor="rgb(245, 241, 209, 0.6)"
-          keyboardType="email-address"
-        />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.header}>
+            <HelloText animated={false} />
+          </View>
 
-        <Text style={styles.label}>Password</Text>
+          <Text style={styles.text}>Login</Text>
 
-        <View style={styles.passwordBox}>
-          <TextInput
-            style={styles.passwordInput}
-            placeholder="Enter Password"
-            placeholderTextColor="rgb(245, 241, 209, 0.6)"
-            secureTextEntry={!showPassword}
-          />
+          <View style={styles.content}>
+            <Text style={styles.label}>Username</Text>
 
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-          >
-            <Ionicons
-              name={showPassword ? "eye-outline" : "eye-off-outline"}
-              size={23}
-              color="#F5F1D1"
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Username"
+              placeholderTextColor="rgba(245, 241, 209, 0.6)"
             />
-          </TouchableOpacity>
-        </View>
 
-        <TouchableOpacity>
-          <Text style={styles.forgot}>Forgot password?</Text>
-        </TouchableOpacity>
+            <Text style={styles.label}>E-mail</Text>
 
-        <View style={styles.or}>
-          <View style={styles.line} />
-          <Text style={styles.orText}>OR</Text>
-          <View style={styles.line} />
-        </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter E-mail"
+              placeholderTextColor="rgba(245, 241, 209, 0.6)"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
 
-        <TouchableOpacity style={styles.google}>
-          <Text style={styles.googleText}>
-            Continue with Google
-          </Text>
+            <Text style={styles.label}>Password</Text>
 
-          <FontAwesome
-            name="google"
-            size={23}
-            color="#F5F1D1"
-          />
-        </TouchableOpacity>
+            <View style={styles.passwordBox}>
+              <TextInput
+                style={styles.passwordInput}
+                placeholder="Enter Password"
+                placeholderTextColor="rgba(245, 241, 209, 0.6)"
+                secureTextEntry={!showPassword}
+              />
 
-        <View style={styles.register}>
-          <Text style={styles.smallText}>
-            Don’t have an account?
-          </Text>
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Ionicons
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  size={23}
+                  color="#F5F1D1"
+                />
+              </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity>
-            <Text style={styles.registerText}> Register</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity>
+              <Text style={styles.forgot}>Forgot password?</Text>
+            </TouchableOpacity>
 
-      </View>
+            <View style={styles.or}>
+              <View style={styles.line} />
+              <Text style={styles.orText}>OR</Text>
+              <View style={styles.line} />
+            </View>
+
+            <TouchableOpacity style={styles.google}>
+              <Text style={styles.googleText}>
+                Continue with Google
+              </Text>
+
+              <FontAwesome
+                name="google"
+                size={23}
+                color="#F5F1D1"
+              />
+            </TouchableOpacity>
+
+            <View style={styles.register}>
+              <Text style={styles.smallText}>
+                Don’t have an account?
+              </Text>
+
+              <TouchableOpacity>
+                <Text style={styles.registerText}> Register</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
@@ -110,27 +128,31 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
 
-  header: {
-    position: "absolute",
-    top: "10%",
-    left: "5%",
-    right: "5%",
-  },
-  text: {
-  position: "absolute",
-  left: 0,
-  right: 0,
-  top: "33%",
-  textAlign: "center",
-  textAlignVertical: "center",
-  fontSize: 40,
-  fontWeight: "500",
-  color: "#CF928A",
-},
-content: {
+  container: {
     flex: 1,
+  },
+
+  scrollContent: {
+    flexGrow: 1,
     paddingHorizontal: "5%",
-    top: "42%",
+    paddingTop: "25%",
+    paddingBottom: 30,
+  },
+
+  header: {
+    marginBottom: 40,
+  },
+
+  text: {
+    textAlign: "center",
+    fontSize: 40,
+    fontWeight: "500",
+    color: "#CF928A",
+    marginBottom: 35,
+  },
+
+  content: {
+    width: "100%",
   },
 
   label: {
@@ -191,7 +213,7 @@ content: {
     color: "#c99591",
     fontSize: 20,
     marginHorizontal: 12,
-    fontStyle: "italic"
+    fontStyle: "italic",
   },
 
   google: {
@@ -227,4 +249,3 @@ content: {
     fontWeight: "600",
   },
 });
-
