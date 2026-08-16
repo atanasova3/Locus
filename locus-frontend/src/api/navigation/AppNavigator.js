@@ -25,6 +25,14 @@ export default function AppNavigator() {
         name="Home"
         component={HomeScreen}
       />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+      />
 
     </Stack.Navigator>
   );

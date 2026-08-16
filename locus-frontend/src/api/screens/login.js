@@ -20,7 +20,7 @@ export default function LoginScreen() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // Responsive стойности
+  // Responsive 
   const isSmallScreen = width < 380;
   const isShortScreen = height < 700;
 
@@ -200,6 +200,30 @@ export default function LoginScreen() {
               </Text>
             </TouchableOpacity>
 
+            <TouchableOpacity
+  style={[
+    styles.google,
+    {
+      height: inputHeight,
+      marginTop: 15,
+      backgroundColor: "rgba(207,146,138,0.6)", 
+    },
+  ]}
+  onPress={() => navigation.navigate("register")} 
+>
+  <Text
+    style={[
+      styles.googleText,
+      {
+        fontSize: googleFontSize,
+      },
+    ]}
+  >
+    Sign Up
+  </Text>
+  
+</TouchableOpacity>
+
             {/* OR */}
             <View
               style={[
@@ -268,6 +292,7 @@ export default function LoginScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
+            
 
           </View>
         </ScrollView>

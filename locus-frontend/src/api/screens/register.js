@@ -7,7 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert, //za greshki izvestqvane (posle shte mahna komentarite, prosto sum bavna i zabravqm hahahaha)
+  Alert, //za greshki izvestqvane (posle shte mahna komentarite, prosto sum bavna i zabravqm)
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -29,7 +29,7 @@ export default function RegisterScreen({ navigation }) {
       return;
     }
     try {
-      const response = await fetch("http://192.168.1.100:5000/register", { //trqq sloja ip na kompa
+      const response = await fetch("http://192.168.0.194:5000/api/register", { // ip na kompa
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default function RegisterScreen({ navigation }) {
       const data = await response.json();
       if (response.ok) {
         Alert.alert("Success", "Registration successful!");
-        navigation.navigate("Login");
+        navigation.navigate("Home");
       } else {
         Alert.alert("Error", data.message || "Registration failed.");
       }
@@ -118,6 +118,10 @@ export default function RegisterScreen({ navigation }) {
             />
           </TouchableOpacity>
         </View>
+        
+        <TouchableOpacity style={styles.google} onPress={handleRegister}>
+          <Text style={styles.googleText}>Sign Up</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity>
           <Text style={styles.forgot}>Forgot password?</Text>
