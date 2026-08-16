@@ -63,7 +63,7 @@ const handleGoToLogin = () => {
     }),
   ]).start(({ finished }) => {
     if (finished) {
-      navigation.navigate("Register");
+      navigation.navigate("Home");
     }
   });
 };

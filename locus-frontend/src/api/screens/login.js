@@ -9,13 +9,31 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 import HelloText from "../components/HelloText";
 
 export default function LoginScreen() {
+  const { width, height } = useWindowDimensions();
+
   const [showPassword, setShowPassword] = useState(false);
+
+  // Responsive стойности
+  const isSmallScreen = width < 380;
+  const isShortScreen = height < 700;
+
+  const titleSize = isSmallScreen ? 34 : 40;
+  const labelSize = isSmallScreen ? 18 : 20;
+  const inputFontSize = isSmallScreen ? 16 : 18;
+  const googleFontSize = isSmallScreen ? 18 : 20;
+
+  const inputHeight = isSmallScreen ? 48 : 52;
+
+  const topPadding = isShortScreen
+    ? height * 0.18
+    : height * 0.25;
 
   return (
     <ImageBackground
@@ -27,90 +45,230 @@ export default function LoginScreen() {
 
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={
+          Platform.OS === "ios"
+            ? "padding"
+            : "height"
+        }
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            {
+              paddingTop: topPadding,
+            },
+          ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.header}>
+          {/* HEADER */}
+          <View
+            style={[
+              styles.header,
+              {
+                marginBottom: isSmallScreen
+                  ? 25
+                  : 40,
+              },
+            ]}
+          >
             <HelloText animated={false} />
           </View>
 
-          <Text style={styles.text}>Login</Text>
+          {/* TITLE */}
+          <Text
+            style={[
+              styles.text,
+              {
+                fontSize: titleSize,
+                marginBottom: isSmallScreen
+                  ? 25
+                  : 35,
+              },
+            ]}
+          >
+            Login
+          </Text>
 
           <View style={styles.content}>
-            <Text style={styles.label}>Username</Text>
+
+            {/* USERNAME */}
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: labelSize,
+                },
+              ]}
+            >
+              Username
+            </Text>
 
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                {
+                  height: inputHeight,
+                  fontSize: inputFontSize,
+                },
+              ]}
               placeholder="Enter Username"
               placeholderTextColor="rgba(245, 241, 209, 0.6)"
+              autoCapitalize="none"
             />
 
-            <Text style={styles.label}>E-mail</Text>
+            {/* EMAIL */}
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: labelSize,
+                },
+              ]}
+            >
+              E-mail
+            </Text>
 
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                {
+                  height: inputHeight,
+                  fontSize: inputFontSize,
+                },
+              ]}
               placeholder="Enter E-mail"
               placeholderTextColor="rgba(245, 241, 209, 0.6)"
               keyboardType="email-address"
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Password</Text>
+            {/* PASSWORD */}
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: labelSize,
+                },
+              ]}
+            >
+              Password
+            </Text>
 
-            <View style={styles.passwordBox}>
+            <View
+              style={[
+                styles.passwordBox,
+                {
+                  height: inputHeight,
+                },
+              ]}
+            >
               <TextInput
-                style={styles.passwordInput}
+                style={[
+                  styles.passwordInput,
+                  {
+                    fontSize: inputFontSize,
+                  },
+                ]}
                 placeholder="Enter Password"
                 placeholderTextColor="rgba(245, 241, 209, 0.6)"
                 secureTextEntry={!showPassword}
+                autoCapitalize="none"
               />
 
               <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
+                onPress={() =>
+                  setShowPassword(!showPassword)
+                }
               >
                 <Ionicons
-                  name={showPassword ? "eye-outline" : "eye-off-outline"}
-                  size={23}
+                  name={
+                    showPassword
+                      ? "eye-outline"
+                      : "eye-off-outline"
+                  }
+                  size={isSmallScreen ? 21 : 23}
                   color="#F5F1D1"
                 />
               </TouchableOpacity>
             </View>
 
+            {/* FORGOT PASSWORD */}
             <TouchableOpacity>
-              <Text style={styles.forgot}>Forgot password?</Text>
+              <Text style={styles.forgot}>
+                Forgot password?
+              </Text>
             </TouchableOpacity>
 
-            <View style={styles.or}>
+            {/* OR */}
+            <View
+              style={[
+                styles.or,
+                {
+                  marginVertical: isSmallScreen
+                    ? 10
+                    : 14,
+                },
+              ]}
+            >
               <View style={styles.line} />
-              <Text style={styles.orText}>OR</Text>
+
+              <Text
+                style={[
+                  styles.orText,
+                  {
+                    fontSize: isSmallScreen
+                      ? 18
+                      : 20,
+                  },
+                ]}
+              >
+                OR
+              </Text>
+
               <View style={styles.line} />
             </View>
 
-            <TouchableOpacity style={styles.google}>
-              <Text style={styles.googleText}>
+            {/* GOOGLE */}
+            <TouchableOpacity
+              style={[
+                styles.google,
+                {
+                  height: inputHeight,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.googleText,
+                  {
+                    fontSize: googleFontSize,
+                  },
+                ]}
+              >
                 Continue with Google
               </Text>
 
               <FontAwesome
                 name="google"
-                size={23}
+                size={isSmallScreen ? 21 : 23}
                 color="#F5F1D1"
               />
             </TouchableOpacity>
 
+            {/* REGISTER */}
             <View style={styles.register}>
               <Text style={styles.smallText}>
                 Don’t have an account?
               </Text>
 
               <TouchableOpacity>
-                <Text style={styles.registerText}> Register</Text>
+                <Text style={styles.registerText}>
+                  {" "}Register
+                </Text>
               </TouchableOpacity>
             </View>
+
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -135,20 +293,17 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: "5%",
-    paddingTop: "25%",
     paddingBottom: 30,
   },
 
   header: {
-    marginBottom: 40,
+    alignItems: "center",
   },
 
   text: {
     textAlign: "center",
-    fontSize: 40,
     fontWeight: "500",
     color: "#CF928A",
-    marginBottom: 35,
   },
 
   content: {
@@ -157,30 +312,32 @@ const styles = StyleSheet.create({
 
   label: {
     color: "#F5F1D1",
-    fontSize: 20,
     marginBottom: 5,
   },
 
   input: {
-    height: 52,
+    width: "100%",
     borderWidth: 3,
     borderColor: "#CF928A",
     borderRadius: 35,
-    backgroundColor: "rgba(207,146,138,0.3)",
+    backgroundColor:
+      "rgba(207,146,138,0.3)",
     paddingHorizontal: "5%",
     color: "#F5F1D1",
-    fontSize: 18,
     marginBottom: 25,
   },
 
   passwordBox: {
-    height: 52,
+    width: "100%",
     borderWidth: 3,
     borderColor: "#CF928A",
     borderRadius: 35,
-    backgroundColor: "rgba(207,146,138,0.3)",
+    backgroundColor:
+      "rgba(207,146,138,0.3)",
+
     flexDirection: "row",
     alignItems: "center",
+
     paddingHorizontal: "5%",
     marginBottom: 5,
   },
@@ -188,7 +345,6 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     color: "#F5F1D1",
-    fontSize: 18,
   },
 
   forgot: {
@@ -200,7 +356,6 @@ const styles = StyleSheet.create({
   or: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 14,
   },
 
   line: {
@@ -211,26 +366,29 @@ const styles = StyleSheet.create({
 
   orText: {
     color: "#c99591",
-    fontSize: 20,
     marginHorizontal: 12,
     fontStyle: "italic",
   },
 
   google: {
-    height: 52,
+    width: "100%",
+
     borderWidth: 3,
     borderColor: "#c99591",
     borderRadius: 35,
-    backgroundColor: "rgba(207,146,138,0.3)",
+
+    backgroundColor:
+      "rgba(207,146,138,0.3)",
+
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+
     gap: 8,
   },
 
   googleText: {
     color: "#fffde8",
-    fontSize: 20,
   },
 
   register: {

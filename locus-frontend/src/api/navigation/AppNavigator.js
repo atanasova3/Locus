@@ -22,8 +22,8 @@ export default function AppNavigator() {
       />
 
       <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
+        name="Home"
+        component={HomeScreen}
       />
 
     </Stack.Navigator>
