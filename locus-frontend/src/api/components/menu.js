@@ -1,32 +1,161 @@
 import React from "react";
-import { StyleSheet, View, Pressable, Image, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
 
-const { width } = Dimensions.get("window");
-
 export default function Menu() {
+  const { width, height } = useWindowDimensions();
+
+  // ==========================================
+  // RESPONSIVE SCALE
+  // ==========================================
+
+  const BASE_WIDTH = 390;
+  const BASE_HEIGHT = 844;
+
+  const scale = Math.min(
+    width / BASE_WIDTH,
+    height / BASE_HEIGHT
+  );
+
+  const responsiveScale = Math.max(
+    0.75,
+    Math.min(scale, 1.1)
+  );
+
+  const s = (value) =>
+    value * responsiveScale;
+
+  // ==========================================
+  // RESPONSIVE VALUES
+  // ==========================================
+
+  const menuHeight = s(60);
+  const logoSize = s(35);
+  const iconSize = s(45);
+  const gap = s(20);
+
+  // ==========================================
+  // VERY SMALL SCREEN
+  // ==========================================
+
+  const isVerySmall = width < 340;
+  const isSmall = width < 380;
+  const isShort = height < 700;
+
+  const finalMenuHeight = isVerySmall
+    ? s(47)
+    : isSmall
+    ? s(53)
+    : menuHeight;
+
+  const finalLogoSize = isVerySmall
+    ? s(26)
+    : isSmall
+    ? s(29)
+    : logoSize;
+
+  const finalIconSize = isVerySmall
+    ? s(35)
+    : isSmall
+    ? s(39)
+    : iconSize;
+
+  const finalGap = isVerySmall
+    ? s(9)
+    : isSmall
+    ? s(13)
+    : gap;
+
+  // Малко по-нагоре при къси екрани
+  const bottomPosition = isShort
+    ? "5%"
+    : "8%";
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          bottom: bottomPosition,
+          paddingHorizontal:
+            width * 0.08,
+        },
+      ]}
+    >
       <LinearGradient
-        colors={["#405D38", "#899A5C", "#405D38"]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        style={styles.menu}
+        colors={[
+          "#405D38",
+          "#899A5C",
+          "#405D38",
+        ]}
+        start={{
+          x: 0,
+          y: 0.5,
+        }}
+        end={{
+          x: 1,
+          y: 0.5,
+        }}
+        style={[
+          styles.menu,
+          {
+            height:
+              finalMenuHeight,
+
+            minHeight:
+              finalMenuHeight,
+
+            borderRadius:
+              finalMenuHeight / 2,
+
+            gap:
+              finalGap,
+          },
+        ]}
       >
 
-        {/* 1. Logo */}
-        <Pressable style={styles.item}>
+        {/* ================================= */}
+        {/* 1. LOGO */}
+        {/* ================================= */}
+
+        <Pressable
+          style={styles.item}
+          hitSlop={10}
+        >
           <Image
-            source={require("../components/photos/Asset 1.png")}
-            style={styles.logo}
+            source={require(
+              "../components/photos/Asset 1.png"
+            )}
+            style={{
+              width:
+                finalLogoSize,
+              height:
+                finalLogoSize,
+            }}
             resizeMode="contain"
           />
         </Pressable>
 
-        {/* 2. Paper plane */}
-        <Pressable style={styles.item}>
-          <Svg width={styles.iconSize.width} height={styles.iconSize.height} viewBox="0 0 50 50">
+        {/* ================================= */}
+        {/* 2. PAPER PLANE */}
+        {/* ================================= */}
+
+        <Pressable
+          style={styles.item}
+          hitSlop={10}
+        >
+          <Svg
+            width={finalIconSize}
+            height={finalIconSize}
+            viewBox="0 0 50 50"
+          >
             <Path
               d="M8 25 L42 8 L30 42 L24 28 Z"
               fill="none"
@@ -38,9 +167,19 @@ export default function Menu() {
           </Svg>
         </Pressable>
 
-        {/* 3. Plus */}
-        <Pressable style={styles.item}>
-          <Svg width={styles.iconSize.width} height={styles.iconSize.height} viewBox="0 0 50 50">
+        {/* ================================= */}
+        {/* 3. PLUS */}
+        {/* ================================= */}
+
+        <Pressable
+          style={styles.item}
+          hitSlop={10}
+        >
+          <Svg
+            width={finalIconSize}
+            height={finalIconSize}
+            viewBox="0 0 50 50"
+          >
             <Path
               d="M26 8 V44 M8 26 H44"
               stroke="#F3F0D5"
@@ -50,9 +189,20 @@ export default function Menu() {
           </Svg>
         </Pressable>
 
-        {/* 4. Hamburger */}
-        <Pressable style={styles.item}>
-          <Svg width={styles.iconSize.width} height={styles.iconSize.height} viewBox="0 0 50 50">
+        {/* ================================= */}
+        {/* 4. HAMBURGER */}
+        {/* ================================= */}
+
+        <Pressable
+          style={styles.item}
+          hitSlop={10}
+        >
+          <Svg
+            width={finalIconSize}
+            height={finalIconSize}
+            viewBox="0 0 50 50"
+          >
+
             <Path
               d="M8 12 H44"
               stroke="#F3F0D5"
@@ -73,6 +223,7 @@ export default function Menu() {
               strokeWidth={6}
               strokeLinecap="round"
             />
+
           </Svg>
         </Pressable>
 
@@ -84,41 +235,32 @@ export default function Menu() {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
+
     left: 0,
     right: 0,
-    bottom: "8%",
-    paddingHorizontal: "10%",
+
     alignItems: "center",
   },
 
   menu: {
     width: "100%",
-    minHeight: 60,
-    height: width < 380 ? 60 : 67,
-    borderRadius: 35,
 
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
 
-    gap: width < 380 ? 13 : 20,
+    alignItems: "center",
+
+    justifyContent:
+      "center",
 
     overflow: "hidden",
   },
 
   item: {
-    height: "100%",
     alignItems: "center",
-    justifyContent: "center",
-  },
 
-  logo: {
-    width: width < 380 ? 34 : 40,
-    height: width < 380 ? 34 : 40,
-  },
+    justifyContent:
+      "center",
 
-  iconSize: {
-    width: width < 380 ? 44 : 50,
-    height: width < 380 ? 44 : 50,
+    height: "100%",
   },
 });

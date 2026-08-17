@@ -8,32 +8,96 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   useWindowDimensions,
 } from "react-native";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+
+import {
+  Ionicons,
+  FontAwesome,
+} from "@expo/vector-icons";
 
 import HelloText from "../components/HelloText";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
 
   const [showPassword, setShowPassword] = useState(false);
 
+<<<<<<< Updated upstream
   // Responsive 
   const isSmallScreen = width < 380;
   const isShortScreen = height < 700;
+=======
+>>>>>>> Stashed changes
 
-  const titleSize = isSmallScreen ? 34 : 40;
-  const labelSize = isSmallScreen ? 18 : 20;
-  const inputFontSize = isSmallScreen ? 16 : 18;
-  const googleFontSize = isSmallScreen ? 18 : 20;
+  const BASE_WIDTH = 390;
+  const BASE_HEIGHT = 844;
 
-  const inputHeight = isSmallScreen ? 48 : 52;
+  const scale = Math.min(
+    width / BASE_WIDTH,
+    height / BASE_HEIGHT
+  );
 
-  const topPadding = isShortScreen
-    ? height * 0.18
-    : height * 0.25;
+  const responsiveScale = Math.min(
+    scale,
+    1.10
+  );
+
+  const s = (value) => value * responsiveScale;
+
+
+  const isVeryShort = height < 620;
+  const isShort = height < 700;
+
+
+  const titleSize = s(40);
+
+  const labelSize = s(20);
+
+  const inputFontSize = s(18);
+
+  const googleFontSize = s(20);
+
+
+  const inputHeight = s(52);
+
+  const iconSize = s(23);
+
+  let topPadding;
+
+  if (isVeryShort) {
+    topPadding = height * 0.025;
+  } else if (isShort) {
+    topPadding = height * 0.055;
+  } else {
+    topPadding = height * 0.10;
+  }
+
+
+  const headerMargin = isVeryShort
+    ? s(5)
+    : isShort
+    ? s(12)
+    : s(20);
+
+  const titleMargin = isVeryShort
+    ? s(7)
+    : isShort
+    ? s(14)
+    : s(20);
+
+  const inputMargin = isVeryShort
+    ? s(9)
+    : isShort
+    ? s(14)
+    : s(19);
+
+  const orMargin = isVeryShort
+    ? s(5)
+    : isShort
+    ? s(8)
+    : s(12);
+
 
   return (
     <ImageBackground
@@ -41,6 +105,9 @@ export default function LoginScreen() {
       style={styles.background}
       resizeMode="cover"
     >
+
+      {/* DARK OVERLAY */}
+
       <View style={styles.overlay} />
 
       <KeyboardAvoidingView
@@ -51,53 +118,66 @@ export default function LoginScreen() {
             : "height"
         }
       >
-        <ScrollView
-          contentContainerStyle={[
-            styles.scrollContent,
+
+        <View
+          style={[
+            styles.contentWrapper,
             {
               paddingTop: topPadding,
+              paddingHorizontal: width * 0.05,
             },
           ]}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
         >
-          {/* HEADER */}
+
+          {/* ==========================================
+              HEADER
+          ========================================== */}
+
           <View
             style={[
               styles.header,
               {
-                marginBottom: isSmallScreen
-                  ? 25
-                  : 40,
+                marginBottom: headerMargin,
               },
             ]}
           >
             <HelloText animated={false} />
           </View>
 
-          {/* TITLE */}
+
+          {/* ==========================================
+              LOGIN TITLE
+          ========================================== */}
+
           <Text
             style={[
-              styles.text,
+              styles.title,
               {
                 fontSize: titleSize,
-                marginBottom: isSmallScreen
-                  ? 25
-                  : 35,
+                marginBottom: titleMargin,
               },
             ]}
           >
             Login
           </Text>
 
+
+          {/* ==========================================
+              FORM
+          ========================================== */}
+
           <View style={styles.content}>
 
-            {/* USERNAME */}
+            {/* ========================================
+                USERNAME
+            ======================================== */}
+
             <Text
               style={[
                 styles.label,
                 {
                   fontSize: labelSize,
+                  marginBottom: s(4),
                 },
               ]}
             >
@@ -110,19 +190,28 @@ export default function LoginScreen() {
                 {
                   height: inputHeight,
                   fontSize: inputFontSize,
+                  borderRadius: s(35),
+                  paddingHorizontal: width * 0.05,
+                  marginBottom: inputMargin,
                 },
               ]}
               placeholder="Enter Username"
               placeholderTextColor="rgba(245, 241, 209, 0.6)"
               autoCapitalize="none"
+              autoCorrect={false}
             />
 
-            {/* EMAIL */}
+
+            {/* ========================================
+                EMAIL
+            ======================================== */}
+
             <Text
               style={[
                 styles.label,
                 {
                   fontSize: labelSize,
+                  marginBottom: s(4),
                 },
               ]}
             >
@@ -135,34 +224,48 @@ export default function LoginScreen() {
                 {
                   height: inputHeight,
                   fontSize: inputFontSize,
+                  borderRadius: s(35),
+                  paddingHorizontal: width * 0.05,
+                  marginBottom: inputMargin,
                 },
               ]}
               placeholder="Enter E-mail"
               placeholderTextColor="rgba(245, 241, 209, 0.6)"
               keyboardType="email-address"
               autoCapitalize="none"
+              autoCorrect={false}
             />
 
-            {/* PASSWORD */}
+
+            {/* ========================================
+                PASSWORD
+            ======================================== */}
+
             <Text
               style={[
                 styles.label,
                 {
                   fontSize: labelSize,
+                  marginBottom: s(4),
                 },
               ]}
             >
               Password
             </Text>
 
+
             <View
               style={[
                 styles.passwordBox,
                 {
                   height: inputHeight,
+                  borderRadius: s(35),
+                  paddingHorizontal: width * 0.05,
+                  marginBottom: s(3),
                 },
               ]}
             >
+
               <TextInput
                 style={[
                   styles.passwordInput,
@@ -174,32 +277,60 @@ export default function LoginScreen() {
                 placeholderTextColor="rgba(245, 241, 209, 0.6)"
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
+                autoCorrect={false}
               />
+
+
+              {/* PASSWORD VISIBILITY */}
 
               <TouchableOpacity
                 onPress={() =>
                   setShowPassword(!showPassword)
                 }
+                hitSlop={{
+                  top: 10,
+                  bottom: 10,
+                  left: 10,
+                  right: 10,
+                }}
               >
+
                 <Ionicons
                   name={
                     showPassword
                       ? "eye-outline"
                       : "eye-off-outline"
                   }
-                  size={isSmallScreen ? 21 : 23}
+                  size={iconSize}
                   color="#F5F1D1"
                 />
+
               </TouchableOpacity>
+
             </View>
 
-            {/* FORGOT PASSWORD */}
+
+            {/* ========================================
+                FORGOT PASSWORD
+            ======================================== */}
+
             <TouchableOpacity>
-              <Text style={styles.forgot}>
+
+              <Text
+                style={[
+                  styles.forgot,
+                  {
+                    fontSize: s(14),
+                    marginTop: s(1),
+                  },
+                ]}
+              >
                 Forgot password?
               </Text>
+
             </TouchableOpacity>
 
+<<<<<<< Updated upstream
             <TouchableOpacity
   style={[
     styles.google,
@@ -225,43 +356,69 @@ export default function LoginScreen() {
 </TouchableOpacity>
 
             {/* OR */}
+=======
+
+            {/* ========================================
+                OR
+            ======================================== */}
+
+>>>>>>> Stashed changes
             <View
               style={[
                 styles.or,
                 {
-                  marginVertical: isSmallScreen
-                    ? 10
-                    : 14,
+                  marginVertical: orMargin,
                 },
               ]}
             >
-              <View style={styles.line} />
+
+              <View
+                style={[
+                  styles.line,
+                  {
+                    height: s(2),
+                  },
+                ]}
+              />
 
               <Text
                 style={[
                   styles.orText,
                   {
-                    fontSize: isSmallScreen
-                      ? 18
-                      : 20,
+                    fontSize: s(19),
+                    marginHorizontal: s(10),
                   },
                 ]}
               >
                 OR
               </Text>
 
-              <View style={styles.line} />
+              <View
+                style={[
+                  styles.line,
+                  {
+                    height: s(2),
+                  },
+                ]}
+              />
+
             </View>
 
-            {/* GOOGLE */}
+
+            {/* ========================================
+                GOOGLE
+            ======================================== */}
+
             <TouchableOpacity
               style={[
                 styles.google,
                 {
                   height: inputHeight,
+                  borderRadius: s(35),
                 },
               ]}
             >
+
               <Text
                 style={[
                   styles.googleText,
@@ -275,33 +432,80 @@ export default function LoginScreen() {
 
               <FontAwesome
                 name="google"
-                size={isSmallScreen ? 21 : 23}
+                size={iconSize}
                 color="#F5F1D1"
               />
+
             </TouchableOpacity>
 
-            {/* REGISTER */}
-            <View style={styles.register}>
-              <Text style={styles.smallText}>
+
+            {/* ========================================
+                REGISTER
+            ======================================== */}
+
+            <View
+              style={[
+                styles.register,
+                {
+                  marginTop: s(6),
+                },
+              ]}
+            >
+
+              <Text
+                style={[
+                  styles.smallText,
+                  {
+                    fontSize: s(15),
+                  },
+                ]}
+              >
                 Don’t have an account?
               </Text>
 
-              <TouchableOpacity>
-                <Text style={styles.registerText}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Register")
+                }
+                >
+
+                <Text
+                  style={[
+                    styles.registerText,
+                    {
+                      fontSize: s(15),
+                    },
+                  ]}
+                >
                   {" "}Register
                 </Text>
+
               </TouchableOpacity>
+
             </View>
             
 
           </View>
-        </ScrollView>
+
+        </View>
+
       </KeyboardAvoidingView>
+
     </ImageBackground>
   );
 }
 
+
+// ==================================================
+// STYLES
+// ==================================================
+
 const styles = StyleSheet.create({
+
+  // -----------------------------------------------
+  // BACKGROUND
+  // -----------------------------------------------
+
   background: {
     flex: 1,
   },
@@ -311,72 +515,113 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
 
+
+  // -----------------------------------------------
+  // CONTAINER
+  // -----------------------------------------------
+
   container: {
     flex: 1,
   },
 
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: "5%",
-    paddingBottom: 30,
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
   },
+
+
+  // -----------------------------------------------
+  // HEADER
+  // -----------------------------------------------
 
   header: {
-    alignItems: "center",
+    alignItems: "flex-start",
   },
 
-  text: {
+
+  // -----------------------------------------------
+  // LOGIN TITLE
+  // -----------------------------------------------
+
+  title: {
     textAlign: "center",
     fontWeight: "500",
     color: "#CF928A",
   },
 
+
+  // -----------------------------------------------
+  // FORM
+  // -----------------------------------------------
+
   content: {
     width: "100%",
   },
 
+
+  // -----------------------------------------------
+  // LABEL
+  // -----------------------------------------------
+
   label: {
     color: "#F5F1D1",
-    marginBottom: 5,
   },
+
+
+  // -----------------------------------------------
+  // INPUT
+  // -----------------------------------------------
 
   input: {
     width: "100%",
+
     borderWidth: 3,
     borderColor: "#CF928A",
-    borderRadius: 35,
+
     backgroundColor:
       "rgba(207,146,138,0.3)",
-    paddingHorizontal: "5%",
+
     color: "#F5F1D1",
-    marginBottom: 25,
   },
+
+
+  // -----------------------------------------------
+  // PASSWORD
+  // -----------------------------------------------
 
   passwordBox: {
     width: "100%",
+
     borderWidth: 3,
     borderColor: "#CF928A",
-    borderRadius: 35,
+
     backgroundColor:
       "rgba(207,146,138,0.3)",
 
     flexDirection: "row",
-    alignItems: "center",
 
-    paddingHorizontal: "5%",
-    marginBottom: 5,
+    alignItems: "center",
   },
 
   passwordInput: {
     flex: 1,
+
     color: "#F5F1D1",
   },
 
+
+  // -----------------------------------------------
+  // FORGOT PASSWORD
+  // -----------------------------------------------
+
   forgot: {
     color: "#F5F1D1",
-    fontSize: 14,
-    marginTop: 2,
   },
+
+
+  // -----------------------------------------------
+  // OR
+  // -----------------------------------------------
 
   or: {
     flexDirection: "row",
@@ -385,27 +630,30 @@ const styles = StyleSheet.create({
 
   line: {
     flex: 1,
-    height: 2,
     backgroundColor: "#c99591",
   },
 
   orText: {
     color: "#c99591",
-    marginHorizontal: 12,
     fontStyle: "italic",
   },
+
+
+  // -----------------------------------------------
+  // GOOGLE
+  // -----------------------------------------------
 
   google: {
     width: "100%",
 
     borderWidth: 3,
     borderColor: "#c99591",
-    borderRadius: 35,
 
     backgroundColor:
       "rgba(207,146,138,0.3)",
 
     flexDirection: "row",
+
     justifyContent: "center",
     alignItems: "center",
 
@@ -416,19 +664,22 @@ const styles = StyleSheet.create({
     color: "#fffde8",
   },
 
+
+  // -----------------------------------------------
+  // REGISTER
+  // -----------------------------------------------
+
   register: {
     flexDirection: "row",
-    marginTop: 7,
   },
 
   smallText: {
     color: "#fffde8",
-    fontSize: 15,
   },
 
   registerText: {
     color: "#fffde8",
-    fontSize: 15,
     fontWeight: "600",
   },
+
 });

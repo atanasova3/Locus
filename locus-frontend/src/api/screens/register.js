@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   ImageBackground,
@@ -7,28 +6,133 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+<<<<<<< Updated upstream
   Alert, //za greshki izvestqvane (posle shte mahna komentarite, prosto sum bavna i zabravqm)
+=======
+  Alert,
+>>>>>>> Stashed changes
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
+  useWindowDimensions,
 } from "react-native";
+
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 import HelloText from "../components/HelloText";
 
 export default function RegisterScreen({ navigation }) {
-   const [showPassword, setShowPassword] = useState(false);
-// state promenlivi
-   const [username, setUsername] = useState("");
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
+  const { width, height } = useWindowDimensions();
 
-   const handleRegister = async () => { //izprashtame kum backend
-    if (!username || !email || !password) { //validirame dali vs e ppopulneno
-      Alert.alert("Error", "Please fill in all fields.");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // ==================================================
+  // FORM STATES
+  // ==================================================
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // ==================================================
+  // RESPONSIVE SCALE
+  // ==================================================
+
+  const BASE_WIDTH = 390;
+  const BASE_HEIGHT = 844;
+
+  const scale = Math.min(
+    width / BASE_WIDTH,
+    height / BASE_HEIGHT
+  );
+
+  const responsiveScale = Math.min(
+    scale,
+    1.10
+  );
+
+  const s = (value) => value * responsiveScale;
+
+  // ==================================================
+  // SCREEN SIZE
+  // ==================================================
+
+  const isVeryShort = height < 620;
+  const isShort = height < 700;
+
+  // ==================================================
+  // SIZES
+  // ==================================================
+
+  const titleSize = s(40);
+
+  const labelSize = s(20);
+
+  const inputFontSize = s(18);
+
+  const googleFontSize = s(20);
+
+  const inputHeight = s(52);
+
+  const iconSize = s(23);
+
+  // ==================================================
+  // TOP PADDING
+  // ==================================================
+
+  let topPadding;
+
+  if (isVeryShort) {
+    topPadding = height * 0.025;
+  } else if (isShort) {
+    topPadding = height * 0.055;
+  } else {
+    topPadding = height * 0.10;
+  }
+
+  // ==================================================
+  // SPACING
+  // ==================================================
+
+  const headerMargin = isVeryShort
+    ? s(5)
+    : isShort
+    ? s(12)
+    : s(20);
+
+  const titleMargin = isVeryShort
+    ? s(7)
+    : isShort
+    ? s(14)
+    : s(20);
+
+  const inputMargin = isVeryShort
+    ? s(9)
+    : isShort
+    ? s(14)
+    : s(19);
+
+  const orMargin = isVeryShort
+    ? s(5)
+    : isShort
+    ? s(8)
+    : s(12);
+
+  // ==================================================
+  // REGISTER
+  // ==================================================
+
+  const handleRegister = async () => {
+    if (!username || !email || !password) {
+      Alert.alert(
+        "Error",
+        "Please fill in all fields."
+      );
+
       return;
     }
+
     try {
+<<<<<<< Updated upstream
       const response = await fetch("http://192.168.0.194:5000/api/register", { // ip na kompa
         method: "POST",
         headers: {
@@ -36,134 +140,455 @@ export default function RegisterScreen({ navigation }) {
         },
         body: JSON.stringify({ username, email, password }),
       });
+=======
+      const response = await fetch(
+        "http://192.168.1.100:5000/register",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            username,
+            email,
+            password,
+          }),
+        }
+      );
+
+>>>>>>> Stashed changes
       const data = await response.json();
+
       if (response.ok) {
+<<<<<<< Updated upstream
         Alert.alert("Success", "Registration successful!");
         navigation.navigate("Home");
+=======
+        Alert.alert(
+          "Success",
+          "Registration successful!",
+          [
+            {
+              text: "OK",
+              onPress: () =>
+                navigation.navigate("Login"),
+            },
+          ]
+        );
+>>>>>>> Stashed changes
       } else {
-        Alert.alert("Error", data.message || "Registration failed.");
+        Alert.alert(
+          "Error",
+          data.message || "Registration failed."
+        );
       }
     } catch (error) {
-      Alert.alert("Error", "An error occurred. Please try again later.");
-      console.error("Registration error:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred. Please try again later."
+      );
+
+      console.error(
+        "Registration error:",
+        error
+      );
     }
   };
 
+  // ==================================================
+  // UI
+  // ==================================================
+
   return (
-    
     <ImageBackground
       source={require("../components/photos/background.png")}
       style={styles.background}
       resizeMode="cover"
     >
+
+      {/* DARK OVERLAY */}
+
       <View style={styles.overlay} />
 
-<KeyboardAvoidingView
-  style={styles.container}
-  behavior={Platform.OS === "ios" ? "padding" : "height"}
->
-  <ScrollView
-    contentContainerStyle={styles.scrollContent}
-    showsVerticalScrollIndicator={false}
-    keyboardShouldPersistTaps="handled"
-  >
-    <View style={styles.header}>
-      <HelloText animated={false} />
-    </View>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={
+          Platform.OS === "ios"
+            ? "padding"
+            : "height"
+        }
+      >
 
-    <Text style={styles.text}>Register</Text>
+        <View
+          style={[
+            styles.contentWrapper,
+            {
+              paddingTop: topPadding,
+              paddingHorizontal: width * 0.05,
+            },
+          ]}
+        >
 
-    <View style={styles.content}>
-        <Text style={styles.label}>Username</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Username"
-          placeholderTextColor="rgb(245, 241, 209, 0.6)"
-          value={username} //state
-          onChangeText={setUsername} 
-          autoCapitalize="none" // za vseki sluchai
-        />
+          {/* ==========================================
+              HEADER
+          ========================================== */}
 
-        <Text style={styles.label}>E-mail</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter E-mail"
-          placeholderTextColor="rgb(245, 241, 209, 0.6)"
-          keyboardType="email-address"
-          value ={email} //state
-          onChangeText={setEmail} 
-          autoCapitalize="none"
-        />
-
-        <Text style={styles.label}>Password</Text>
-
-        <View style={styles.passwordBox}>
-          <TextInput
-            style={styles.passwordInput}
-            placeholder="Enter Password"
-            placeholderTextColor="rgb(245, 241, 209, 0.6)"
-            secureTextEntry={!showPassword}
-            value={password} //state
-            onChangeText={setPassword} 
-            autoCapitalize="none"
-          />
-
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
+          <View
+            style={[
+              styles.header,
+              {
+                marginBottom: headerMargin,
+              },
+            ]}
           >
-            <Ionicons
-              name={showPassword ? "eye-outline" : "eye-off-outline"}
-              size={23}
-              color="#F5F1D1"
+            <HelloText animated={false} />
+          </View>
+
+
+          {/* ==========================================
+              REGISTER TITLE
+          ========================================== */}
+
+          <Text
+            style={[
+              styles.title,
+              {
+                fontSize: titleSize,
+                marginBottom: titleMargin,
+              },
+            ]}
+          >
+            Register
+          </Text>
+
+
+          {/* ==========================================
+              FORM
+          ========================================== */}
+
+          <View style={styles.content}>
+
+            {/* ========================================
+                USERNAME
+            ======================================== */}
+
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: labelSize,
+                  marginBottom: s(4),
+                },
+              ]}
+            >
+              Username
+            </Text>
+
+            <TextInput
+              style={[
+                styles.input,
+                {
+                  height: inputHeight,
+                  fontSize: inputFontSize,
+                  borderRadius: s(35),
+                  paddingHorizontal: width * 0.05,
+                  marginBottom: inputMargin,
+                },
+              ]}
+              placeholder="Enter Username"
+              placeholderTextColor="rgba(245, 241, 209, 0.6)"
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="none"
+              autoCorrect={false}
             />
-          </TouchableOpacity>
+
+
+            {/* ========================================
+                EMAIL
+            ======================================== */}
+
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: labelSize,
+                  marginBottom: s(4),
+                },
+              ]}
+            >
+              E-mail
+            </Text>
+
+            <TextInput
+              style={[
+                styles.input,
+                {
+                  height: inputHeight,
+                  fontSize: inputFontSize,
+                  borderRadius: s(35),
+                  paddingHorizontal: width * 0.05,
+                  marginBottom: inputMargin,
+                },
+              ]}
+              placeholder="Enter E-mail"
+              placeholderTextColor="rgba(245, 241, 209, 0.6)"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+
+            {/* ========================================
+                PASSWORD
+            ======================================== */}
+
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: labelSize,
+                  marginBottom: s(4),
+                },
+              ]}
+            >
+              Password
+            </Text>
+
+
+            <View
+              style={[
+                styles.passwordBox,
+                {
+                  height: inputHeight,
+                  borderRadius: s(35),
+                  paddingHorizontal: width * 0.05,
+                  marginBottom: s(3),
+                },
+              ]}
+            >
+
+              <TextInput
+                style={[
+                  styles.passwordInput,
+                  {
+                    fontSize: inputFontSize,
+                  },
+                ]}
+                placeholder="Enter Password"
+                placeholderTextColor="rgba(245, 241, 209, 0.6)"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+
+
+              {/* PASSWORD VISIBILITY */}
+
+              <TouchableOpacity
+                onPress={() =>
+                  setShowPassword(!showPassword)
+                }
+                hitSlop={{
+                  top: 10,
+                  bottom: 10,
+                  left: 10,
+                  right: 10,
+                }}
+              >
+
+                <Ionicons
+                  name={
+                    showPassword
+                      ? "eye-outline"
+                      : "eye-off-outline"
+                  }
+                  size={iconSize}
+                  color="#F5F1D1"
+                />
+
+              </TouchableOpacity>
+
+            </View>
+
+
+            {/* ========================================
+                FORGOT PASSWORD
+            ======================================== */}
+
+            <TouchableOpacity>
+
+              <Text
+                style={[
+                  styles.forgot,
+                  {
+                    fontSize: s(14),
+                    marginTop: s(1),
+                  },
+                ]}
+              >
+                Forgot password?
+              </Text>
+
+            </TouchableOpacity>
+
+
+            {/* ========================================
+                OR
+            ======================================== */}
+
+            <View
+              style={[
+                styles.or,
+                {
+                  marginVertical: orMargin,
+                },
+              ]}
+            >
+
+              <View
+                style={[
+                  styles.line,
+                  {
+                    height: s(2),
+                  },
+                ]}
+              />
+
+              <Text
+                style={[
+                  styles.orText,
+                  {
+                    fontSize: s(19),
+                    marginHorizontal: s(10),
+                  },
+                ]}
+              >
+                OR
+              </Text>
+
+              <View
+                style={[
+                  styles.line,
+                  {
+                    height: s(2),
+                  },
+                ]}
+              />
+
+            </View>
+
+
+            {/* ========================================
+                GOOGLE
+            ======================================== */}
+
+            <TouchableOpacity
+              style={[
+                styles.google,
+                {
+                  height: inputHeight,
+                  borderRadius: s(35),
+                },
+              ]}
+            >
+
+              <Text
+                style={[
+                  styles.googleText,
+                  {
+                    fontSize: googleFontSize,
+                  },
+                ]}
+              >
+                Continue with Google
+              </Text>
+
+              <FontAwesome
+                name="google"
+                size={iconSize}
+                color="#F5F1D1"
+              />
+
+            </TouchableOpacity>
+
+
+            {/* ========================================
+                LOGIN
+            ======================================== */}
+
+            <View
+              style={[
+                styles.login,
+                {
+                  marginTop: s(6),
+                },
+              ]}
+            >
+
+              <Text
+                style={[
+                  styles.smallText,
+                  {
+                    fontSize: s(15),
+                  },
+                ]}
+              >
+                Have an account?
+              </Text>
+
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Login")
+                }
+              >
+
+                <Text
+                  style={[
+                    styles.loginText,
+                    {
+                      fontSize: s(15),
+                    },
+                  ]}
+                >
+                  {" "}Login
+                </Text>
+
+              </TouchableOpacity>
+
+            </View>
+
+          </View>
+
         </View>
         
         <TouchableOpacity style={styles.google} onPress={handleRegister}>
           <Text style={styles.googleText}>Sign Up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Text style={styles.forgot}>Forgot password?</Text>
-        </TouchableOpacity>
+      </KeyboardAvoidingView>
 
-        <View style={styles.or}>
-          <View style={styles.line} />
-          <Text style={styles.orText}>OR</Text>
-          <View style={styles.line} />
-        </View>
-
-        <TouchableOpacity style={styles.google}>
-          <Text style={styles.googleText}>
-            Continue with Google
-          </Text>
-
-          <FontAwesome
-            name="google"
-            size={23}
-            color="#F5F1D1"
-          />
-        </TouchableOpacity>
-
-        <View style={styles.register}>
-          <Text style={styles.smallText}>
-            Have an account?
-          </Text>
-
-          <TouchableOpacity onPress= {() => navigation.navigate("Login")}>
-            <Text style={styles.registerText}> Login</Text>
-          </TouchableOpacity>
-        </View>
-
-       </View>
-  </ScrollView>
-</KeyboardAvoidingView>
-      
     </ImageBackground>
   );
 }
 
+
+// ==================================================
+// STYLES
+// ==================================================
+
 const styles = StyleSheet.create({
+
+  // -----------------------------------------------
+  // BACKGROUND
+  // -----------------------------------------------
+
   background: {
     flex: 1,
   },
@@ -173,125 +598,172 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
 
- container: {
-  flex: 1,
-},
 
-scrollContent: {
-  flexGrow: 1,
-  paddingHorizontal: "5%",
-  paddingTop: "25%",
-  paddingBottom: 30,
-},
+  // -----------------------------------------------
+  // CONTAINER
+  // -----------------------------------------------
 
-header: {
-  marginBottom: 40,
-},
+  container: {
+    flex: 1,
+  },
 
-text: {
-  textAlign: "center",
-  fontSize: 40,
-  fontWeight: "500",
-  color: "#CF928A",
-  marginBottom: 35,
-},
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+  },
 
-content: {
-  width: "100%",
-},
+
+  // -----------------------------------------------
+  // HEADER
+  // -----------------------------------------------
+
+  header: {
+    alignItems: "flex-start",
+  },
+
+
+  // -----------------------------------------------
+  // TITLE
+  // -----------------------------------------------
+
+  title: {
+    textAlign: "center",
+    fontWeight: "500",
+    color: "#CF928A",
+  },
+
+
+  // -----------------------------------------------
+  // FORM
+  // -----------------------------------------------
+
+  content: {
+    width: "100%",
+  },
+
+
+  // -----------------------------------------------
+  // LABEL
+  // -----------------------------------------------
 
   label: {
     color: "#F5F1D1",
-    fontSize: 20,
-    marginBottom: 5,
   },
+
+
+  // -----------------------------------------------
+  // INPUT
+  // -----------------------------------------------
 
   input: {
-    height: 52,
+    width: "100%",
+
     borderWidth: 3,
     borderColor: "#CF928A",
-    borderRadius: 35,
-    backgroundColor: "rgba(207,146,138,0.3)",
-    paddingHorizontal: "5%",
+
+    backgroundColor:
+      "rgba(207,146,138,0.3)",
+
     color: "#F5F1D1",
-    fontSize: 18,
-    marginBottom: 25,
   },
 
+
+  // -----------------------------------------------
+  // PASSWORD
+  // -----------------------------------------------
+
   passwordBox: {
-    height: 52,
+    width: "100%",
+
     borderWidth: 3,
     borderColor: "#CF928A",
-    borderRadius: 35,
-    backgroundColor: "rgba(207,146,138,0.3)",
+
+    backgroundColor:
+      "rgba(207,146,138,0.3)",
+
     flexDirection: "row",
+
     alignItems: "center",
-    paddingHorizontal: "5%",
-    marginBottom: 5,
   },
 
   passwordInput: {
     flex: 1,
     color: "#F5F1D1",
-    fontSize: 18,
   },
+
+
+  // -----------------------------------------------
+  // FORGOT
+  // -----------------------------------------------
 
   forgot: {
     color: "#F5F1D1",
-    fontSize: 14,
-    marginTop: 2,
   },
+
+
+  // -----------------------------------------------
+  // OR
+  // -----------------------------------------------
 
   or: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 14,
   },
 
   line: {
     flex: 1,
-    height: 2,
     backgroundColor: "#c99591",
   },
 
   orText: {
     color: "#c99591",
-    fontSize: 20,
-    marginHorizontal: 12,
-    fontStyle: "italic"
+    fontStyle: "italic",
   },
 
+
+  // -----------------------------------------------
+  // GOOGLE
+  // -----------------------------------------------
+
   google: {
-    height: 52,
+    width: "100%",
+
     borderWidth: 3,
     borderColor: "#c99591",
-    borderRadius: 35,
-    backgroundColor: "rgba(207,146,138,0.3)",
+
+    backgroundColor:
+      "rgba(207,146,138,0.3)",
+
     flexDirection: "row",
+
     justifyContent: "center",
     alignItems: "center",
+
     gap: 8,
   },
 
   googleText: {
     color: "#fffde8",
-    fontSize: 20,
   },
 
-  register: {
+
+  // -----------------------------------------------
+  // LOGIN
+  // -----------------------------------------------
+
+  login: {
     flexDirection: "row",
-    marginTop: 7,
   },
 
   smallText: {
     color: "#fffde8",
-    fontSize: 15,
   },
 
-  registerText: {
+  loginText: {
     color: "#fffde8",
-    fontSize: 15,
     fontWeight: "600",
   },
-});
 
+
+
+});
