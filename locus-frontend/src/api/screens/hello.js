@@ -36,76 +36,61 @@ export default function HelloScreen() {
   const [isNavigating, setIsNavigating] = React.useState(false);
 
   const handleGoToLogin = () => {
-    if (isNavigating) return;
+  if (isNavigating) return;
 
-    setIsNavigating(true);
+  setIsNavigating(true);
 
-<<<<<<< Updated upstream
-   
+  Animated.parallel([
+    Animated.timing(screenOpacity, {
+      toValue: 0,
+      duration: 550,
+      useNativeDriver: true,
+    }),
+
+    Animated.timing(screenScale, {
+      toValue: 1.04,
+      duration: 550,
+      useNativeDriver: true,
+    }),
+
     Animated.timing(buttonY, {
-      toValue: -90,
+      toValue: -s(90),
       duration: 450,
       useNativeDriver: true,
     }),
   ]).start(({ finished }) => {
     if (finished) {
-      navigation.navigate("Register");
+      navigation.navigate("Home");
     }
   });
 };
-=======
-    Animated.parallel([
-      Animated.timing(screenOpacity, {
-        toValue: 0,
-        duration: 550,
-        useNativeDriver: true,
-      }),
->>>>>>> Stashed changes
 
-      Animated.timing(screenScale, {
-        toValue: 1.04,
-        duration: 550,
-        useNativeDriver: true,
-      }),
+const pan = useRef(
+  PanResponder.create({
+    onStartShouldSetPanResponder: () => !isNavigating,
 
-      Animated.timing(buttonY, {
-        toValue: -s(90),
-        duration: 450,
-        useNativeDriver: true,
-      }),
-    ]).start(({ finished }) => {
-      if (finished) {
-        navigation.navigate("Home");
+    onPanResponderMove: (evt, gestureState) => {
+      const y = gestureState.dy;
+
+      if (y < 0 && y > -s(90)) {
+        buttonY.setValue(y);
       }
-    });
-  };
+    },
 
-  const pan = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => !isNavigating,
-
-      onPanResponderMove: (evt, gestureState) => {
-        const y = gestureState.dy;
-
-        if (y < 0 && y > -s(90)) {
-          buttonY.setValue(y);
-        }
-      },
-
-      onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.dy < -s(80)) {
-          handleGoToLogin();
-        } else {
-          Animated.spring(buttonY, {
-            toValue: 0,
-            useNativeDriver: true,
-            friction: 7,
-            tension: 45,
-          }).start();
-        }
-      },
-    })
-  ).current;
+    onPanResponderRelease: (evt, gestureState) => {
+      if (gestureState.dy < -s(80)) {
+        handleGoToLogin();
+      } else {
+        Animated.spring(buttonY, {
+          toValue: 0,
+          useNativeDriver: true,
+          friction: 7,
+          tension: 45,
+        }).start();
+      }
+    },
+  })
+).current;
 
   return (
     <Animated.View
@@ -205,7 +190,7 @@ export default function HelloScreen() {
       </LinearGradient>
     </Animated.View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

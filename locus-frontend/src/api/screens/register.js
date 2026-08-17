@@ -6,11 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-<<<<<<< Updated upstream
   Alert, //za greshki izvestqvane (posle shte mahna komentarite, prosto sum bavna i zabravqm)
-=======
-  Alert,
->>>>>>> Stashed changes
   KeyboardAvoidingView,
   Platform,
   useWindowDimensions,
@@ -71,7 +67,7 @@ export default function RegisterScreen({ navigation }) {
 
   const googleFontSize = s(20);
 
-  const inputHeight = s(52);
+  const inputHeight = s(45);
 
   const iconSize = s(23);
 
@@ -112,10 +108,10 @@ export default function RegisterScreen({ navigation }) {
     : s(19);
 
   const orMargin = isVeryShort
-    ? s(5)
-    : isShort
     ? s(8)
-    : s(12);
+    : isShort
+    ? s(11)
+    : s(15);
 
   // ==================================================
   // REGISTER
@@ -132,7 +128,7 @@ export default function RegisterScreen({ navigation }) {
     }
 
     try {
-<<<<<<< Updated upstream
+
       const response = await fetch("http://192.168.0.194:5000/api/register", { // ip na kompa
         method: "POST",
         headers: {
@@ -140,32 +136,15 @@ export default function RegisterScreen({ navigation }) {
         },
         body: JSON.stringify({ username, email, password }),
       });
-=======
-      const response = await fetch(
-        "http://192.168.1.100:5000/register",
-        {
-          method: "POST",
 
-          headers: {
-            "Content-Type": "application/json",
-          },
 
-          body: JSON.stringify({
-            username,
-            email,
-            password,
-          }),
-        }
-      );
-
->>>>>>> Stashed changes
       const data = await response.json();
 
       if (response.ok) {
-<<<<<<< Updated upstream
+
         Alert.alert("Success", "Registration successful!");
         navigation.navigate("Home");
-=======
+
         Alert.alert(
           "Success",
           "Registration successful!",
@@ -177,7 +156,7 @@ export default function RegisterScreen({ navigation }) {
             },
           ]
         );
->>>>>>> Stashed changes
+
       } else {
         Alert.alert(
           "Error",
@@ -437,7 +416,33 @@ export default function RegisterScreen({ navigation }) {
               </Text>
 
             </TouchableOpacity>
+{/* ========================================
+    SIGN UP
+======================================== */}
 
+<TouchableOpacity
+  style={[
+  styles.google,
+  {
+    height: inputHeight,
+    borderRadius: s(35),
+    marginTop: s(22),
+    marginBottom: orMargin,
+  },
+]}
+  onPress={handleRegister}
+>
+  <Text
+    style={[
+      styles.googleText,
+      {
+        fontSize: googleFontSize,
+      },
+    ]}
+  >
+    Sign Up
+  </Text>
+</TouchableOpacity>
 
             {/* ========================================
                 OR
@@ -567,10 +572,7 @@ export default function RegisterScreen({ navigation }) {
           </View>
 
         </View>
-        
-        <TouchableOpacity style={styles.google} onPress={handleRegister}>
-          <Text style={styles.googleText}>Sign Up</Text>
-        </TouchableOpacity>
+      
 
       </KeyboardAvoidingView>
 

@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "@expo/metro-runtime": "~6.1.2",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "expres": "^0.0.5"
+    "expres": "^0.0.5",
+    "react-dom": "19.1.0",
+    "react-native-web": "^0.21.0"
   }
 }

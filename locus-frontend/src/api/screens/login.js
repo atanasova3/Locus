@@ -23,12 +23,11 @@ export default function LoginScreen({ navigation }) {
 
   const [showPassword, setShowPassword] = useState(false);
 
-<<<<<<< Updated upstream
+
   // Responsive 
   const isSmallScreen = width < 380;
   const isShortScreen = height < 700;
-=======
->>>>>>> Stashed changes
+
 
   const BASE_WIDTH = 390;
   const BASE_HEIGHT = 844;
@@ -59,7 +58,7 @@ export default function LoginScreen({ navigation }) {
   const googleFontSize = s(20);
 
 
-  const inputHeight = s(52);
+  const inputHeight = s(45);
 
   const iconSize = s(23);
 
@@ -93,10 +92,10 @@ export default function LoginScreen({ navigation }) {
     : s(19);
 
   const orMargin = isVeryShort
-    ? s(5)
-    : isShort
     ? s(8)
-    : s(12);
+    : isShort
+    ? s(11)
+    : s(15);
 
 
   return (
@@ -329,40 +328,35 @@ export default function LoginScreen({ navigation }) {
               </Text>
 
             </TouchableOpacity>
+        
 
-<<<<<<< Updated upstream
-            <TouchableOpacity
-  style={[
+  <TouchableOpacity
+    style={[
     styles.google,
     {
       height: inputHeight,
-      marginTop: 15,
-      backgroundColor: "rgba(207,146,138,0.6)", 
+      borderRadius: s(35),
+      marginTop: s(22),
+      marginBottom: orMargin,
     },
   ]}
-  onPress={() => navigation.navigate("register")} 
->
-  <Text
-    style={[
-      styles.googleText,
-      {
-        fontSize: googleFontSize,
-      },
-    ]}
   >
-    Sign Up
-  </Text>
-  
-</TouchableOpacity>
-
-            {/* OR */}
-=======
-
+    <Text
+      style={[
+        styles.googleText,
+        {
+          fontSize: googleFontSize,
+        },
+      ]}
+    >
+      Log In
+    </Text>
+  </TouchableOpacity>
             {/* ========================================
                 OR
             ======================================== */}
 
->>>>>>> Stashed changes
+
             <View
               style={[
                 styles.or,
