@@ -18,7 +18,101 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
-  const cardRadius = width * 0.08;
+
+  // ==================================================
+  // RESPONSIVE
+  // ==================================================
+
+  const BASE_WIDTH = 390;
+  const BASE_HEIGHT = 844;
+
+  const scale = Math.min(
+    width / BASE_WIDTH,
+    height / BASE_HEIGHT
+  );
+
+  const responsiveScale = Math.min(scale, 1.10);
+
+  const s = (value) => value * responsiveScale;
+
+  // Small / short screens
+  const isVeryShort = height < 620;
+  const isShort = height < 700;
+  const isSmallScreen = width < 380;
+
+  // ==================================================
+  // RESPONSIVE SIZES
+  // ==================================================
+
+  const cardRadius = s(30);
+
+  const lokiSize = s(120);
+
+  const speechWidth = s(160);
+  const speechMinHeight = s(72);
+
+  const profileSize = s(42);
+  const profileIconSize = s(25);
+
+  const currentTripHeight = s(125);
+
+  const currentTripTitleSize = s(25);
+  const currentTripDateSize = s(15);
+  const peopleIconSize = s(20);
+  const peopleTextSize = s(12);
+
+  const myTripsSize = s(35);
+  const addTripTextSize = s(29);
+
+  const addCardWidth = s(207);
+  const addCardHeight = s(250);
+
+  const addCardTitleSize = s(25);
+  const addCardDescriptionSize = s(12);
+
+  // ==================================================
+  // RESPONSIVE SPACING
+  // ==================================================
+
+  let topPadding;
+
+  if (isVeryShort) {
+    topPadding = s(3);
+  } else if (isShort) {
+    topPadding = s(7);
+  } else {
+    topPadding = s(10);
+  }
+
+  const headerMarginBottom = isVeryShort
+    ? s(8)
+    : isShort
+    ? s(12)
+    : s(18);
+
+  const tripMarginTop = isVeryShort
+    ? s(5)
+    : isShort
+    ? s(8)
+    : s(10);
+
+  const myTripsMarginTop = isVeryShort
+    ? s(20)
+    : isShort
+    ? s(28)
+    : s(38);
+
+  const addTripMarginTop = isVeryShort
+    ? s(8)
+    : isShort
+    ? s(12)
+    : s(18);
+
+  const cardMarginTop = isVeryShort
+    ? s(12)
+    : isShort
+    ? s(18)
+    : s(22);
 
   return (
     <ImageBackground
@@ -26,203 +120,370 @@ export default function HomeScreen() {
       style={styles.background}
       resizeMode="cover"
     >
-      {/* BLUR */}
+      {/* ==================================================
+          BLUR
+      ================================================== */}
+
       <BlurView
         intensity={40}
         tint="dark"
         style={styles.blur}
       />
 
-      {/* DARK OVERLAY */}
+      {/* ==================================================
+          DARK OVERLAY
+      ================================================== */}
+
       <View style={styles.overlay} />
 
-      {/* CONTENT */}
-      <SafeAreaView style={styles.safeArea}>
+      {/* ==================================================
+          CONTENT
+      ================================================== */}
 
-          {/* MENU */}
+      <SafeAreaView style={styles.safeArea}>
+          {/* ==================================================
+              MENU
+          ================================================== */}
+
           <Menu />
 
-          {/* ================= HEADER ================= */}
-          <View style={styles.header}>
+         {/* ==================================================
+    HEADER
+================================================== */}
 
-            {/* LOKI */}
-            <View style={styles.lokiContainer}>
-              <Image
-                source={require("../components/photos/botche 1.png")}
-                style={[
-                  styles.loki,
-                  {
-                    width: width * 0.28,
-                    height: width * 0.28,
-                  },
-                ]}
-                resizeMode="contain"
-              />
-            </View>
+<View style={styles.header}>
 
-            {/* SPEECH BUBBLE */}
-            <View
-              style={[
-                styles.speechBubble,
-                {
-                  width: width * 0.36,
-                  minHeight: width * 0.17,
-                },
-              ]}
-            >
-              <Text style={styles.speechTitle}>
-                Hi, I'm Loki!
-              </Text>
+  {/* ==================================================
+      GRADIENT BEHIND HERO / SPEECH BUBBLE
+  ================================================== */}
 
-              <Text style={styles.speechText}>
-                Where are we taking{"\n"}
-                you today?
-              </Text>
-            </View>
+  <LinearGradient
+    colors={[
+      "rgba(207, 146, 138, 0)",
+      "rgba(207, 146, 138, 0.36)",
+      "rgba(207, 146, 138, 0.7)",
+    ]}
+    start={{ x: 0, y: 0.5 }}
+    end={{ x: 1, y: 0.5 }}
+    style={[
+      styles.heroGradient,
+      {
+        height: s(80),
+        width: s(306),
+        borderRadius: s(28),
+        zIndex: 0,
+        top: s(12)
+      },
+    ]}
+  />
 
-            {/* PROFILE */}
-            <TouchableOpacity style={styles.profileButton}>
-              <Ionicons
-                name="person-outline"
-                size={width * 0.065}
-                color="#F7F1D2"
-              />
-            </TouchableOpacity>
+  {/* ==================================================
+      HEADER CONTENT
+  ================================================== */}
 
-          </View>
+  <View
+    style={[
+      styles.heroContent,
+      {
+        minHeight: s(80),
+        zIndex: 1,
+      },
+    ]}
+  >
 
-          {/* ================= CURRENT TRIP ================= */}
-          
-          <LinearGradient
-  colors={[
-    "#405D38",
-    "#899A5C",
-    "#405D38",
-  ]}
-  start={{
-    x: 0,
-    y: 0.5,
-  }}
-  end={{
-    x: 1,
-    y: 0.5,
-  }}
-  style={[
-    styles.currentTrip,
-    {
-      borderRadius: cardRadius,
-      minHeight: width * 0.30,
-    },
-  ]}
->
+    {/* ==================================================
+        LOKI
+    ================================================== */}
 
-  <View style={styles.tripTextContainer}>
-
-    <Text
-      style={[
-        styles.currentTripTitle,
-        {
-          fontSize: width * 0.065,
-        },
-      ]}
-    >
-      No current trip
-    </Text>
-
-    <Text
-      style={[
-        styles.currentTripDate,
-        {
-          fontSize: width * 0.038,
-        },
-      ]}
-    >
-      No added date
-    </Text>
-
-    <View style={styles.peopleRow}>
-
-      <Ionicons
-        name="people-outline"
-        size={width * 0.05}
-        color="#F7F1D2"
+    <View style={styles.lokiContainer}>
+      <Image
+        source={require("../components/photos/botche 1.png")}
+        style={{
+          width: lokiSize,
+          height: lokiSize,
+          marginBottom: -s(16),
+          transform: [{ translateX: s(22) }],
+        }}
+        resizeMode="contain"
       />
+    </View>
 
-      <Text style={styles.peopleText}>
-        No added people
+
+    {/* ==================================================
+        SPEECH BUBBLE
+    ================================================== */}
+
+    <View
+      style={[
+        styles.speechBubble,
+        {
+          width: speechWidth,
+          minHeight: speechMinHeight,
+          height: s(80),
+          borderRadius: s(28),
+          paddingHorizontal: s(12),
+          paddingVertical: s(10),
+          marginLeft: s(20),
+          zIndex: 2,
+        },
+      ]}
+    >
+
+      <Text
+        style={[
+          styles.speechTitle,
+          {
+            fontSize: s(14),
+            marginBottom: s(4),
+          },
+        ]}
+      >
+        Hi, I'm Loki!
+      </Text>
+
+      <Text
+        style={[
+          styles.speechText,
+          {
+            fontSize: s(13),
+            lineHeight: s(16),
+          },
+        ]}
+      >
+        Where are we taking{"\n"}
+        you today?
       </Text>
 
     </View>
 
+
+    {/* ==================================================
+        PROFILE
+    ================================================== */}
+
+    <TouchableOpacity
+      style={[
+        styles.profileButton,
+        {
+          width: profileSize,
+          height: profileSize,
+          borderRadius: profileSize / 2,
+          borderWidth: s(2),
+          marginLeft: s(5),
+          zIndex: 2,
+        },
+      ]}
+    >
+      <Ionicons
+        name="person-outline"
+        size={profileIconSize}
+        color="#F5F1D1"
+      />
+    </TouchableOpacity>
+
   </View>
 
-  {/* EDIT */}
-  <TouchableOpacity style={styles.editButton}>
-    <Ionicons
-      name="create-outline"
-      size={width * 0.05}
-      color="#D89791"
-    />
-  </TouchableOpacity>
 
-  {/* NEXT */}
-  <TouchableOpacity style={styles.nextButton}>
+  {/* ==================================================
+      CURRENT TRIP
+  ================================================== */}
 
-    <Ionicons
-      name="chevron-forward"
-      size={width * 0.06}
-      color="#D89791"
-    />
+  <LinearGradient
+    colors={[
+      "#405D38",
+      "#899A5C",
+      "#405D38",
+    ]}
+    start={{ x: 0, y: 0.5 }}
+    end={{ x: 1, y: 0.5 }}
+    style={[
+      styles.currentTrip,
+      {
+        borderRadius: cardRadius,
+        minHeight: currentTripHeight,
+        marginTop: 0,
+        padding: s(16),
+        borderWidth: s(4),
+      },
+    ]}
+  >
 
-    <Ionicons
-      name="chevron-forward"
-      size={width * 0.06}
-      color="#D89791"
-      style={{ marginLeft: -10 }}
-    />
+    <View style={styles.tripTextContainer}>
 
-  </TouchableOpacity>
+      <Text
+        style={[
+          styles.currentTripTitle,
+          {
+            fontSize: currentTripTitleSize,
+          },
+        ]}
+      >
+        No current trip
+      </Text>
 
-</LinearGradient>
+      <Text
+        style={[
+          styles.currentTripDate,
+          {
+            fontSize: currentTripDateSize,
+            marginTop: s(1),
+          },
+        ]}
+      >
+        No added date
+      </Text>
 
-         
+      <View
+        style={[
+          styles.peopleRow,
+          {
+            marginTop: s(10),
+          },
+        ]}
+      >
 
-          {/* ================= MY TRIPS ================= */}
+        <Ionicons
+          name="people-outline"
+          size={peopleIconSize}
+          color="#F5F1D1"
+        />
+
+        <Text
+          style={[
+            styles.peopleText,
+            {
+              fontSize: peopleTextSize,
+              marginLeft: s(5),
+            },
+          ]}
+        >
+          No added people
+        </Text>
+
+      </View>
+
+    </View>
+
+
+    {/* ==================================================
+        EDIT
+    ================================================== */}
+
+    <TouchableOpacity
+      style={[
+        styles.editButton,
+        {
+          top: s(18),
+          right: s(17),
+        },
+      ]}
+    >
+      <Ionicons
+        name="create-outline"
+        size={s(20)}
+        color="#CF928A"
+      />
+    </TouchableOpacity>
+
+
+    {/* ==================================================
+        NEXT
+    ================================================== */}
+
+    <TouchableOpacity
+      style={[
+        styles.nextButton,
+        {
+          right: s(14),
+          bottom: s(17),
+          width: s(34),
+          height: s(34),
+          borderRadius: s(18),
+          paddingLeft: s(2),
+        },
+      ]}
+    >
+      <Ionicons
+        name="chevron-forward"
+        size={s(22)}
+        color="#405D38"
+      />
+
+      <Ionicons
+        name="chevron-forward"
+        size={s(22)}
+        color="rgba(64, 93, 56, 0.6)"
+        style={{
+          marginLeft: -s(12),
+        }}
+      />
+    </TouchableOpacity>
+
+  </LinearGradient>
+
+</View>
+
+          {/* ==================================================
+              MY TRIPS
+          ================================================== */}
 
           <Text
             style={[
               styles.myTrips,
               {
-                fontSize: width * 0.09,
-                marginTop: height * 0.045,
+                fontSize: myTripsSize,
+                marginTop: myTripsMarginTop,
               },
             ]}
           >
             My trips
           </Text>
-<TouchableOpacity>
-          <Text
-            style={[
-              styles.addTripText,
-              {
-                fontSize: width * 0.075,
-              },
-            ]}
-          >
-            Add trip +
-          </Text>
-</TouchableOpacity>
-          {/* ================= ADD TRIP CARD ================= */}
+
+         {/* ==================================================
+    ADD TRIP
+================================================== */}
+
+<View style={{ marginTop: addTripMarginTop }}>
+
+  <View
+    style={{
+      width: s(45),
+      height: s(7),
+      backgroundColor: "#F7F1D2",
+      borderRadius: s(6),
+      marginBottom: s(5),
+    }}
+  />
+
+  <TouchableOpacity>
+    <Text
+      style={[
+        styles.addTripText,
+        {
+          fontSize: addTripTextSize,
+        },
+      ]}
+    >
+      Add trip +
+    </Text>
+  </TouchableOpacity>
+
+</View>
+
+          {/* ==================================================
+              ADD TRIP CARD
+          ================================================== */}
 
           <TouchableOpacity
             activeOpacity={0.85}
             style={[
               styles.addTripCard,
               {
-                width: width * 0.53,
-                height: width * 0.60,
+                width: addCardWidth,
+                height: addCardHeight,
                 borderRadius: cardRadius,
-                marginTop: height * 0.025,
+                marginTop: cardMarginTop,
+                borderWidth: s(4),
               },
             ]}
           >
@@ -231,7 +492,8 @@ export default function HomeScreen() {
               style={[
                 styles.addTripTitle,
                 {
-                  fontSize: width * 0.065,
+                  fontSize: addCardTitleSize,
+                  marginBottom: s(12),
                 },
               ]}
             >
@@ -242,8 +504,9 @@ export default function HomeScreen() {
               style={[
                 styles.addTripDescription,
                 {
-                  fontSize: width * 0.032,
-                  paddingHorizontal: width * 0.06,
+                  fontSize: addCardDescriptionSize,
+                  lineHeight: s(15),
+                  paddingHorizontal: s(23),
                 },
               ]}
             >
@@ -257,24 +520,27 @@ export default function HomeScreen() {
 
           </TouchableOpacity>
 
-      
+       
       </SafeAreaView>
-
     </ImageBackground>
   );
 }
 
 
+
+// ==================================================
+// STYLES
+// ==================================================
+
 const styles = StyleSheet.create({
+
+  // ==================================================
+  // BACKGROUND
+  // ==================================================
+
   background: {
     flex: 1,
   },
-
-  safeArea: {
-    flex: 1,
-    marginHorizontal: "5%",
-  },
-
 
   blur: {
     ...StyleSheet.absoluteFillObject,
@@ -285,62 +551,85 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
 
-  /* ================= HEADER ================= */
+  // ==================================================
+  // SAFE AREA
+  // ==================================================
 
-  header: {
+  safeArea: {
+    flex: 1,
+    marginHorizontal: "5%",
+  },
+
+  // ==================================================
+  // HEADER
+  // ==================================================
+
+   header: {
+    width: "100%",
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  heroGradient: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+  },
+
+  heroContent: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 10,
   },
 
   lokiContainer: {
     justifyContent: "center",
     alignItems: "center",
+    flex: 0,
   },
 
   speechBubble: {
-    backgroundColor: "rgba(190, 135, 128, 0.90)",
-    borderRadius: 18,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: "rgba(207, 146, 138, 0.92)",
     justifyContent: "center",
-    marginLeft: -5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 4,
   },
 
   speechTitle: {
-    color: "#F7F1D2",
-    fontSize: 13,
+    color: "#F5F1D1",
     fontStyle: "italic",
-    marginBottom: 4,
+    fontWeight: "500",
   },
 
   speechText: {
-    color: "#F7F1D2",
-    fontSize: 12,
+    color: "#F5F1D1",
     fontStyle: "italic",
-    lineHeight: 15,
+    fontWeight: "500",
   },
 
   profileButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    borderWidth: 2,
-    borderColor: "#F7F1D2",
     alignItems: "center",
     justifyContent: "center",
+    borderColor: "#F5F1D1",
+    backgroundColor: "rgba(245, 241, 209, 0.05)",
   },
 
-  /* ================= CURRENT TRIP ================= */
+  // ==================================================
+  // CURRENT TRIP
+  // ==================================================
 
   currentTrip: {
     width: "100%",
-    padding: 16,
     position: "relative",
-    borderWidth: 4,
     borderColor: "#405D38",
+    marginTop: 0,
   },
 
   tripTextContainer: {
@@ -348,80 +637,70 @@ const styles = StyleSheet.create({
   },
 
   currentTripTitle: {
-    color: "#F7F1D2",
+    color: "#F5F1D1",
     fontWeight: "500",
   },
 
   currentTripDate: {
-    color: "#D99A91",
-    marginTop: 1,
+    color: "rgba(207, 146, 138, 0.75)",
   },
 
   peopleRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
   },
 
   peopleText: {
-    color: "#F7F1D2",
-    fontSize: 12,
-    marginLeft: 5,
+    color: "#F5F1D1",
   },
 
   editButton: {
     position: "absolute",
-    top: 18,
-    right: 17,
   },
 
   nextButton: {
     position: "absolute",
-    right: 14,
-    bottom: 17,
-    width: 34,
-    height: 34,
-    borderRadius: 18,
-    backgroundColor: "#D89791",
+    backgroundColor: "#CF928A",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
 
-  /* ================= MY TRIPS ================= */
+  // ==================================================
+  // MY TRIPS
+  // ==================================================
 
   myTrips: {
-    color: "#D89791",
+    color: "#CF928A",
     fontWeight: "600",
   },
 
   addTripText: {
-    color: "#F7F1D2",
+    color: "#F5F1D1",
     fontStyle: "italic",
-    marginTop: 18,
   },
 
-  /* ================= ADD TRIP ================= */
+  // ==================================================
+  // ADD TRIP CARD
+  // ==================================================
 
   addTripCard: {
-    backgroundColor: "rgba(180, 130, 123, 0.82)",
-    borderWidth: 4,
-    borderColor: "#D99A91",
+    backgroundColor: "rgba(207, 146, 138, 0.65)",
+    borderColor: "#CF928A",
     alignItems: "center",
     justifyContent: "center",
   },
 
   addTripTitle: {
-    color: "#F7F1D2",
+    color: "#F5F1D1",
     fontStyle: "italic",
     fontWeight: "500",
-    marginBottom: 12,
   },
 
   addTripDescription: {
-    color: "#F7F1D2",
+    color: "#F5F1D1",
     textAlign: "center",
     fontStyle: "italic",
-    lineHeight: 15,
   },
+
 });
