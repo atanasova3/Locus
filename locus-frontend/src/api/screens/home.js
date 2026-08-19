@@ -15,6 +15,7 @@ import { BlurView } from "expo-blur";
 import Menu from "../components/menu";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import AddTripCard from "../components/addTripCard";
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
@@ -470,55 +471,7 @@ export default function HomeScreen() {
 
 </View>
 
-          {/* ==================================================
-              ADD TRIP CARD
-          ================================================== */}
-
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={[
-              styles.addTripCard,
-              {
-                width: addCardWidth,
-                height: addCardHeight,
-                borderRadius: cardRadius,
-                marginTop: cardMarginTop,
-                borderWidth: s(4),
-              },
-            ]}
-          >
-
-            <Text
-              style={[
-                styles.addTripTitle,
-                {
-                  fontSize: addCardTitleSize,
-                  marginBottom: s(12),
-                },
-              ]}
-            >
-              Add trip +
-            </Text>
-
-            <Text
-              style={[
-                styles.addTripDescription,
-                {
-                  fontSize: addCardDescriptionSize,
-                  lineHeight: s(15),
-                  paddingHorizontal: s(23),
-                },
-              ]}
-            >
-              Plan your dream trip, your{"\n"}
-              way. Get a custom hourly{"\n"}
-              itinerary, local gems, and{"\n"}
-              real-time AI guidance{"\n"}
-              tailored to your interests{"\n"}
-              and budget.
-            </Text>
-
-          </TouchableOpacity>
+  <AddTripCard />
 
        
       </SafeAreaView>
@@ -677,29 +630,6 @@ const styles = StyleSheet.create({
 
   addTripText: {
     color: "#F5F1D1",
-    fontStyle: "italic",
-  },
-
-  // ==================================================
-  // ADD TRIP CARD
-  // ==================================================
-
-  addTripCard: {
-    backgroundColor: "rgba(207, 146, 138, 0.65)",
-    borderColor: "#CF928A",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  addTripTitle: {
-    color: "#F5F1D1",
-    fontStyle: "italic",
-    fontWeight: "500",
-  },
-
-  addTripDescription: {
-    color: "#F5F1D1",
-    textAlign: "center",
     fontStyle: "italic",
   },
 
