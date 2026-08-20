@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   useWindowDimensions,
@@ -22,6 +23,8 @@ export default function LoginScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
 
   // Responsive 
@@ -96,6 +99,45 @@ export default function LoginScreen({ navigation }) {
     : isShort
     ? s(11)
     : s(15);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please fill in email and password.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://192.168.0.194:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        });
+
+        return;
+      }
+
+      const errorMessage = data.error || data.message || "Login failed.";
+
+      Alert.alert("Error", errorMessage);
+    } catch (error) {
+      Alert.alert(
+        "Error",
+        "An error occurred. Please try again later."
+      );
+
+      console.error("Login error:", error);
+    }
+  };
 
 
   return (
@@ -231,6 +273,8 @@ export default function LoginScreen({ navigation }) {
               placeholder="Enter E-mail"
               placeholderTextColor="rgba(245, 241, 209, 0.6)"
               keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
               autoCapitalize="none"
               autoCorrect={false}
             />
@@ -275,6 +319,8 @@ export default function LoginScreen({ navigation }) {
                 placeholder="Enter Password"
                 placeholderTextColor="rgba(245, 241, 209, 0.6)"
                 secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
                 autoCapitalize="none"
                 autoCorrect={false}
               />
@@ -340,6 +386,7 @@ export default function LoginScreen({ navigation }) {
       marginBottom: orMargin,
     },
   ]}
+  onPress={handleLogin}
   >
     <Text
       style={[

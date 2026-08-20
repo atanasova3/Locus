@@ -141,26 +141,19 @@ export default function RegisterScreen({ navigation }) {
       const data = await response.json();
 
       if (response.ok) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        });
 
-        Alert.alert("Success", "Registration successful!");
-        navigation.navigate("Home");
-
-        Alert.alert(
-          "Success",
-          "Registration successful!",
-          [
-            {
-              text: "OK",
-              onPress: () =>
-                navigation.navigate("Login"),
-            },
-          ]
-        );
+        return;
 
       } else {
+        const errorMessage = data.error || data.message || "Registration failed.";
+
         Alert.alert(
           "Error",
-          data.message || "Registration failed."
+          errorMessage
         );
       }
     } catch (error) {
