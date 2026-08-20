@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
 import HelloText from "../components/HelloText";
 
 export default function HelloScreen() {
@@ -18,228 +19,522 @@ export default function HelloScreen() {
 
   const { width, height } = useWindowDimensions();
 
-  // Base design: iPhone 14 / 15-ish size
-  const BASE_WIDTH = 390;
-  const BASE_HEIGHT = 844;
+  // ==================================================
+  // RESPONSIVE BREAKPOINTS
+  // ==================================================
 
-  // Scale according to both width and height
-  const scale = Math.min(width / BASE_WIDTH, height / BASE_HEIGHT);
+  const isVerySmall = width < 350;
+  const isSmall = width < 380;
+  const isTablet = width >= 600;
 
-  // Prevent elements from becoming too small or too large
-  const s = (size) => size * Math.max(0.78, Math.min(scale, 1.15));
+  const isVeryShort = height < 620;
+  const isShort = height < 700;
 
-  const buttonY = useRef(new Animated.Value(0)).current;
+  // ==================================================
+  // RESPONSIVE HELPER
+  // ==================================================
 
-  const screenOpacity = useRef(new Animated.Value(1)).current;
-  const screenScale = useRef(new Animated.Value(1)).current;
+  const clamp = (value, min, max) =>
+    Math.min(Math.max(value, min), max);
 
-  const [isNavigating, setIsNavigating] = React.useState(false);
+  // ==================================================
+  // ANIMATION
+  // ==================================================
+
+  const buttonY = useRef(
+    new Animated.Value(0)
+  ).current;
+
+  const screenOpacity = useRef(
+    new Animated.Value(1)
+  ).current;
+
+  const screenScale = useRef(
+    new Animated.Value(1)
+  ).current;
+
+  const [isNavigating, setIsNavigating] =
+    useState(false);
+
+  // ==================================================
+  // GO BUTTON SIZE
+  // ==================================================
+
+  const buttonSize = isVerySmall
+    ? 88
+    : isSmall
+    ? 94
+    : isTablet
+    ? 110
+    : 100;
+
+  const containerWidth = isVerySmall
+    ? 88
+    : isSmall
+    ? 94
+    : isTablet
+    ? 110
+    : 100;
+
+  const containerHeight = isVeryShort
+    ? 175
+    : isShort
+    ? 185
+    : isTablet
+    ? 220
+    : 200;
+
+  // ==================================================
+  // GO TEXT
+  // ==================================================
+
+  const goTextSize = clamp(
+    width * 0.128,
+    43,
+    54
+  );
+
+  // ==================================================
+  // ARROW SIZES
+  // ==================================================
+
+  const arrowSmallSize = clamp(
+    width * 0.069,
+    24,
+    27
+  );
+
+  const arrowLargeSize = clamp(
+    width * 0.077,
+    27,
+    30
+  );
+
+  // ==================================================
+  // BOTTOM POSITION
+  // ==================================================
+
+  const bottomPosition = isVeryShort
+    ? height * 0.025
+    : isShort
+    ? height * 0.035
+    : isTablet
+    ? height * 0.055
+    : height * 0.05;
+
+  // ==================================================
+  // HEADER POSITION
+  // ==================================================
+
+  const headerTop = isVeryShort
+    ? height * 0.12
+    : isShort
+    ? height * 0.16
+    : isTablet
+    ? height * 0.20
+    : height * 0.20;
+
+  const headerHorizontalPadding = isTablet
+    ? Math.min(width * 0.08, 70)
+    : width * 0.05;
+
+  // ==================================================
+  // GO CONTAINER RADIUS
+  // ==================================================
+
+  const containerRadius =
+    containerWidth * 0.55;
+
+  const buttonRadius =
+    buttonSize / 2;
+
+  // ==================================================
+  // NAVIGATION
+  // ==================================================
 
   const handleGoToLogin = () => {
-  if (isNavigating) return;
+    if (isNavigating) return;
 
-  setIsNavigating(true);
+    setIsNavigating(true);
 
-  Animated.parallel([
-    Animated.timing(screenOpacity, {
-      toValue: 0,
-      duration: 550,
-      useNativeDriver: true,
-    }),
-
-    Animated.timing(screenScale, {
-      toValue: 1.04,
-      duration: 550,
-      useNativeDriver: true,
-    }),
-
-    Animated.timing(buttonY, {
-      toValue: -s(90),
-      duration: 450,
-      useNativeDriver: true,
-    }),
-  ]).start(({ finished }) => {
-    if (finished) {
-      navigation.navigate("Register");
-    }
-  });
-};
-
-const pan = useRef(
-  PanResponder.create({
-    onStartShouldSetPanResponder: () => !isNavigating,
-
-    onPanResponderMove: (evt, gestureState) => {
-      const y = gestureState.dy;
-
-      if (y < 0 && y > -s(90)) {
-        buttonY.setValue(y);
-      }
-    },
-
-    onPanResponderRelease: (evt, gestureState) => {
-      if (gestureState.dy < -s(80)) {
-        handleGoToLogin();
-      } else {
-        Animated.spring(buttonY, {
+    Animated.parallel([
+      Animated.timing(
+        screenOpacity,
+        {
           toValue: 0,
+          duration: 550,
           useNativeDriver: true,
-          friction: 7,
-          tension: 45,
-        }).start();
+        }
+      ),
+
+      Animated.timing(
+        screenScale,
+        {
+          toValue: 1.04,
+          duration: 550,
+          useNativeDriver: true,
+        }
+      ),
+
+      Animated.timing(
+        buttonY,
+        {
+          toValue: -90,
+          duration: 450,
+          useNativeDriver: true,
+        }
+      ),
+    ]).start(({ finished }) => {
+      if (finished) {
+        navigation.navigate("Home");
       }
-    },
-  })
-).current;
+    });
+  };
+
+  // ==================================================
+  // SWIPE
+  // ==================================================
+
+  const pan = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () =>
+        !isNavigating,
+
+      onPanResponderMove: (
+        evt,
+        gestureState
+      ) => {
+        const y = gestureState.dy;
+
+        if (
+          y < 0 &&
+          y > -90
+        ) {
+          buttonY.setValue(y);
+        }
+      },
+
+      onPanResponderRelease: (
+        evt,
+        gestureState
+      ) => {
+        if (
+          gestureState.dy <
+          -80
+        ) {
+          handleGoToLogin();
+        } else {
+          Animated.spring(
+            buttonY,
+            {
+              toValue: 0,
+              useNativeDriver: true,
+              friction: 7,
+              tension: 45,
+            }
+          ).start();
+        }
+      },
+    })
+  ).current;
+
+  // ==================================================
+  // UI
+  // ==================================================
 
   return (
     <Animated.View
       style={[
         styles.container,
         {
-          opacity: screenOpacity,
-          transform: [{ scale: screenScale }],
+          opacity:
+            screenOpacity,
+
+          transform: [
+            {
+              scale:
+                screenScale,
+            },
+          ],
         },
       ]}
     >
-      {/* BACKGROUND */}
+
+      {/* ==================================================
+          BACKGROUND
+      ================================================== */}
+
       <ImageBackground
-        source={require("../components/photos/background.png")}
+        source={require(
+          "../components/photos/background.png"
+        )}
         style={styles.background}
         resizeMode="cover"
       >
-        <View style={styles.overlay} />
+        <View
+          style={styles.overlay}
+        />
       </ImageBackground>
 
-      {/* HELLO TEXT */}
+      {/* ==================================================
+          HELLO TEXT
+      ================================================== */}
+
       <View
         style={[
           styles.header,
           {
-            top: height * 0.2,
-            left: width * 0.05,
+            top: headerTop,
+            left:
+              headerHorizontalPadding,
+            right:
+              headerHorizontalPadding,
           },
         ]}
       >
         <HelloText />
       </View>
 
-      {/* GO CONTAINER */}
+      {/* ==================================================
+          GO CONTAINER
+      ================================================== */}
+
       <LinearGradient
         colors={[
           "rgba(245, 241, 209, 0.05)",
           "rgba(137, 154, 92, 0.4)",
         ]}
-        locations={[0.16, 0.58]}
+        locations={[
+          0.16,
+          0.58,
+        ]}
         style={[
-          styles.gocontainer,
+          styles.goContainer,
           {
-            width: s(100),
-            height: s(200),
-            borderRadius: s(55),
-            paddingVertical: s(20),
-            bottom: height * 0.05,
+            width:
+              containerWidth,
+
+            height:
+              containerHeight,
+
+            borderRadius:
+              containerRadius,
+
+            paddingVertical:
+              isVerySmall
+                ? 17
+                : isSmall
+                ? 19
+                : isTablet
+                ? 22
+                : 20,
+
+            bottom:
+              bottomPosition,
           },
         ]}
       >
-        {/* TOP ARROWS */}
-        <View style={styles.arrows}>
+
+        {/* ==================================================
+            ARROWS
+        ================================================== */}
+
+        <View
+          style={styles.arrows}
+        >
+
           <Ionicons
             name="chevron-up-outline"
-            size={s(27)}
+            size={
+              arrowSmallSize
+            }
             color="rgba(217, 140, 140, 0.65)"
             style={{
-              marginTop: s(25),
+              marginTop:
+                isVerySmall
+                  ? 21
+                  : 25,
             }}
           />
 
           <Ionicons
             name="chevron-up-outline"
-            size={s(30)}
+            size={
+              arrowLargeSize
+            }
             color="rgba(217, 140, 140, 1)"
             style={{
-              marginTop: s(-15),
+              marginTop:
+                isVerySmall
+                  ? -13
+                  : -15,
             }}
           />
+
         </View>
 
-        {/* GO BUTTON */}
+        {/* ==================================================
+            GO BUTTON
+        ================================================== */}
+
         <Animated.View
           {...pan.panHandlers}
           style={[
             styles.button,
             {
-              width: s(100),
-              height: s(100),
-              borderRadius: s(47.5),
-              transform: [{ translateY: buttonY }],
+              width:
+                buttonSize,
+
+              height:
+                buttonSize,
+
+              borderRadius:
+                buttonRadius,
+
+              transform: [
+                {
+                  translateY:
+                    buttonY,
+                },
+              ],
             },
           ]}
         >
+
           <Text
             style={[
               styles.buttonText,
               {
-                fontSize: s(50),
+                fontSize:
+                  goTextSize,
               },
             ]}
           >
             Go!
           </Text>
+
         </Animated.View>
+
       </LinearGradient>
+
     </Animated.View>
   );
-};
+}
+
+// ==================================================
+// STYLES
+// ==================================================
 
 const styles = StyleSheet.create({
+
+  // ==================================================
+  // CONTAINER
+  // ==================================================
+
   container: {
     flex: 1,
   },
 
+  // ==================================================
+  // BACKGROUND
+  // ==================================================
+
   background: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
+
+    justifyContent:
+      "center",
+
+    alignItems:
+      "center",
   },
 
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.5)",
+
+    backgroundColor:
+      "rgba(0,0,0,0.5)",
   },
+
+  // ==================================================
+  // HEADER
+  // ==================================================
 
   header: {
     position: "absolute",
+
+    alignItems:
+      "flex-start",
+
     zIndex: 1,
   },
 
-  gocontainer: {
+  // ==================================================
+  // GO CONTAINER
+  // ==================================================
+
+  goContainer: {
     position: "absolute",
-    alignSelf: "center",
 
-    backgroundColor: "rgba(255,255,255,0.18)",
+    alignSelf:
+      "center",
 
-    alignItems: "center",
-    justifyContent: "space-between",
+    alignItems:
+      "center",
 
-    overflow: "hidden",
+    justifyContent:
+      "space-between",
+
+    overflow:
+      "hidden",
+
+    backgroundColor:
+      "rgba(255,255,255,0.18)",
   },
+
+  // ==================================================
+  // ARROWS
+  // ==================================================
 
   arrows: {
-    alignItems: "center",
-    justifyContent: "flex-start",
+    alignItems:
+      "center",
+
+    justifyContent:
+      "flex-start",
   },
+
+  // ==================================================
+  // BUTTON
+  // ==================================================
 
   button: {
-    backgroundColor: "rgba(131, 150, 85, 0.8)",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent:
+      "center",
+
+    alignItems:
+      "center",
+
+    backgroundColor:
+      "rgba(131, 150, 85, 0.8)",
   },
 
+  // ==================================================
+  // BUTTON TEXT
+  // ==================================================
+
   buttonText: {
-    fontFamily: "Inter",
-    fontWeight: "300",
-    fontStyle: "italic",
-    color: "#F5F1D1",
+    fontFamily:
+      "Inter",
+
+    fontWeight:
+      "300",
+
+    fontStyle:
+      "italic",
+
+    color:
+      "#F5F1D1",
   },
+
 });

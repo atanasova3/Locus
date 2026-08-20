@@ -9,25 +9,62 @@ import {
 export default function HelloText({ animated = true }) {
   const { width, height } = useWindowDimensions();
 
-  // --------------------------------------------------
-  // RESPONSIVE SCALE
-  // Base design: 390 x 844
-  // --------------------------------------------------
+  // ==================================================
+  // SCREEN SIZE
+  // ==================================================
 
-  const BASE_WIDTH = 390;
-  const BASE_HEIGHT = 844;
+  const isVerySmall = width < 340;
+  const isSmall = width < 380;
 
-  const scale = Math.min(
-    width / BASE_WIDTH,
-    height / BASE_HEIGHT
-  );
-  const responsiveScale = Math.min(scale, 1.10);
+  const isVeryShort = height < 620;
+  const isShort = height < 700;
 
-  const s = (value) => value * responsiveScale;
+  // ==================================================
+  // RESPONSIVE SIZES
+  // NO SCALING
+  // ==================================================
 
-  // --------------------------------------------------
+  const titleSize = isVerySmall
+    ? 48
+    : isSmall
+    ? 55
+    : 64;
+
+  const logoWidth = isVerySmall
+    ? 225
+    : isSmall
+    ? 250
+    : 280;
+
+  const logoHeight = isVerySmall
+    ? 52
+    : isSmall
+    ? 58
+    : 65;
+
+  const subtitleSize = isVerySmall
+    ? 18
+    : isSmall
+    ? 21
+    : 24;
+
+  // ==================================================
+  // SPACING
+  // ==================================================
+
+  const logoMarginTop = isVerySmall
+    ? -2
+    : 0;
+
+  const subtitleMarginTop = isVeryShort
+    ? -2
+    : isShort
+    ? 0
+    : 0;
+
+  // ==================================================
   // ANIMATION VALUES
-  // --------------------------------------------------
+  // ==================================================
 
   const titleOpacity = useRef(
     new Animated.Value(animated ? 0 : 1)
@@ -53,12 +90,11 @@ export default function HelloText({ animated = true }) {
     new Animated.Value(animated ? 20 : 0)
   ).current;
 
-  // --------------------------------------------------
+  // ==================================================
   // ANIMATION
-  // --------------------------------------------------
+  // ==================================================
 
   useEffect(() => {
-    // Без animation
     if (!animated) {
       titleOpacity.setValue(1);
       titleTranslate.setValue(0);
@@ -120,20 +156,29 @@ export default function HelloText({ animated = true }) {
     ]).start();
   }, [animated]);
 
-  // --------------------------------------------------
+  // ==================================================
   // UI
-  // --------------------------------------------------
+  // ==================================================
 
   return (
-    <View style={styles.header}>
+    <View
+      style={[
+        styles.header,
+        {
+          width: "100%",
+        },
+      ]}
+    >
 
-      {/* WELCOME TO */}
+      {/* ==============================================
+          WELCOME TO
+      ============================================== */}
 
       <Animated.Text
         style={[
           styles.title,
           {
-            fontSize: s(64),
+            fontSize: titleSize,
 
             opacity: titleOpacity,
 
@@ -148,7 +193,9 @@ export default function HelloText({ animated = true }) {
         Welcome to
       </Animated.Text>
 
-      {/* LOGO */}
+      {/* ==============================================
+          LOGO
+      ============================================== */}
 
       <Animated.Image
         source={require("./photos/Logoo.png")}
@@ -156,8 +203,9 @@ export default function HelloText({ animated = true }) {
         style={[
           styles.logo,
           {
-            width: s(260),
-            height: s(65),
+            width: logoWidth,
+            height: logoHeight,
+            marginTop: logoMarginTop,
 
             opacity: logoOpacity,
 
@@ -170,13 +218,16 @@ export default function HelloText({ animated = true }) {
         ]}
       />
 
-      {/* SUBTITLE */}
+      {/* ==============================================
+          SUBTITLE
+      ============================================== */}
 
       <Animated.Text
         style={[
           styles.subtitle,
           {
-            fontSize: s(24),
+            fontSize: subtitleSize,
+            marginTop: subtitleMarginTop,
 
             opacity: subtitleOpacity,
 
@@ -195,9 +246,9 @@ export default function HelloText({ animated = true }) {
   );
 }
 
-// --------------------------------------------------
+// ==================================================
 // STYLES
-// --------------------------------------------------
+// ==================================================
 
 const styles = StyleSheet.create({
   header: {
@@ -212,14 +263,13 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    marginTop: 0,
+    alignSelf: "flex-start",
   },
 
   subtitle: {
     fontFamily: "Inter",
     color: "#F5F1D1",
     fontWeight: "400",
-    marginTop: 0,
     textAlign: "left",
   },
 });

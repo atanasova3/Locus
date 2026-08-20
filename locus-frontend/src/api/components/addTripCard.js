@@ -5,106 +5,151 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   Text,
-  ScrollView,
 } from "react-native";
 
-
-import Menu from "../components/menu";
-
-
 export default function AddTripCard() {
-    const { width, height } = useWindowDimensions();
-    // ==================================================
-  // RESPONSIVE
+  const { width, height } = useWindowDimensions();
+
+  // ==================================================
+  // SCREEN SIZE
   // ==================================================
 
-  const BASE_WIDTH = 390;
-  const BASE_HEIGHT = 844;
+  const isVerySmall = width < 340;
+  const isSmall = width < 380;
 
-  const scale = Math.min(
-    width / BASE_WIDTH,
-    height / BASE_HEIGHT
-  );
-
-  const responsiveScale = Math.min(scale, 1.10);
-
-  const s = (value) => value * responsiveScale;
-
-  // Small / short screens
   const isVeryShort = height < 620;
   const isShort = height < 700;
-  const isSmallScreen = width < 380;
 
   // ==================================================
-  // RESPONSIVE SIZES
+  // CARD SIZE
   // ==================================================
 
-  const cardRadius = s(30);
-  const addCardWidth = s(207);
-  const addCardHeight = s(250);
+  const cardWidth = isVerySmall
+    ? 193
+    : isSmall
+    ? 208
+    : 230;
 
-  const addCardTitleSize = s(25);
-  const addCardDescriptionSize = s(12);
+  const cardHeight = isVerySmall
+    ? 235
+    : isSmall
+    ? 255
+    : 280;
+
+  const cardRadius = isVerySmall
+    ? 25
+    : 30;
+
+  // ==================================================
+  // TEXT SIZE
+  // ==================================================
+
+  const titleSize = isVerySmall
+    ? 26
+    : isSmall
+    ? 28
+    : 30;
+
+  const descriptionSize = isVerySmall
+    ? 12
+    : isSmall
+    ? 13
+    : 14;
+
+  // ==================================================
+  // SPACING
+  // ==================================================
+
   const cardMarginTop = isVeryShort
-    ? s(12)
+    ? 12
     : isShort
-    ? s(18)
-    : s(22);
+    ? 18
+    : 22;
 
-    return (
+  const titleMarginBottom = isVerySmall
+    ? 8
+    : 12;
 
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={[
-              styles.addTripCard,
-              {
-                width: addCardWidth,
-                height: addCardHeight,
-                borderRadius: cardRadius,
-                marginTop: cardMarginTop,
-                borderWidth: s(4),
-              },
-            ]}
-          >
+  const descriptionPadding = isVerySmall
+    ? 14
+    : isSmall
+    ? 18
+    : 23;
 
-            <Text
-              style={[
-                styles.addTripTitle,
-                {
-                  fontSize: addCardTitleSize,
-                  marginBottom: s(12),
-                },
-              ]}
-            >
-              Add trip +
-            </Text>
+  const descriptionLineHeight = isVerySmall
+    ? 13
+    : isSmall
+    ? 14
+    : 15;
 
-            <Text
-              style={[
-                styles.addTripDescription,
-                {
-                  fontSize: addCardDescriptionSize,
-                  lineHeight: s(15),
-                  paddingHorizontal: s(23),
-                },
-              ]}
-            >
-              Plan your dream trip, your{"\n"}
-              way. Get a custom hourly{"\n"}
-              itinerary, local gems, and{"\n"}
-              real-time AI guidance{"\n"}
-              tailored to your interests{"\n"}
-              and budget.
-            </Text>
+  // ==================================================
+  // UI
+  // ==================================================
 
-          </TouchableOpacity>
+  return (
+    <TouchableOpacity
+      activeOpacity={0.9}
+      style={[
+        styles.addTripCard,
+        {
+          width: cardWidth,
+          height: cardHeight,
+          borderRadius: cardRadius,
+          marginTop: cardMarginTop,
+          borderWidth: 4,
+        },
+      ]}
+    >
+      {/* ==============================================
+          TITLE
+      ============================================== */}
 
-        );
+      <Text
+        style={[
+          styles.addTripTitle,
+          {
+            fontSize: titleSize,
+            marginBottom: titleMarginBottom,
+          },
+        ]}
+      >
+        Add trip +
+      </Text>
+
+      {/* ==============================================
+          DESCRIPTION
+      ============================================== */}
+
+      <Text
+        style={[
+          styles.addTripDescription,
+          {
+            fontSize: descriptionSize,
+            lineHeight: descriptionLineHeight,
+            paddingHorizontal: descriptionPadding,
+          },
+        ]}
+      >
+        Plan your dream trip, your{"\n"}
+        way. Get a custom hourly{"\n"}
+        itinerary, local gems, and{"\n"}
+        real-time AI guidance{"\n"}
+        tailored to your interests{"\n"}
+        and budget.
+      </Text>
+    </TouchableOpacity>
+  );
 }
+
+// ==================================================
+// STYLES
+// ==================================================
+
 const styles = StyleSheet.create({
- addTripCard: {
+  addTripCard: {
     backgroundColor: "rgba(207, 146, 138, 0.65)",
     borderColor: "#CF928A",
+
     alignItems: "center",
     justifyContent: "center",
   },
@@ -120,5 +165,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontStyle: "italic",
   },
-
-    });
+});

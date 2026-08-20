@@ -10,73 +10,105 @@ import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
 
 export default function Menu() {
-  const { width, height } = useWindowDimensions();
+  const { width, height } =
+    useWindowDimensions();
 
-  // ==========================================
-  // RESPONSIVE SCALE
-  // ==========================================
+  // ==================================================
+  // SCREEN SIZE
+  // ==================================================
 
-  const BASE_WIDTH = 390;
-  const BASE_HEIGHT = 844;
+  const isVerySmall =
+    width < 350;
 
-  const scale = Math.min(
-    width / BASE_WIDTH,
-    height / BASE_HEIGHT
-  );
+  const isSmall =
+    width < 380;
 
-  const responsiveScale = Math.max(
-    0.75,
-    Math.min(scale, 1.1)
-  );
+  const isTablet =
+    width >= 600;
 
-  const s = (value) =>
-    value * responsiveScale;
+  const isVeryShort =
+    height < 620;
 
-  // ==========================================
-  // RESPONSIVE VALUES
-  // ==========================================
+  const isShort =
+    height < 700;
 
-  const menuHeight = s(60);
-  const logoSize = s(35);
-  const iconSize = s(45);
-  const gap = s(20);
+  // ==================================================
+  // MENU SIZE
+  // ==================================================
 
-  // ==========================================
-  // VERY SMALL SCREEN
-  // ==========================================
-
-  const isVerySmall = width < 340;
-  const isSmall = width < 380;
-  const isShort = height < 700;
-
-  const finalMenuHeight = isVerySmall
-    ? s(47)
+  const menuHeight = isVerySmall
+    ? 47
     : isSmall
-    ? s(53)
-    : menuHeight;
+    ? 53
+    : isTablet
+    ? 68
+    : 60;
 
-  const finalLogoSize = isVerySmall
-    ? s(26)
+  // ==================================================
+  // ICON SIZE
+  // ==================================================
+
+  const logoSize = isVerySmall
+    ? 26
     : isSmall
-    ? s(29)
-    : logoSize;
+    ? 29
+    : isTablet
+    ? 40
+    : 35;
 
-  const finalIconSize = isVerySmall
-    ? s(35)
+  const iconSize = isVerySmall
+    ? 35
     : isSmall
-    ? s(39)
-    : iconSize;
+    ? 39
+    : isTablet
+    ? 50
+    : 45;
 
-  const finalGap = isVerySmall
-    ? s(9)
+  // ==================================================
+  // GAP
+  // ==================================================
+
+  const menuGap = isVerySmall
+    ? 9
     : isSmall
-    ? s(13)
-    : gap;
+    ? 13
+    : isTablet
+    ? 25
+    : 20;
 
-  // Малко по-нагоре при къси екрани
-  const bottomPosition = isShort
-    ? "5%"
-    : "8%";
+  // ==================================================
+  // MENU WIDTH
+  // ==================================================
+
+  const horizontalPadding =
+    isTablet
+      ? Math.min(width * 0.08, 70)
+      : isVerySmall
+      ? 12
+      : isSmall
+      ? 16
+      : 25;
+
+  const menuWidth =
+    width -
+    horizontalPadding * 5;
+
+  // ==================================================
+  // BOTTOM
+  // ==================================================
+
+  const bottomPosition =
+    isVeryShort
+      ? height * 0.025
+      : isShort
+      ? height * 0.035
+      : isTablet
+      ? height * 0.055
+      : height * 0.06;
+
+  // ==================================================
+  // UI
+  // ==================================================
 
   return (
     <View
@@ -84,8 +116,8 @@ export default function Menu() {
         styles.container,
         {
           bottom: bottomPosition,
-          paddingHorizontal:
-            width * 0.08,
+          width: menuWidth,
+          alignSelf: "center",
         },
       ]}
     >
@@ -106,24 +138,16 @@ export default function Menu() {
         style={[
           styles.menu,
           {
-            height:
-              finalMenuHeight,
-
-            minHeight:
-              finalMenuHeight,
-
-            borderRadius:
-              finalMenuHeight / 2,
-
-            gap:
-              finalGap,
+            height: menuHeight,
+            minHeight: menuHeight,
+            borderRadius: menuHeight / 2,
+            gap: menuGap,
           },
         ]}
       >
-
-        {/* ================================= */}
-        {/* 1. LOGO */}
-        {/* ================================= */}
+        {/* ==================================================
+            LOGO
+        ================================================== */}
 
         <Pressable
           style={styles.item}
@@ -134,26 +158,24 @@ export default function Menu() {
               "../components/photos/Asset 1.png"
             )}
             style={{
-              width:
-                finalLogoSize,
-              height:
-                finalLogoSize,
+              width: logoSize,
+              height: logoSize,
             }}
             resizeMode="contain"
           />
         </Pressable>
 
-        {/* ================================= */}
-        {/* 2. PAPER PLANE */}
-        {/* ================================= */}
+        {/* ==================================================
+            PAPER PLANE
+        ================================================== */}
 
         <Pressable
           style={styles.item}
           hitSlop={10}
         >
           <Svg
-            width={finalIconSize}
-            height={finalIconSize}
+            width={iconSize}
+            height={iconSize}
             viewBox="0 0 50 50"
           >
             <Path
@@ -167,17 +189,17 @@ export default function Menu() {
           </Svg>
         </Pressable>
 
-        {/* ================================= */}
-        {/* 3. PLUS */}
-        {/* ================================= */}
+        {/* ==================================================
+            PLUS
+        ================================================== */}
 
         <Pressable
           style={styles.item}
           hitSlop={10}
         >
           <Svg
-            width={finalIconSize}
-            height={finalIconSize}
+            width={iconSize}
+            height={iconSize}
             viewBox="0 0 50 50"
           >
             <Path
@@ -189,20 +211,19 @@ export default function Menu() {
           </Svg>
         </Pressable>
 
-        {/* ================================= */}
-        {/* 4. HAMBURGER */}
-        {/* ================================= */}
+        {/* ==================================================
+            HAMBURGER
+        ================================================== */}
 
         <Pressable
           style={styles.item}
           hitSlop={10}
         >
           <Svg
-            width={finalIconSize}
-            height={finalIconSize}
+            width={iconSize}
+            height={iconSize}
             viewBox="0 0 50 50"
           >
-
             <Path
               d="M8 12 H44"
               stroke="#F3F0D5"
@@ -223,23 +244,24 @@ export default function Menu() {
               strokeWidth={6}
               strokeLinecap="round"
             />
-
           </Svg>
         </Pressable>
-
       </LinearGradient>
     </View>
   );
 }
 
+// ==================================================
+// STYLES
+// ==================================================
+
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
 
-    left: 0,
-    right: 0,
-
     alignItems: "center",
+
+    zIndex: 100,
   },
 
   menu: {
@@ -249,8 +271,7 @@ const styles = StyleSheet.create({
 
     alignItems: "center",
 
-    justifyContent:
-      "center",
+    justifyContent: "center",
 
     overflow: "hidden",
   },
@@ -258,8 +279,7 @@ const styles = StyleSheet.create({
   item: {
     alignItems: "center",
 
-    justifyContent:
-      "center",
+    justifyContent: "center",
 
     height: "100%",
   },

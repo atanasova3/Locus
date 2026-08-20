@@ -19,75 +19,148 @@ export default function VerificationScreen() {
   const { width, height } = useWindowDimensions();
 
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+
   const [code, setCode] = useState(
     Array(CODE_LENGTH).fill("")
   );
 
   const inputs = useRef([]);
 
-  // ==========================================
-  // RESPONSIVE SCALE
-  // ==========================================
+  // ==================================================
+  // RESPONSIVE BREAKPOINTS
+  // ==================================================
 
-  const BASE_WIDTH = 390;
-  const BASE_HEIGHT = 844;
-
-  const scale = Math.min(
-    width / BASE_WIDTH,
-    height / BASE_HEIGHT
-  );
-
-  const responsiveScale = Math.max(
-    0.70,
-    Math.min(scale, 1.10)
-  );
-
-  const s = (value) =>
-    value * responsiveScale;
-
-  // ==========================================
-  // SCREEN SIZE
-  // ==========================================
+  const isVerySmall = width < 350;
+  const isSmall = width < 380;
+  const isTablet = width >= 600;
 
   const isVeryShort = height < 620;
   const isShort = height < 700;
 
-  // ==========================================
-  // CODE INPUT SIZE
-  // ==========================================
+  // ==================================================
+  // CONTENT WIDTH
+  // ==================================================
 
-  const horizontalPadding = width * 0.05;
+  const horizontalPadding = isTablet
+    ? Math.min(width * 0.08, 70)
+    : isSmall
+    ? 21
+    : 25;
 
-  const availableWidth =
-    width - horizontalPadding * 2;
+  const contentWidth = Math.min(
+    width - horizontalPadding * 2,
+    700
+  );
 
-  const gap = s(12);
+  // ==================================================
+  // RESPONSIVE HELPER
+  // ==================================================
+
+  const clamp = (value, min, max) =>
+    Math.min(Math.max(value, min), max);
+
+  // ==================================================
+  // CODE INPUTS
+  // ==================================================
+
+  const codeGap = isVerySmall
+    ? 8
+    : isSmall
+    ? 10
+    : isTablet
+    ? 18
+    : 12;
+
+  const maxInputWidth = isTablet
+    ? 78
+    : isVerySmall
+    ? 55
+    : isSmall
+    ? 60
+    : 65;
 
   const inputWidth = Math.min(
-    s(65),
-    (availableWidth - gap * 3) / 4
+    maxInputWidth,
+    (contentWidth - codeGap * 3) / 4
   );
 
   const inputHeight = inputWidth * 1.1;
 
-  const inputFontSize =
-    inputWidth * 0.43;
+  const inputFontSize = clamp(
+    inputWidth * 0.43,
+    22,
+    32
+  );
 
-  // ==========================================
-  // RESPONSIVE VALUES
-  // ==========================================
+  // ==================================================
+  // TEXT SIZES
+  // ==================================================
 
-  const titleSize = s(40);
+  const titleSize = clamp(
+    width * 0.095,
+    32,
+    42
+  );
 
-  const buttonHeight = s(52);
+  const buttonHeight = isVerySmall
+    ? 48
+    : isSmall
+    ? 50
+    : isTablet
+    ? 58
+    : 52;
 
-  const buttonFontSize = s(20);
+  const buttonFontSize = clamp(
+    width * 0.051,
+    18,
+    22
+  );
 
-  const smallFontSize = s(15);
+  const smallFontSize = clamp(
+    width * 0.038,
+    13,
+    16
+  );
 
-  // ==========================================
+  // ==================================================
+  // HEADER POSITION
+  // ==================================================
+
+  const topMargin = isVeryShort
+    ? 80
+    : isShort
+    ? 90
+    : isTablet
+    ? 110
+    : 100;
+
+  // ==================================================
+  // ENTER CODE POSITION
+  // ==================================================
+
+  const titleTop = isVeryShort
+    ? topMargin + 170
+    : isShort
+    ? topMargin + 190
+    : isTablet
+    ? topMargin + 230
+    : topMargin + 210;
+
+  // ==================================================
+  // BUTTON SPACING
+  // ==================================================
+
+  const buttonMarginTop = isVeryShort
+    ? 18
+    : isShort
+    ? 25
+    : isTablet
+    ? 40
+    : 35;
+
+  // ==================================================
   // KEYBOARD
-  // ==========================================
+  // ==================================================
 
   useEffect(() => {
     const showEvent =
@@ -100,23 +173,21 @@ export default function VerificationScreen() {
         ? "keyboardWillHide"
         : "keyboardDidHide";
 
-    const showKeyboard =
-      Keyboard.addListener(
-        showEvent,
-        (event) => {
-          setKeyboardHeight(
-            event.endCoordinates.height
-          );
-        }
-      );
+    const showKeyboard = Keyboard.addListener(
+      showEvent,
+      (event) => {
+        setKeyboardHeight(
+          event.endCoordinates.height
+        );
+      }
+    );
 
-    const hideKeyboard =
-      Keyboard.addListener(
-        hideEvent,
-        () => {
-          setKeyboardHeight(0);
-        }
-      );
+    const hideKeyboard = Keyboard.addListener(
+      hideEvent,
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
 
     return () => {
       showKeyboard.remove();
@@ -124,9 +195,9 @@ export default function VerificationScreen() {
     };
   }, []);
 
-  // ==========================================
+  // ==================================================
   // CODE CHANGE
-  // ==========================================
+  // ==================================================
 
   const handleChange = (text, index) => {
     const digit = text
@@ -147,54 +218,41 @@ export default function VerificationScreen() {
       inputs.current[index + 1]?.focus();
     }
 
-    // Full code entered
+    // Full code
     if (
       digit &&
       index === CODE_LENGTH - 1
     ) {
-      const fullCode =
-        newCode.join("");
+      const fullCode = newCode.join("");
 
-      if (
-        fullCode.length === CODE_LENGTH
-      ) {
-        console.log(
-          "CODE:",
-          fullCode
-        );
+      if (fullCode.length === CODE_LENGTH) {
+        console.log("CODE:", fullCode);
       }
     }
   };
 
-  // ==========================================
+  // ==================================================
   // BACKSPACE
-  // ==========================================
+  // ==================================================
 
   const handleKeyPress = (e, index) => {
     if (
-      e.nativeEvent.key ===
-        "Backspace" &&
+      e.nativeEvent.key === "Backspace" &&
       !code[index] &&
       index > 0
     ) {
-      inputs.current[
-        index - 1
-      ]?.focus();
+      inputs.current[index - 1]?.focus();
     }
   };
 
-  // ==========================================
+  // ==================================================
   // VERIFY
-  // ==========================================
+  // ==================================================
 
   const verifyCode = () => {
-    const fullCode =
-      code.join("");
+    const fullCode = code.join("");
 
-    if (
-      fullCode.length !==
-      CODE_LENGTH
-    ) {
+    if (fullCode.length !== CODE_LENGTH) {
       console.log(
         "Please enter the full code"
       );
@@ -208,37 +266,29 @@ export default function VerificationScreen() {
     );
   };
 
-  // ==========================================
+  // ==================================================
   // BOTTOM POSITION
-  // ==========================================
+  // ==================================================
 
   let bottomPosition;
 
   if (keyboardHeight > 0) {
     bottomPosition =
-      keyboardHeight + s(15);
+      keyboardHeight +
+      (isVerySmall ? 10 : 15);
   } else if (isVeryShort) {
-    bottomPosition = s(20);
+    bottomPosition = 18;
   } else if (isShort) {
-    bottomPosition = s(35);
+    bottomPosition = 28;
+  } else if (isTablet) {
+    bottomPosition = 45;
   } else {
-    bottomPosition =
-      height * 0.08;
+    bottomPosition = height * 0.07;
   }
 
-  // ==========================================
-  // TITLE POSITION
-  // ==========================================
-
-  let titleTop;
-
-  if (isVeryShort) {
-    titleTop = "25%";
-  } else if (isShort) {
-    titleTop = "29%";
-  } else {
-    titleTop = "33%";
-  }
+  // ==================================================
+  // UI
+  // ==================================================
 
   return (
     <ImageBackground
@@ -246,211 +296,237 @@ export default function VerificationScreen() {
       style={styles.background}
       resizeMode="cover"
     >
-      {/* DARK OVERLAY */}
 
-      <View
-        style={styles.overlay}
-      />
+      {/* ==================================================
+          DARK OVERLAY
+      ================================================== */}
 
-      <View
-        style={styles.screen}
-      >
+      <View style={styles.overlay} />
 
-        {/* ========================= */}
-        {/* HEADER */}
-        {/* ========================= */}
+      {/* ==================================================
+          SCREEN
+      ================================================== */}
+
+      <View style={styles.screen}>
+
+        {/* ==================================================
+            HEADER
+        ================================================== */}
 
         <View
           style={[
             styles.header,
             {
-              top: isVeryShort
-                ? "5%"
-                : isShort
-                ? "7%"
-                : "10%",
+              left: horizontalPadding,
+              right: horizontalPadding,
+              top: topMargin,
             },
           ]}
         >
-          <HelloText
-            animated={false}
-          />
+          <HelloText animated={false} />
         </View>
 
-        {/* ========================= */}
-        {/* TITLE */}
-        {/* ========================= */}
 
-        <Text
+        {/* ==================================================
+            ENTER CODE
+        ================================================== */}
+
+        <View
           style={[
-            styles.text,
+            styles.titleContainer,
             {
               top: titleTop,
-              fontSize: titleSize,
+              left: horizontalPadding,
+              right: horizontalPadding,
             },
           ]}
         >
-          Enter code
-        </Text>
+          <Text
+            style={[
+              styles.title,
+              {
+                fontSize: titleSize,
+              },
+            ]}
+          >
+            Enter code
+          </Text>
+        </View>
 
-        {/* ========================= */}
-        {/* BOTTOM SECTION */}
-        {/* ========================= */}
+
+        {/* ==================================================
+            BOTTOM SECTION
+        ================================================== */}
 
         <View
           style={[
             styles.bottomSection,
             {
-              bottom:
-                bottomPosition,
+              left: horizontalPadding,
+              right: horizontalPadding,
+              bottom: bottomPosition,
             },
           ]}
         >
 
-          {/* ========================= */}
-          {/* CODE INPUTS */}
-          {/* ========================= */}
+          {/* ================================================
+              CODE INPUTS
+          ================================================ */}
 
           <View
             style={[
               styles.codeContainer,
               {
-                gap: gap,
+                gap: codeGap,
               },
             ]}
           >
-            {code.map(
-              (value, index) => (
-                <TextInput
-                  key={index}
-                  ref={(ref) => {
-                    inputs.current[
-                      index
-                    ] = ref;
-                  }}
-                  value={value}
-                  onChangeText={(
-                    text
-                  ) =>
-                    handleChange(
-                      text,
-                      index
-                    )
-                  }
-                  onKeyPress={(e) =>
-                    handleKeyPress(e,index)
-                  }
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  selectTextOnFocus
-                  textAlign="center"
-                  selectionColor="#D99791"
-                  placeholder="0"
-                  placeholderTextColor="rgba(255,255,255,0.25)"
-                  style={[
-                    styles.input,
-                    {
-                      width:
-                        inputWidth,
-                      height:
-                        inputHeight,
-                      fontSize:
-                        inputFontSize,
-                      borderRadius:
-                        inputWidth *
-                        0.28,
-                    },
-                  ]}
-                />
-              )
-            )}
+
+            {code.map((value, index) => (
+              <TextInput
+                key={index}
+
+                ref={(ref) => {
+                  inputs.current[index] = ref;
+                }}
+
+                value={value}
+
+                onChangeText={(text) =>
+                  handleChange(
+                    text,
+                    index
+                  )
+                }
+
+                onKeyPress={(e) =>
+                  handleKeyPress(
+                    e,
+                    index
+                  )
+                }
+
+                keyboardType="number-pad"
+
+                maxLength={1}
+
+                selectTextOnFocus
+
+                textAlign="center"
+
+                selectionColor="#D99791"
+
+                placeholder="0"
+
+                placeholderTextColor="rgba(255,255,255,0.25)"
+
+                style={[
+                  styles.input,
+                  {
+                    width: inputWidth,
+                    height: inputHeight,
+                    fontSize: inputFontSize,
+                    borderRadius:
+                      inputWidth * 0.28,
+                  },
+                ]}
+              />
+            ))}
+
           </View>
 
-          {/* ========================= */}
-          {/* VERIFY BUTTON */}
-          {/* ========================= */}
+
+          {/* ================================================
+              VERIFY
+          ================================================ */}
 
           <TouchableOpacity
             style={[
-              styles.google,
+              styles.verifyButton,
               {
-                height:
-                  buttonHeight,
-                borderRadius:
-                  s(35),
-                marginTop:
-                  isVeryShort
-                    ? s(20)
-                    : isShort
-                    ? s(30)
-                    : s(45),
+                height: buttonHeight,
+                borderRadius: 35,
+                marginTop: buttonMarginTop,
               },
             ]}
-            onPress={
-              verifyCode
-            }
+            onPress={verifyCode}
             activeOpacity={0.8}
           >
+
             <Text
               style={[
-                styles.googleText,
+                styles.verifyText,
                 {
-                  fontSize:
-                    buttonFontSize,
+                  fontSize: buttonFontSize,
                 },
               ]}
             >
               Verify
             </Text>
+
           </TouchableOpacity>
 
-          {/* ========================= */}
-          {/* SEND AGAIN */}
-          {/* ========================= */}
+
+          {/* ================================================
+              SEND AGAIN
+          ================================================ */}
 
           <View
             style={[
               styles.register,
               {
-                marginTop: s(7),
+                marginTop: 7,
               },
             ]}
           >
+
             <Text
               style={[
                 styles.smallText,
                 {
-                  fontSize:
-                    smallFontSize,
+                  fontSize: smallFontSize,
                 },
               ]}
             >
-              You didn't receive
-              a code?
+              You didn't receive a code?
             </Text>
 
             <TouchableOpacity>
+
               <Text
                 style={[
                   styles.registerText,
                   {
-                    fontSize:
-                      smallFontSize,
+                    fontSize: smallFontSize,
                   },
                 ]}
               >
                 {" "}Send a new one
               </Text>
+
             </TouchableOpacity>
+
           </View>
 
         </View>
+
       </View>
+
     </ImageBackground>
   );
 }
 
+
+// ==================================================
+// STYLES
+// ==================================================
+
 const styles = StyleSheet.create({
+
+  // ==================================================
+  // BACKGROUND
+  // ==================================================
+
   background: {
     flex: 1,
   },
@@ -465,54 +541,64 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // ==========================================
+
+  // ==================================================
   // HEADER
-  // ==========================================
+  // ==================================================
 
   header: {
     position: "absolute",
-    left: "5%",
-    right: "5%",
 
-    alignItems: "flex-start",
+    alignItems:
+      "flex-start",
+
+    zIndex: 5,
   },
 
-  // ==========================================
-  // TITLE
-  // ==========================================
 
-  text: {
+  // ==================================================
+  // ENTER CODE
+  // ==================================================
+
+  titleContainer: {
     position: "absolute",
 
-    left: "5%",
-    right: "5%",
+    alignItems:
+      "center",
 
-    textAlign: "center",
+    zIndex: 4,
+  },
+
+  title: {
+    color: "#CF928A",
 
     fontWeight: "500",
 
-    color: "#CF928A",
+    textAlign: "center",
   },
 
-  // ==========================================
-  // BOTTOM
-  // ==========================================
+
+  // ==================================================
+  // BOTTOM SECTION
+  // ==================================================
 
   bottomSection: {
     position: "absolute",
 
-    left: "5%",
-    right: "5%",
+    alignItems:
+      "center",
   },
 
-  // ==========================================
+
+  // ==================================================
   // CODE
-  // ==========================================
+  // ==================================================
 
   codeContainer: {
     width: "100%",
 
-    flexDirection: "row",
+    flexDirection:
+      "row",
 
     justifyContent:
       "center",
@@ -533,8 +619,7 @@ const styles = StyleSheet.create({
     color:
       "#F5F1D1",
 
-    fontWeight:
-      "600",
+    fontWeight: "600",
 
     padding: 0,
 
@@ -545,11 +630,12 @@ const styles = StyleSheet.create({
       "center",
   },
 
-  // ==========================================
-  // VERIFY BUTTON
-  // ==========================================
 
-  google: {
+  // ==================================================
+  // VERIFY BUTTON
+  // ==================================================
+
+  verifyButton: {
     width: "100%",
 
     alignSelf:
@@ -570,16 +656,19 @@ const styles = StyleSheet.create({
       "center",
   },
 
-  googleText: {
+  verifyText: {
     color:
       "#fffde8",
   },
 
-  // ==========================================
+
+  // ==================================================
   // SEND AGAIN
-  // ==========================================
+  // ==================================================
 
   register: {
+    width: "100%",
+
     flexDirection:
       "row",
 
@@ -588,6 +677,9 @@ const styles = StyleSheet.create({
 
     alignItems:
       "center",
+
+    flexWrap:
+      "wrap",
   },
 
   smallText: {
@@ -602,4 +694,5 @@ const styles = StyleSheet.create({
     fontWeight:
       "600",
   },
+
 });
