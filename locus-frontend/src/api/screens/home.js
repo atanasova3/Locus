@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import AddTripCard from "../components/addTripCard";
 import TripCard from "../components/TripCard";
+import Line from "../components/line";
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
@@ -80,6 +81,8 @@ export default function HomeScreen() {
     ? 70
     : isShort
     ? 72
+    :isTablet
+    ? 90
     : 80;
 
   const profileSize = isVerySmall
@@ -93,10 +96,27 @@ export default function HomeScreen() {
     : 24;
 
   const lokiTranslateX = isVerySmall
-    ? 18
+    ? 25
     : isSmall
     ? 24
     : 30;
+
+  const grandientWidth = isVerySmall
+  ? 180
+  : isSmall
+  ? 250
+  : isTablet
+  ? 420
+  : 250;
+
+  const robotPadding = isVerySmall
+  ? -28
+  : isSmall
+  ? -28
+  : isTablet
+  ? -15
+  : -20;
+
   // ==================================================
   // CURRENT TRIP
   // ==================================================
@@ -152,12 +172,12 @@ export default function HomeScreen() {
   // ==================================================
 
   const topMargin = isVeryShort
-    ? 58
+    ? 20
     : isShort
-    ? 68
+    ? 30
     : isTablet
     ? 75
-    : 85;
+    : 45;
 
   const headerMarginBottom = isVeryShort
     ? 3
@@ -178,9 +198,9 @@ export default function HomeScreen() {
     : 18;
 
   const cardMarginTop = isVeryShort
-    ? 2
+    ? 3
     : isShort
-    ? 6
+    ? 5
     : 10;
 
   return (
@@ -267,12 +287,10 @@ export default function HomeScreen() {
                   styles.heroGradient,
                   {
                     height: speechHeight,
-                    width: Math.min(
-                      contentWidth,
-                      isTablet ? 445 : 315
-                    ),
+                    width: grandientWidth,
                     borderRadius: 28,
                     top: 12,
+                    zIndex: 1
                   },
                 ]}
               />
@@ -299,7 +317,7 @@ export default function HomeScreen() {
                     {
                       width: lokiSize,
                        transform: [{ translateX: lokiTranslateX }],
-                       zIndex: 2,
+                       zIndex: 3,
                     },
                   ]}
                 >
@@ -308,7 +326,7 @@ export default function HomeScreen() {
                     style={{
                       width: lokiSize,
                       height: lokiSize,
-                      marginBottom: -20,
+                      marginBottom: robotPadding,
 
                     }}
                     resizeMode="contain"
@@ -327,13 +345,13 @@ export default function HomeScreen() {
                       minHeight: speechHeight,
                       borderRadius: 28,
                       paddingHorizontal: isVerySmall
-                        ? 9
+                        ? 12
                         : 12,
                       paddingVertical: 9,
                       marginLeft: isVerySmall
-                        ? 5
+                        ? 10
                         : 12,
-                        zIndex: 1,
+                        zIndex: 2,
                     },
                   ]}
                 >
@@ -406,6 +424,7 @@ export default function HomeScreen() {
                     borderRadius: isTablet ? 32 : 30,
                     padding: isVerySmall ? 13 : 16,
                     borderWidth: 4,
+                    zIndex: 3
                   },
                 ]}
               >
@@ -544,15 +563,7 @@ export default function HomeScreen() {
                 marginTop: addTripMarginTop,
               }}
             >
-              <View
-                style={{
-                  width: 45,
-                  height: 7,
-                  backgroundColor: "#F7F1D2",
-                  borderRadius: 6,
-                  marginBottom: 5,
-                }}
-              />
+              <Line />
 
               <TouchableOpacity>
                 <Text
@@ -597,6 +608,8 @@ const styles = StyleSheet.create({
 
   background: {
     flex: 1,
+    width: "100%",
+  height: "100%",
   },
 
   blur: {
@@ -650,7 +663,7 @@ const styles = StyleSheet.create({
   },
 
   speechBubble: {
-    backgroundColor: "rgba(207, 146, 138, 0.92)",
+    backgroundColor: "rgba(207, 146, 138, 1)",
     justifyContent: "center",
     flexShrink: 1,
 

@@ -10,7 +10,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   useWindowDimensions,
-  ScrollView,
 } from "react-native";
 
 import {
@@ -93,9 +92,9 @@ export default function LoginScreen({ navigation }) {
   );
 
   const inputHeight = isVerySmall
-    ? 43
+    ? 38
     : isSmall
-    ? 45
+    ? 40
     : isTablet
     ? 56
     : 48;
@@ -123,23 +122,23 @@ export default function LoginScreen({ navigation }) {
   // ==================================================
 
   const topPadding = isVeryShort
-    ? 80
+    ? 30
     : isShort
-    ? 90
+    ? 40
     : isTablet
     ? 110
-    : 100;
+    : 70;
 
   const headerMargin = isVeryShort
-    ? 5
+    ? 2
     : isShort
-    ? 10
+    ? 0
     : 18;
 
   const titleMargin = isVeryShort
-    ? 10
+    ? 2
     : isShort
-    ? 16
+    ? 0
     : 22;
 
   const inputMargin = isVerySmall
@@ -151,13 +150,13 @@ export default function LoginScreen({ navigation }) {
     : 16;
 
   const buttonMargin = isVeryShort
-    ? 14
+    ? 10
     : isShort
-    ? 18
+    ? 10
     : 22;
 
   const orMargin = isVeryShort
-    ? 8
+    ? 4
     : isShort
     ? 11
     : 15;
@@ -233,6 +232,9 @@ export default function LoginScreen({ navigation }) {
       source={require("../components/photos/background.png")}
       style={styles.background}
       resizeMode="cover"
+        imageStyle={{
+    resizeMode: "cover",
+  }}
     >
       {/* ==================================================
           OVERLAY
@@ -252,14 +254,7 @@ export default function LoginScreen({ navigation }) {
             : "height"
         }
       >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingBottom: 40,
-          }}
-        >
+        
           {/* ==================================================
               CONTENT
           ================================================== */}
@@ -600,7 +595,7 @@ export default function LoginScreen({ navigation }) {
 
             </View>
           </View>
-        </ScrollView>
+        
       </KeyboardAvoidingView>
     </ImageBackground>
   );
@@ -618,6 +613,8 @@ const styles = StyleSheet.create({
 
   background: {
     flex: 1,
+width: "100%",
+  height: "100%",
   },
 
   overlay: {

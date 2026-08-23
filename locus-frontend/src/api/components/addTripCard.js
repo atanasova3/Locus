@@ -14,7 +14,7 @@ export default function AddTripCard() {
   // SCREEN SIZE
   // ==================================================
 
-  const isVerySmall = width < 340;
+  const isVerySmall = width < 350;
   const isSmall = width < 380;
 
   const isVeryShort = height < 620;
@@ -25,20 +25,23 @@ export default function AddTripCard() {
   // ==================================================
 
   const cardWidth = isVerySmall
-    ? 193
+    ? 175
     : isSmall
-    ? 208
-    : 230;
+    ? 187
+    : 210;
+
 
   const cardHeight = isVerySmall
-    ? 235
+    ? 200
     : isSmall
-    ? 255
-    : 280;
+    ? 205
+    : 230;
 
   const cardRadius = isVerySmall
     ? 25
     : 30;
+
+  
 
   // ==================================================
   // TEXT SIZE
@@ -61,10 +64,10 @@ export default function AddTripCard() {
   // ==================================================
 
   const cardMarginTop = isVeryShort
-    ? 12
+    ? 3
     : isShort
-    ? 18
-    : 22;
+    ? 5
+    : 10;
 
   const titleMarginBottom = isVerySmall
     ? 8

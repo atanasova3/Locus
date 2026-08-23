@@ -13,7 +13,7 @@ export default function HelloText({ animated = true }) {
   // SCREEN SIZE
   // ==================================================
 
-  const isVerySmall = width < 340;
+  const isVerySmall = width < 350;
   const isSmall = width < 380;
 
   const isVeryShort = height < 620;

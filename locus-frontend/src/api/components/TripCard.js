@@ -29,16 +29,16 @@ export default function TripCard() {
   // ==================================================
 
   const cardWidth = isVerySmall
-    ? 193
+    ? 175
     : isSmall
-    ? 208
-    : 230;
+    ? 187
+    : 210;
 
   const cardHeight = isVerySmall
-    ? 235
+    ? 200
     : isSmall
-    ? 255
-    : 280;
+    ? 205
+    : 230;
 
   const cardRadius = isVerySmall
     ? 25
@@ -70,11 +70,11 @@ export default function TripCard() {
   // CARD SPACING
   // ==================================================
 
-  const cardMarginTop = isVeryShort
-    ? 8
+const cardMarginTop = isVeryShort
+    ? 3
     : isShort
-    ? 14
-    : 20;
+    ? 5
+    : 10;
 
   // ==================================================
   // INFO BOX

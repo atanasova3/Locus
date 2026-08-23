@@ -17,20 +17,13 @@ export default function Menu() {
   // SCREEN SIZE
   // ==================================================
 
-  const isVerySmall =
-    width < 350;
+  const isVerySmall = width < 350;
+  const isSmall = width < 380;
 
-  const isSmall =
-    width < 380;
+  const isTablet = width >= 600;
 
-  const isTablet =
-    width >= 600;
-
-  const isVeryShort =
-    height < 620;
-
-  const isShort =
-    height < 700;
+  const isVeryShort = height < 620;
+  const isShort = height < 700;
 
   // ==================================================
   // MENU SIZE
@@ -69,11 +62,11 @@ export default function Menu() {
   // ==================================================
 
   const menuGap = isVerySmall
-    ? 9
+    ? 18
     : isSmall
     ? 13
     : isTablet
-    ? 25
+    ? 35
     : 20;
 
   // ==================================================

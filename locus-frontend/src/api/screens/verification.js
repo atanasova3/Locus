@@ -127,12 +127,12 @@ export default function VerificationScreen() {
   // ==================================================
 
   const topMargin = isVeryShort
-    ? 80
+    ? 30
     : isShort
-    ? 90
+    ? 50
     : isTablet
     ? 110
-    : 100;
+    : 70;
 
   // ==================================================
   // ENTER CODE POSITION
@@ -529,6 +529,8 @@ const styles = StyleSheet.create({
 
   background: {
     flex: 1,
+    width: "100%",
+  height: "100%",
   },
 
   overlay: {

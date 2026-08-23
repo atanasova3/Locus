@@ -90,9 +90,9 @@ export default function RegisterScreen({ navigation }) {
   );
 
   const inputHeight = isVerySmall
-    ? 43
+    ? 38
     : isSmall
-    ? 45
+    ? 40
     : isTablet
     ? 56
     : 48;
@@ -120,27 +120,27 @@ export default function RegisterScreen({ navigation }) {
   // ==================================================
 
   const topPadding = isVeryShort
-    ? 80
+    ? 30
     : isShort
-    ? 90
+    ? 50
     : isTablet
     ? 110
-    : 100;
+    : 70;
 
   const headerMargin = isVeryShort
-    ? 5
+    ? 2
     : isShort
-    ? 10
+    ? 5
     : 18;
 
   const titleMargin = isVeryShort
-    ? 10
+    ? 2
     : isShort
-    ? 16
+    ? 5
     : 22;
 
   const fieldMargin = isVeryShort
-    ? 8
+    ? 4
     : isShort
     ? 12
     : 16;
@@ -639,6 +639,8 @@ const styles = StyleSheet.create({
 
   background: {
     flex: 1,
+    width: "100%",
+  height: "100%",
   },
 
   overlay: {
