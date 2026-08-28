@@ -186,7 +186,7 @@ export default function HelloScreen() {
       ),
     ]).start(({ finished }) => {
       if (finished) {
-        navigation.navigate("Login");
+        navigation.navigate("Home");
       }
     });
   };

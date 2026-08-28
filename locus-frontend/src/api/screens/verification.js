@@ -132,7 +132,7 @@ export default function VerificationScreen() {
     ? 50
     : isTablet
     ? 110
-    : 70;
+    : 95;
 
   // ==================================================
   // ENTER CODE POSITION

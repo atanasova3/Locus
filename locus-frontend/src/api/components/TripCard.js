@@ -32,13 +32,13 @@ export default function TripCard() {
     ? 175
     : isSmall
     ? 187
-    : 210;
+    : 220;
 
   const cardHeight = isVerySmall
     ? 200
     : isSmall
     ? 205
-    : 230;
+    : 270;
 
   const cardRadius = isVerySmall
     ? 25

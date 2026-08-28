@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Text,
   SafeAreaView,
+  ScrollView
 } from "react-native";
 
 import { BlurView } from "expo-blur";
@@ -17,10 +18,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import AddTripCard from "../components/addTripCard";
 import TripCard from "../components/TripCard";
 import Line from "../components/line";
+import TripPopup from "../components/TripPopup";
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
-
+  const [tripPopupVisible, setTripPopupVisible] = useState(false);
   // ==================================================
   // RESPONSIVE BREAKPOINTS
   // ==================================================
@@ -508,18 +510,20 @@ export default function HomeScreen() {
                     NEXT
                 ================================================== */}
 
-                <TouchableOpacity
-                  style={[
-                    styles.nextButton,
-                    {
-                      right: isVerySmall ? 11 : 14,
-                      bottom: isVerySmall ? 14 : 17,
-                      width: isVerySmall ? 31 : 34,
-                      height: isVerySmall ? 31 : 34,
-                      borderRadius: 18,
-                    },
-                  ]}
-                >
+                              <TouchableOpacity
+                onPress={() => setTripPopupVisible(true)}
+                style={[
+                  styles.nextButton,
+                  {
+                    right: isVerySmall ? 11 : 14,
+                    bottom: isVerySmall ? 14 : 17,
+                    width: isVerySmall ? 31 : 34,
+                    height: isVerySmall ? 31 : 34,
+                    borderRadius: 18,
+                  },
+                ]}
+              >
+                
                   <Ionicons
                     name="chevron-forward"
                     size={isVerySmall ? 20 : 22}
@@ -582,17 +586,32 @@ export default function HomeScreen() {
             {/* ==================================================
                 ADD TRIP CARD
             ================================================== */}
-
+<ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.cards}
+            decelerationRate="fast"
+          >
             <View
               style={{
                 marginTop: cardMarginTop,
                 width: "100%",
+                flexDirection: "row",
+                gap: 25
               }}
             >
               <AddTripCard />
+              <TripCard />
+              <TripCard />
+
             </View>
+            </ScrollView>
           </View>
       </SafeAreaView>
+      <TripPopup
+  visible={tripPopupVisible}
+  onClose={() => setTripPopupVisible(false)}
+/>
     </ImageBackground>
   );
 }

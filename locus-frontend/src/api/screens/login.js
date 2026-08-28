@@ -127,13 +127,13 @@ export default function LoginScreen({ navigation }) {
     ? 40
     : isTablet
     ? 110
-    : 70;
+    : 95;
 
   const headerMargin = isVeryShort
     ? 2
     : isShort
     ? 0
-    : 18;
+    : 35;
 
   const titleMargin = isVeryShort
     ? 2

@@ -125,13 +125,13 @@ export default function RegisterScreen({ navigation }) {
     ? 50
     : isTablet
     ? 110
-    : 70;
+    : 95;
 
   const headerMargin = isVeryShort
     ? 2
     : isShort
     ? 5
-    : 18;
+    : 35;
 
   const titleMargin = isVeryShort
     ? 2
@@ -142,7 +142,7 @@ export default function RegisterScreen({ navigation }) {
   const fieldMargin = isVeryShort
     ? 4
     : isShort
-    ? 12
+    ? 9
     : 16;
 
   const labelMargin = isVerySmall
