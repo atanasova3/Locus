@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,9 +6,12 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
+import StepOne from "../components/StepOne";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function AddTripCard() {
   const { width, height } = useWindowDimensions();
+    const [StepOneVisible, setStepOneVisible] = useState(false);
 
   // ==================================================
   // SCREEN SIZE
@@ -16,6 +19,7 @@ export default function AddTripCard() {
 
   const isVerySmall = width < 350;
   const isSmall = width < 380;
+  const isTablet = width >= 600;
 
   const isVeryShort = height < 620;
   const isShort = height < 700;
@@ -28,6 +32,8 @@ export default function AddTripCard() {
     ? 175
     : isSmall
     ? 187
+    : isTablet
+    ? 240
     : 220;
 
 
@@ -91,6 +97,7 @@ export default function AddTripCard() {
 
   return (
     <TouchableOpacity
+    onPress={() => setStepOneVisible(true)}
       activeOpacity={0.9}
       style={[
         styles.addTripCard,
@@ -140,6 +147,10 @@ export default function AddTripCard() {
         tailored to your interests{"\n"}
         and budget.
       </Text>
+         <StepOne
+        visible={StepOneVisible}
+        onClose={() => setStepOneVisible(false)}
+      />
     </TouchableOpacity>
   );
 }

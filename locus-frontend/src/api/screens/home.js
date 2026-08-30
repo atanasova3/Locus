@@ -19,10 +19,16 @@ import AddTripCard from "../components/addTripCard";
 import TripCard from "../components/TripCard";
 import Line from "../components/line";
 import TripPopup from "../components/TripPopup";
+import StepOne from "../components/StepOne";
+
+
+
 
 export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
   const [tripPopupVisible, setTripPopupVisible] = useState(false);
+  const [StepOneVisible, setStepOneVisible] = useState(false);
+
   // ==================================================
   // RESPONSIVE BREAKPOINTS
   // ==================================================
@@ -569,7 +575,9 @@ export default function HomeScreen() {
             >
               <Line />
 
-              <TouchableOpacity>
+              <TouchableOpacity
+              onPress={() => setStepOneVisible(true)}
+              >
                 <Text
                   style={[
                     styles.addTripText,
@@ -612,6 +620,10 @@ export default function HomeScreen() {
   visible={tripPopupVisible}
   onClose={() => setTripPopupVisible(false)}
 />
+<StepOne
+        visible={StepOneVisible}
+        onClose={() => setStepOneVisible(false)}
+      />
     </ImageBackground>
   );
 }

@@ -32,6 +32,8 @@ export default function TripCard() {
     ? 175
     : isSmall
     ? 187
+    : isTablet
+    ? 240
     : 220;
 
   const cardHeight = isVerySmall
