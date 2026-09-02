@@ -54,7 +54,7 @@ export default function AddTripCard() {
   // ==================================================
 
   const titleSize = isVerySmall
-    ? 26
+    ? 23
     : isSmall
     ? 28
     : 30;
