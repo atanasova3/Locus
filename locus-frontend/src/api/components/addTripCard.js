@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import StepOne from "../components/StepOne";
+import StepOne from "../components/Steps";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function AddTripCard() {

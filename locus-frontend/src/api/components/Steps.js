@@ -11,13 +11,13 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-import Timeline from "../components/timeline";
+import Timeline from "./timeline";
 
-export default function StepOne({ visible, onClose }) {
+export default function Steps({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
 
   // ==================================================
-  // RESPONSIVE BREAKPOINTS
+  // RESPONSIVE
   // ==================================================
 
   const isVerySmall = width < 350;
@@ -28,7 +28,7 @@ export default function StepOne({ visible, onClose }) {
   const isShort = height < 700;
 
   // ==================================================
-  // MODAL WIDTH
+  // MODAL
   // ==================================================
 
   const modalHorizontalPadding = isTablet
@@ -41,10 +41,6 @@ export default function StepOne({ visible, onClose }) {
     ? Math.min(width * 0.72, 650)
     : width - modalHorizontalPadding * 2;
 
-  // ==================================================
-  // MODAL HEIGHT
-  // ==================================================
-
   const modalHeight = isVeryShort
     ? 320
     : isShort
@@ -55,19 +51,11 @@ export default function StepOne({ visible, onClose }) {
     ? 390
     : 400;
 
-  // ==================================================
-  // MODAL RADIUS
-  // ==================================================
-
   const modalRadius = isVerySmall
     ? 24
     : isTablet
     ? 36
     : 32;
-
-  // ==================================================
-  // MODAL PADDING
-  // ==================================================
 
   const modalTopPadding = isVeryShort
     ? 38
@@ -114,29 +102,28 @@ export default function StepOne({ visible, onClose }) {
     : 10;
 
   // ==================================================
+  // QUESTION SIZES
+  // ==================================================
+
+  const questionHeight = isTablet
+    ? 48
+    : isVerySmall
+    ? 40
+    : 44;
+
+  const questionGap = isTablet
+  ? 35
+  : isVeryShort
+  ? 18
+  : isShort
+  ? 25
+  : 30;
+
+  // ==================================================
   // STATE
   // ==================================================
 
   const [currentStep, setCurrentStep] = useState(1);
-
-  const [destination, setDestination] = useState("FR");
-
-  const [date, setDate] = useState(
-    "Check-in / Check-out"
-  );
-
-  // ==================================================
-  // RESPONSIVE INPUT SIZES
-  // ==================================================
-
-  const destinationWidth =
-    modalWidth - modalSidePadding * 2;
-
-  const dateWidth = isTablet
-    ? 290
-    : Math.min(destinationWidth * 0.75, 290);
-
-  const guestsWidth = destinationWidth;
 
   // ==================================================
   // NEXT
@@ -144,8 +131,39 @@ export default function StepOne({ visible, onClose }) {
 
   const handleNext = () => {
     if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      onClose();
     }
+  };
+
+  // ==================================================
+  // QUESTION TEXT
+  // ==================================================
+
+  const getQuestion = (index) => {
+    if (currentStep === 1) {
+      if (index === 0) {
+        return {
+          title: "Choose your destination:",
+          value: "FR",
+        };
+      }
+
+      if (index === 1) {
+        return {
+          title: "Check-in / Check-out",
+        };
+      }
+
+      return {
+        title: "2 adults · 0 children · 1 room",
+      };
+    }
+
+    return {
+      title: `Question ${index + 1}`,
+    };
   };
 
   // ==================================================
@@ -188,8 +206,9 @@ export default function StepOne({ visible, onClose }) {
             },
           ]}
         >
-
-          {/* DECORATIONS */}
+          {/* ==================================================
+              DECORATIONS
+          ================================================== */}
 
           <Image
             source={require("./photos/Decorations.png")}
@@ -197,7 +216,9 @@ export default function StepOne({ visible, onClose }) {
             style={styles.decorations}
           />
 
-          {/* CLOSE BUTTON */}
+          {/* ==================================================
+              CLOSE
+          ================================================== */}
 
           <Pressable
             style={[
@@ -222,114 +243,89 @@ export default function StepOne({ visible, onClose }) {
               ×
             </Text>
           </Pressable>
-           <Timeline currentStep={currentStep} />
+
+          {/* ==================================================
+              CONTENT
+          ================================================== */}
 
           <SafeAreaView style={styles.content}>
 
-            {/* HEADER */}
+            {/* ==================================================
+                HEADER
+            ================================================== */}
 
-<Text style={styles.step}>
-  Step {currentStep}:
-</Text>
+            <Text style={styles.step}>
+              Step {currentStep}:
+            </Text>
 
-<View style={styles.underline} />
+            <View style={styles.underline} />
 
+            {/* ==================================================
+                QUESTIONS AREA
+            ================================================== */}
 
-{/* STEP 1 */}
+            <View style={styles.questionsArea}>
 
-{currentStep === 1 && (
-  <View style={styles.stepContent}>
+           
 
-    <View style={styles.input}>
-      <Text style={styles.inputText}>
-        Choose your dream destination:
-      </Text>
+              <Timeline
+                currentStep={currentStep}
+                rowHeight={questionHeight}
+                rowGap={questionGap}
+              />
 
-      <Text style={styles.valueText}>
-        FR
-      </Text>
-    </View>
+              {/* QUESTIONS */}
 
-    <View style={[styles.input, styles.dateInput]}>
-      <Text style={styles.inputText}>
-        Check-in / Check-out
-      </Text>
-    </View>
+              <View style={styles.questionsColumn}>
+                {[0, 1, 2].map((index) => {
+                  const question = getQuestion(index);
 
-    <View style={[styles.input, styles.guestsInput]}>
-      <Text style={styles.inputText}>
-        2 adults · 0 children · 1 room
-      </Text>
-    </View>
+                  return (
+                    <View
+                      key={index}
+                      style={[
+                        styles.questionRow,
+                        {
+                          height: questionHeight,
+                          marginBottom:
+                            index < 2
+                              ? questionGap
+                              : 0,
+                        },
+                      ]}
+                    >
+                      <View style={styles.input}>
+                        <Text style={styles.inputText}>
+                          {question.title}
+                        </Text>
 
-  </View>
-)}
+                        {question.value && (
+                          <Text style={styles.valueText}>
+                            {question.value}
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
 
+            </View>
 
-{/* STEP 2 */}
+            {/* ==================================================
+                NEXT
+            ================================================== */}
 
-{currentStep === 2 && (
-  <View style={styles.stepContent}>
-
-  <View style={[styles.input, styles.question1]}>
-    <Text style={styles.inputText}>
-      Question 1
-    </Text>
-  </View>
-
-  <View style={[styles.input, styles.question2]}>
-    <Text style={styles.inputText}>
-      Question 2
-    </Text>
-  </View>
-
-  <View style={[styles.input, styles.question3]}>
-    <Text style={styles.inputText}>
-      Question 3
-    </Text>
-  </View>
-
-</View>
-)}
-
-
-{/* STEP 3 */}
-
-{currentStep === 3 && (
-<View style={styles.stepContent}>
-
-  <View style={[styles.input, styles.question1]}>
-    <Text style={styles.inputText}>
-      Question 1
-    </Text>
-  </View>
-
-  <View style={[styles.input, styles.question2]}>
-    <Text style={styles.inputText}>
-      Question 2
-    </Text>
-  </View>
-
-  <View style={[styles.input, styles.question3]}>
-    <Text style={styles.inputText}>
-      Question 3
-    </Text>
-  </View>
-
-</View>
-)}
-
-
-{/* NEXT */}
-
-<Pressable
-  style={styles.nextButton}
-  onPress={handleNext}
->
-  <Text style={styles.nextText}>
-    {currentStep === 3 ? "Done" : "Next"}
-  </Text>
-</Pressable>
+            <Pressable
+              style={styles.nextButton}
+              onPress={handleNext}
+            >
+              <Text style={styles.nextText}>
+                {currentStep === 3
+                  ? "Done"
+                  : "Next"}
+              </Text>
+            </Pressable>
 
           </SafeAreaView>
         </LinearGradient>
@@ -347,7 +343,8 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
 
-    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    backgroundColor:
+      "rgba(0, 0, 0, 0.55)",
 
     justifyContent: "center",
     alignItems: "center",
@@ -359,7 +356,6 @@ const styles = StyleSheet.create({
 
   modal: {
     position: "relative",
-
     overflow: "hidden",
   },
 
@@ -429,64 +425,77 @@ const styles = StyleSheet.create({
 
   underline: {
     width: 183,
-
     height: 2,
 
     backgroundColor: "#dc9997",
 
     marginTop: 2,
 
-    marginBottom: 45,
+    marginBottom: 15,
   },
 
   // ==================================================
-  // STEP CONTENT
+  // QUESTIONS AREA
   // ==================================================
 
-  stepContent: {
-  position: "relative",
+  questionsArea: {
+    flexDirection: "row",
 
-  marginLeft: 40,
-  marginTop: 20,
+    alignItems: "flex-start",
 
-  height: 220,
-},
+    width: "100%",
 
-input: {
-  position: "absolute",
+    flex: 1,
+  },
 
-  left: 0,
+  // ==================================================
+  // QUESTIONS
+  // ==================================================
 
-  height: 52,
+  questionsColumn: {
+    flex: 1,
 
-  borderRadius: 30,
-  borderWidth: 2,
-  borderColor: "#dc9997",
+    minWidth: 0,
 
-  flexDirection: "row",
-  alignItems: "center",
+    flexDirection: "column",
 
-  paddingHorizontal: 14,
+    marginLeft: 0,
+  },
 
-  backgroundColor: "rgba(207, 146, 138, 0.3)",
-},
+  questionRow: {
+    width: "100%",
 
-question1: {
-  top: -14,
-},
+    justifyContent: "center",
+  },
 
-question2: {
-  top: 81,
-},
+  // ==================================================
+  // INPUT
+  // ==================================================
 
-question3: {
-  top: 176,
-},
+  input: {
+    width: "100%",
+    height: "100%",
+
+    borderRadius: 30,
+
+    borderWidth: 2,
+
+    borderColor: "#dc9997",
+
+    flexDirection: "row",
+
+    alignItems: "center",
+
+    paddingHorizontal: 12,
+
+    backgroundColor:
+      "rgba(207, 146, 138, 0.3)",
+  },
 
   inputText: {
     color: "#fff4d9",
 
-    fontSize: 22,
+    fontSize: 17,
 
     fontWeight: "400",
 
@@ -496,21 +505,13 @@ question3: {
   valueText: {
     color: "#fff4d9",
 
-    fontSize: 22,
+    fontSize: 17,
 
     fontStyle: "italic",
 
     fontWeight: "700",
 
-    marginLeft: 8,
-  },
-
-  dateInput: {
-    marginTop: 30,
-  },
-
-  guestsInput: {
-    marginTop: 30,
+    marginLeft: 5,
   },
 
   // ==================================================
@@ -537,7 +538,8 @@ question3: {
 
     justifyContent: "center",
 
-    backgroundColor: "rgba(207, 146, 138, 0.3)",
+    backgroundColor:
+      "rgba(207, 146, 138, 0.3)",
   },
 
   nextText: {
@@ -547,26 +549,4 @@ question3: {
 
     fontWeight: "500",
   },
-  inputsContainer: {
-  marginTop: 0,
-},
-
-
-valueText: {
-  color: "#fff4d9",
-  fontSize: 18,
-  fontStyle: "italic",
-  fontWeight: "700",
-  marginLeft: 7,
-},
-
-dateInput: {
-  marginTop: 20,
-  width: 190,
-},
-
-guestsInput: {
-  marginTop: 20,
-  width: 270,
-},
 });

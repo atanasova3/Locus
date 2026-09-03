@@ -1,70 +1,118 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-export default function Timeline({ currentStep = 1 }) {
+export default function Timeline({
+  currentStep = 1,
+  rowHeight = 44,
+  rowGap = 45,
+}) {
+  // ==================================================
+  // PASSED DASHES
+  // ==================================================
+
+  const passed =
+    currentStep === 2
+      ? 3
+      : currentStep === 3
+      ? 6
+      : 0;
+
+  // ==================================================
+  // TOTAL HEIGHT
+  // ==================================================
+
+  const totalHeight =
+    rowHeight * 3 +
+    rowGap * 2;
+
+  // ==================================================
+  // RENDER
+  // ==================================================
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          height: totalHeight,
+        },
+      ]}
+    >
 
-      {/* ОБЩА ПУНКТИРНА ЛИНИЯ */}
-      <View style={styles.line}>
-        {Array.from({ length: 6 }).map((_, index) => {
+      {/* ==================================================
+          LINE
+      ================================================== */}
 
-          // Първите 3 пунктирчета = STEP 1 → STEP 2
-          // Последните 3 = STEP 2 → STEP 3
-          const passed =
-            (currentStep === 2 && index < 3) ||
-            (currentStep === 3);
+      <View
+        pointerEvents="none"
+        style={[
+          styles.line,
+          {
+            top: rowHeight / 2,
 
-          return (
+            height:
+              rowHeight * 2 +
+              rowGap * 2,
+          },
+        ]}
+      >
+        {Array.from({ length: 6 }).map(
+          (_, index) => (
             <View
               key={index}
               style={[
                 styles.dash,
                 {
-                  opacity: passed ? 1 : 0.35,
+                  opacity:
+                    index < passed
+                      ? 1
+                      : 0.35,
                 },
               ]}
             />
-          );
-        })}
-      </View>
-
-
-      {/* STEP 1 */}
-      <View style={styles.step1}>
-        {currentStep === 1 ? (
-          <ActiveCircle />
-        ) : (
-          <InactiveCircle />
+          )
         )}
       </View>
 
+      {/* ==================================================
+          POINTS
+      ================================================== */}
 
-      {/* STEP 2 */}
-      <View style={styles.step2}>
-        {currentStep === 2 ? (
-          <ActiveCircle />
-        ) : (
-          <InactiveCircle />
-        )}
-      </View>
+      {[0, 1, 2].map((index) => (
+        <View
+          key={index}
+          style={[
+            styles.row,
+            {
+              height: rowHeight,
 
+              marginBottom:
+                index < 2
+                  ? rowGap
+                  : 0,
+            },
+          ]}
+        >
+          <View style={styles.pointContainer}>
 
-      {/* STEP 3 */}
-      <View style={styles.step3}>
-        {currentStep === 3 ? (
-          <ActiveCircle />
-        ) : (
-          <InactiveCircle />
-        )}
-      </View>
+            {currentStep === index + 1 ? (
+              <ActiveCircle />
+            ) : (
+              <InactiveCircle />
+            )}
+
+          </View>
+        </View>
+      ))}
 
     </View>
   );
 }
 
-
+// ==================================================
 // ACTIVE CIRCLE
+// ==================================================
+
 function ActiveCircle() {
   return (
     <View style={styles.activeOuter}>
@@ -73,136 +121,143 @@ function ActiveCircle() {
   );
 }
 
-
+// ==================================================
 // INACTIVE CIRCLE
+// ==================================================
+
 function InactiveCircle() {
-  return <View style={styles.inactiveCircle} />;
+  return (
+    <View style={styles.inactiveCircle} />
+  );
 }
 
-
+// ==================================================
 // STYLES
+// ==================================================
+
 const styles = StyleSheet.create({
 
+  // ==================================================
+  // CONTAINER
+  // ==================================================
+
   container: {
-    position: "absolute",
+    width: 36,
 
-    left: 3,
-    top: 110,
+    flexShrink: 0,
 
-    width: 42,
-    height: 250,
+    position: "relative",
+
+    alignItems: "center",
+  },
+
+  // ==================================================
+  // ROW
+  // ==================================================
+
+  row: {
+    width: 36,
 
     alignItems: "center",
 
-    zIndex: 15,
+    justifyContent: "center",
   },
 
+  // ==================================================
+  // POINT CONTAINER
+  // ==================================================
 
-  // ОБЩА ЛИНИЯ
+  pointContainer: {
+    width: 36,
+
+    height: 36,
+
+    alignItems: "center",
+
+    justifyContent: "center",
+
+    zIndex: 5,
+  },
+
+  // ==================================================
+  // LINE
+  // ==================================================
+
   line: {
     position: "absolute",
 
-    top: 40,
-    height: 150,
+    left: "50%",
 
     width: 3,
+
+    marginLeft: -1.5,
 
     alignItems: "center",
+
     justifyContent: "space-between",
+
+    zIndex: 1,
   },
 
-
-  // ПУНКТИР
   dash: {
     width: 3,
+
     height: 14,
 
     borderRadius: 2,
 
-    backgroundColor: "#d99794",
+    backgroundColor: "#CF928A",
   },
 
-
-  // STEP 1
-  step1: {
-    position: "absolute",
-
-    top: 0,
-
-    width: 42,
-    height: 42,
-
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-
-  // STEP 2
-  step2: {
-    position: "absolute",
-
-    top: 95,
-
-    width: 42,
-    height: 42,
-
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-
-  // STEP 3
-  step3: {
-    position: "absolute",
-
-    top: 190,
-
-    width: 42,
-    height: 42,
-
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-
+  // ==================================================
   // INACTIVE
+  // ==================================================
+
   inactiveCircle: {
     width: 9,
+
     height: 9,
 
     borderRadius: 5,
 
-    backgroundColor: "#d99794",
+    backgroundColor: "#CF928A",
 
     opacity: 0.8,
+
+    zIndex: 5,
   },
 
-
+  // ==================================================
   // ACTIVE
+  // ==================================================
+
   activeOuter: {
     width: 23,
+
     height: 23,
 
     borderRadius: 20,
 
     borderWidth: 2,
 
-    borderColor: "#d99794",
-
-  
+    borderColor: "#CF928A",
 
     alignItems: "center",
-    justifyContent: "center",
-  },
 
+    justifyContent: "center",
+
+    backgroundColor: "transparent",
+
+    zIndex: 5,
+  },
 
   activeInner: {
     width: 13,
+
     height: 13,
 
     borderRadius: 12,
 
-    backgroundColor: "#dc9997",
+    backgroundColor: "#CF928A",
   },
-
 });
