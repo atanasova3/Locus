@@ -186,7 +186,7 @@ export default function HelloScreen() {
       ),
     ]).start(({ finished }) => {
       if (finished) {
-        navigation.navigate("Register");       //SMQNA NA EKRANA
+        navigation.navigate("Home");       //SMQNA NA EKRANA
       }
     });
   };

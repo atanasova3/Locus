@@ -141,30 +141,31 @@ export default function Steps({ visible, onClose }) {
   // QUESTION TEXT
   // ==================================================
 
-  const getQuestion = (index) => {
-    if (currentStep === 1) {
-      if (index === 0) {
-        return {
-          title: "Choose your destination:",
-          value: "FR",
-        };
-      }
-
-      if (index === 1) {
-        return {
-          title: "Check-in / Check-out",
-        };
-      }
-
-      return {
-        title: "2 adults · 0 children · 1 room",
-      };
-    }
-
-    return {
-      title: `Question ${index + 1}`,
-    };
+ 
+const getQuestion = (index) => {
+  const questions = {
+    1: [
+      { title: "Choose your destination:", value: "FR" },
+      { title: "Check-in / Check-out" },
+      { title: "2 adults · 0 children · 1 room" },
+    ],
+    2: [
+      { title: "What's your travel style?" },
+      { title: "What's your budget?" },
+      { title: "How would you like to travel?" },
+    ],
+    3: [
+      { title: "Where would you like to stay?" },
+      { title: "What are you interested in?" },
+      { title: "What's your preferred travel pace?" },
+    ],
   };
+
+  return questions[currentStep]?.[index] ?? {
+    title: "Question",
+  };
+};
+
 
   // ==================================================
   // RENDER
@@ -495,7 +496,7 @@ const styles = StyleSheet.create({
   inputText: {
     color: "#fff4d9",
 
-    fontSize: 17,
+    fontSize: 16,
 
     fontWeight: "400",
 

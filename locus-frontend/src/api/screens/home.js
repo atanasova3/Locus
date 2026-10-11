@@ -20,6 +20,7 @@ import TripCard from "../components/TripCard";
 import Line from "../components/line";
 import TripPopup from "../components/TripPopup";
 import Steps from "../components/Steps";
+import MyProfile from "../components/myProfile";
 
 
 
@@ -28,6 +29,7 @@ export default function HomeScreen() {
   const { width, height } = useWindowDimensions();
   const [tripPopupVisible, setTripPopupVisible] = useState(false);
   const [StepsVisible, setStepsVisible] = useState(false);
+  const [myProfileVisible, setmyProfileVisible] = useState(false);
 
   // ==================================================
   // RESPONSIVE BREAKPOINTS
@@ -394,6 +396,7 @@ export default function HomeScreen() {
                 ================================================== */}
 
                 <TouchableOpacity
+                 onPress={() => setmyProfileVisible(true)}
                   style={[
                     styles.profileButton,
                     {
@@ -624,6 +627,13 @@ export default function HomeScreen() {
         visible={StepsVisible}
         onClose={() => setStepsVisible(false)}
       />
+
+      {myProfileVisible && (
+  <MyProfile
+    visible={myProfileVisible}
+    onClose={() => setmyProfileVisible(false)}
+  />
+)}
     </ImageBackground>
   );
 }
