@@ -15,12 +15,14 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import YourGuide from "../components/yourGuide";
 
 export default function MyProfile({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
 
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [yourGuideVisible, setYourGuideVisible] = useState(false);
 
   // RESPONSIVE BREAKPOINTS
   const isVerySmall = width < 350;
@@ -67,7 +69,7 @@ const rowTextSize = (isTablet ? 21 : isVerySmall ? 16 : 19) * scale;
 const sectionTextSize = (isVerySmall ? 14 : 16) * scale;
   const rowHeight = (isVeryShort ? 29 : isShort ? 33 : 37) * scale;
   const sectionGap = (isVeryShort ? 7 : isShort ? 10 : 14) * scale;
-  const panelRadius = (isTablet ? 30 : 25) * scale;
+  const panelRadius = (isTablet ?  45 : 40) * scale;
 
   const openItem = (label) => {
     console.log(`${label} pressed`);
@@ -438,11 +440,13 @@ const sectionTextSize = (isVerySmall ? 14 : 16) * scale;
               >
                 <SectionTitle>Support</SectionTitle>
 
+                
                 <SettingsRow
                   label="Your guide"
                   showChevron
-                  onPress={() => openItem("Your guide")}
+                  onPress={() => setYourGuideVisible(true)}
                 />
+
 
                 <SettingsRow
                   label="Contact us"
@@ -451,6 +455,11 @@ const sectionTextSize = (isVerySmall ? 14 : 16) * scale;
                   onPress={() => openItem("Contact us")}
                 />
               </View>
+
+              <YourGuide
+                      visible={yourGuideVisible}
+                      onClose={() => setYourGuideVisible(false)}
+                    />
             </ScrollView>
           </LinearGradient>
         </SafeAreaView>

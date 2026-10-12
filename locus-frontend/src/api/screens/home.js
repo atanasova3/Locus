@@ -21,6 +21,8 @@ import Line from "../components/line";
 import TripPopup from "../components/TripPopup";
 import Steps from "../components/Steps";
 import MyProfile from "../components/myProfile";
+import YourGuide from "../components/yourGuide";
+
 
 
 
@@ -30,7 +32,8 @@ export default function HomeScreen() {
   const [tripPopupVisible, setTripPopupVisible] = useState(false);
   const [StepsVisible, setStepsVisible] = useState(false);
   const [myProfileVisible, setmyProfileVisible] = useState(false);
-
+  const [yourGuideVisible, setYourGuideVisible] = useState(false);
+  
   // ==================================================
   // RESPONSIVE BREAKPOINTS
   // ==================================================
