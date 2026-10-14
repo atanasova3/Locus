@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Pressable,
-  StyleSheet,
   useWindowDimensions,
   Image,
   SafeAreaView,
@@ -12,122 +11,15 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 import Timeline from "./timeline";
+import stepsStyles from "../styles/stepsStyles";
+import { clamp } from "../utils/verificationLayout";
+
+const styles = stepsStyles;
 
 export default function Steps({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
 
-  // ==================================================
-  // RESPONSIVE
-  // ==================================================
-
-  const isVerySmall = width < 350;
-  const isSmall = width < 380;
-  const isTablet = width >= 600;
-
-  const isVeryShort = height < 620;
-  const isShort = height < 700;
-
-  // ==================================================
-  // MODAL
-  // ==================================================
-
-  const modalHorizontalPadding = isTablet
-    ? Math.min(width * 0.08, 70)
-    : isSmall
-    ? 16
-    : 24;
-
-  const modalWidth = isTablet
-    ? Math.min(width * 0.72, 650)
-    : width - modalHorizontalPadding * 2;
-
-  const modalHeight = isVeryShort
-    ? 320
-    : isShort
-    ? 350
-    : isTablet
-    ? 470
-    : isSmall
-    ? 390
-    : 400;
-
-  const modalRadius = isVerySmall
-    ? 24
-    : isTablet
-    ? 36
-    : 32;
-
-  const modalTopPadding = isVeryShort
-    ? 38
-    : isShort
-    ? 43
-    : isTablet
-    ? 55
-    : 45;
-
-  const modalSidePadding = isVerySmall
-    ? 14
-    : isSmall
-    ? 16
-    : isTablet
-    ? 25
-    : 18;
-
-  // ==================================================
-  // CLOSE BUTTON
-  // ==================================================
-
-  const closeSize = isVerySmall
-    ? 26
-    : isTablet
-    ? 34
-    : 30;
-
-  const closeFontSize = isVerySmall
-    ? 24
-    : isTablet
-    ? 32
-    : 28;
-
-  const closeRight = isVerySmall
-    ? 12
-    : isTablet
-    ? 20
-    : 17;
-
-  const closeTop = isVeryShort
-    ? 7
-    : isTablet
-    ? 12
-    : 10;
-
-  // ==================================================
-  // QUESTION SIZES
-  // ==================================================
-
-  const questionHeight = isTablet
-    ? 48
-    : isVerySmall
-    ? 40
-    : 44;
-
-  const questionGap = isTablet
-  ? 35
-  : isVeryShort
-  ? 18
-  : isShort
-  ? 25
-  : 30;
-
-  // ==================================================
-  // STATE
-  // ==================================================
-
   const [currentStep, setCurrentStep] = useState(1);
-
-  // ==================================================
-  // NEXT
-  // ==================================================
 
   const handleNext = () => {
     if (currentStep < 3) {
@@ -137,39 +29,155 @@ export default function Steps({ visible, onClose }) {
     }
   };
 
-  // ==================================================
-  // QUESTION TEXT
-  // ==================================================
+  const {
+    isVerySmall,
+    isSmall,
+    isTablet,
+    isVeryShort,
+    isShort,
+    modalHorizontalPadding,
+    modalWidth,
+    modalHeight,
+    modalRadius,
+    modalTopPadding,
+    modalSidePadding,
+    closeSize,
+    closeFontSize,
+    closeRight,
+    closeTop,
+    questionHeight,
+    questionGap,
+  } = (() => {
+    const isVerySmallValue = width < 350;
+    const isSmallValue = width < 380;
+    const isTabletValue = width >= 600;
+    const isVeryShortValue = height < 620;
+    const isShortValue = height < 700;
 
- 
-const getQuestion = (index) => {
-  const questions = {
-    1: [
-      { title: "Choose your destination:", value: "FR" },
-      { title: "Check-in / Check-out" },
-      { title: "2 adults · 0 children · 1 room" },
-    ],
-    2: [
-      { title: "What's your travel style?" },
-      { title: "What's your budget?" },
-      { title: "How would you like to travel?" },
-    ],
-    3: [
-      { title: "Where would you like to stay?" },
-      { title: "What are you interested in?" },
-      { title: "What's your preferred travel pace?" },
-    ],
+    const modalHorizontalPaddingValue = isTabletValue
+      ? Math.min(width * 0.08, 70)
+      : isSmallValue
+      ? 16
+      : 24;
+
+    const modalWidthValue = isTabletValue
+      ? Math.min(width * 0.72, 650)
+      : width - modalHorizontalPaddingValue * 2;
+
+    const modalHeightValue = isVeryShortValue
+      ? 320
+      : isShortValue
+      ? 350
+      : isTabletValue
+      ? 470
+      : isSmallValue
+      ? 390
+      : 400;
+
+    const modalRadiusValue = isVerySmallValue
+      ? 24
+      : isTabletValue
+      ? 36
+      : 32;
+
+    const modalTopPaddingValue = isVeryShortValue
+      ? 38
+      : isShortValue
+      ? 43
+      : isTabletValue
+      ? 55
+      : 45;
+
+    const modalSidePaddingValue = isVerySmallValue
+      ? 14
+      : isSmallValue
+      ? 16
+      : isTabletValue
+      ? 25
+      : 18;
+
+    const closeSizeValue = isVerySmallValue
+      ? 26
+      : isTabletValue
+      ? 34
+      : 30;
+
+    const closeFontSizeValue = isVerySmallValue
+      ? 24
+      : isTabletValue
+      ? 32
+      : 28;
+
+    const closeRightValue = isVerySmallValue
+      ? 12
+      : isTabletValue
+      ? 20
+      : 17;
+
+    const closeTopValue = isVeryShortValue
+      ? 7
+      : isTabletValue
+      ? 12
+      : 10;
+
+    const questionHeightValue = isTabletValue
+      ? 48
+      : isVerySmallValue
+      ? 40
+      : 44;
+
+    const questionGapValue = isTabletValue
+      ? 35
+      : isVeryShortValue
+      ? 18
+      : isShortValue
+      ? 25
+      : 30;
+
+    return {
+      isVerySmall: isVerySmallValue,
+      isSmall: isSmallValue,
+      isTablet: isTabletValue,
+      isVeryShort: isVeryShortValue,
+      isShort: isShortValue,
+      modalHorizontalPadding: modalHorizontalPaddingValue,
+      modalWidth: modalWidthValue,
+      modalHeight: modalHeightValue,
+      modalRadius: modalRadiusValue,
+      modalTopPadding: modalTopPaddingValue,
+      modalSidePadding: modalSidePaddingValue,
+      closeSize: closeSizeValue,
+      closeFontSize: closeFontSizeValue,
+      closeRight: closeRightValue,
+      closeTop: closeTopValue,
+      questionHeight: questionHeightValue,
+      questionGap: questionGapValue,
+    };
+  })();
+
+  const getQuestion = (index) => {
+    const questions = {
+      1: [
+        { title: "Choose your destination:", value: "FR" },
+        { title: "Check-in / Check-out" },
+        { title: "2 adults · 0 children · 1 room" },
+      ],
+      2: [
+        { title: "What's your travel style?" },
+        { title: "What's your budget?" },
+        { title: "How would you like to travel?" },
+      ],
+      3: [
+        { title: "Where would you like to stay?" },
+        { title: "What are you interested in?" },
+        { title: "What's your preferred travel pace?" },
+      ],
+    };
+
+    return questions[currentStep]?.[index] ?? {
+      title: "Question",
+    };
   };
-
-  return questions[currentStep]?.[index] ?? {
-    title: "Question",
-  };
-};
-
-
-  // ==================================================
-  // RENDER
-  // ==================================================
 
   return (
     <Modal
@@ -334,220 +342,3 @@ const getQuestion = (index) => {
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-
-  // ==================================================
-  // OVERLAY
-  // ==================================================
-
-  overlay: {
-    flex: 1,
-
-    backgroundColor:
-      "rgba(0, 0, 0, 0.55)",
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  // ==================================================
-  // MODAL
-  // ==================================================
-
-  modal: {
-    position: "relative",
-    overflow: "hidden",
-  },
-
-  content: {
-    flex: 1,
-
-    position: "relative",
-
-    zIndex: 5,
-  },
-
-  // ==================================================
-  // DECORATIONS
-  // ==================================================
-
-  decorations: {
-    position: "absolute",
-
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-
-    width: "100%",
-    height: "100%",
-
-    zIndex: 1,
-  },
-
-  // ==================================================
-  // CLOSE
-  // ==================================================
-
-  close: {
-    position: "absolute",
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    zIndex: 20,
-    elevation: 20,
-  },
-
-  closeText: {
-    color: "#e99a9a",
-
-    fontWeight: "300",
-
-    lineHeight: 20,
-  },
-
-  // ==================================================
-  // STEP
-  // ==================================================
-
-  step: {
-    fontSize: 36,
-
-    fontStyle: "italic",
-
-    fontWeight: "500",
-
-    color: "#e39b99",
-
-    marginTop: 0,
-  },
-
-  underline: {
-    width: 183,
-    height: 2,
-
-    backgroundColor: "#dc9997",
-
-    marginTop: 2,
-
-    marginBottom: 15,
-  },
-
-  // ==================================================
-  // QUESTIONS AREA
-  // ==================================================
-
-  questionsArea: {
-    flexDirection: "row",
-
-    alignItems: "flex-start",
-
-    width: "100%",
-
-    flex: 1,
-  },
-
-  // ==================================================
-  // QUESTIONS
-  // ==================================================
-
-  questionsColumn: {
-    flex: 1,
-
-    minWidth: 0,
-
-    flexDirection: "column",
-
-    marginLeft: 0,
-  },
-
-  questionRow: {
-    width: "100%",
-
-    justifyContent: "center",
-  },
-
-  // ==================================================
-  // INPUT
-  // ==================================================
-
-  input: {
-    width: "100%",
-    height: "100%",
-
-    borderRadius: 30,
-
-    borderWidth: 2,
-
-    borderColor: "#dc9997",
-
-    flexDirection: "row",
-
-    alignItems: "center",
-
-    paddingHorizontal: 12,
-
-    backgroundColor:
-      "rgba(207, 146, 138, 0.3)",
-  },
-
-  inputText: {
-    color: "#fff4d9",
-
-    fontSize: 16,
-
-    fontWeight: "400",
-
-    flexShrink: 1,
-  },
-
-  valueText: {
-    color: "#fff4d9",
-
-    fontSize: 17,
-
-    fontStyle: "italic",
-
-    fontWeight: "700",
-
-    marginLeft: 5,
-  },
-
-  // ==================================================
-  // NEXT
-  // ==================================================
-
-  nextButton: {
-    position: "absolute",
-
-    left: 0,
-    right: 0,
-
-    bottom: 10,
-
-    height: 40,
-
-    borderRadius: 40,
-
-    borderWidth: 2,
-
-    borderColor: "#dc9997",
-
-    alignItems: "center",
-
-    justifyContent: "center",
-
-    backgroundColor:
-      "rgba(207, 146, 138, 0.3)",
-  },
-
-  nextText: {
-    color: "#fff4d9",
-
-    fontSize: 20,
-
-    fontWeight: "500",
-  },
-});

@@ -1,0 +1,115 @@
+import { StyleSheet } from "react-native";
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modal: {
+    position: "relative",
+    overflow: "hidden",
+  },
+  content: {
+    flex: 1,
+    position: "relative",
+    zIndex: 5,
+  },
+  decorations: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: 1,
+  },
+  close: {
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 20,
+    elevation: 20,
+  },
+  closeText: {
+    color: "#e99a9a",
+    fontWeight: "300",
+    lineHeight: 20,
+  },
+  step: {
+    fontSize: 36,
+    fontStyle: "italic",
+    fontWeight: "500",
+    color: "#e39b99",
+    marginTop: 0,
+  },
+  underline: {
+    width: 183,
+    height: 2,
+    backgroundColor: "#dc9997",
+    marginTop: 2,
+    marginBottom: 15,
+  },
+  questionsArea: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    width: "100%",
+    flex: 1,
+  },
+  questionsColumn: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: "column",
+    marginLeft: 0,
+  },
+  questionRow: {
+    width: "100%",
+    justifyContent: "center",
+  },
+  input: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#dc9997",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    backgroundColor: "rgba(207, 146, 138, 0.3)",
+  },
+  inputText: {
+    color: "#fff4d9",
+    fontSize: 16,
+    fontWeight: "400",
+    flexShrink: 1,
+  },
+  valueText: {
+    color: "#fff4d9",
+    fontSize: 17,
+    fontStyle: "italic",
+    fontWeight: "700",
+    marginLeft: 5,
+  },
+  nextButton: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 10,
+    height: 40,
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: "#dc9997",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(207, 146, 138, 0.3)",
+  },
+  nextText: {
+    color: "#fff4d9",
+    fontSize: 20,
+    fontWeight: "500",
+  },
+});
+
+export default styles;

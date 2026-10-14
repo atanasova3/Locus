@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   ImageBackground,
-  StyleSheet,
   View,
   Text,
   TextInput,
@@ -18,152 +17,38 @@ import {
 } from "@expo/vector-icons";
 
 import HelloText from "../components/HelloText";
+import authStyles from "../styles/authStyles";
+import { getAuthLayoutMetrics } from "../utils/authLayout";
+import { loginUser } from "../services/authService";
+
+const styles = authStyles;
 
 export default function LoginScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
 
-  // ==================================================
-  // STATES
-  // ==================================================
-
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // ==================================================
-  // RESPONSIVE BREAKPOINTS
-  // ==================================================
-
-  const isVerySmall = width < 350;
-  const isSmall = width < 380;
-  const isTablet = width >= 600;
-
-  const isVeryShort = height < 620;
-  const isShort = height < 700;
-
-  // ==================================================
-  // CONTENT WIDTH
-  // ==================================================
-
-  const horizontalPadding = isTablet
-    ? Math.min(width * 0.08, 70)
-    : isSmall
-    ? 21
-    : 25;
-
-  const contentWidth = Math.min(
-    width - horizontalPadding * 2,
-    700
-  );
-
-  // ==================================================
-  // RESPONSIVE HELPER
-  // ==================================================
-
-  const clamp = (value, min, max) =>
-    Math.min(Math.max(value, min), max);
-
-  // ==================================================
-  // SIZES
-  // ==================================================
-
-  const titleSize = clamp(
-    width * 0.095,
-    32,
-    42
-  );
-
-  const labelSize = clamp(
-    width * 0.051,
-    17,
-    21
-  );
-
-  const inputFontSize = clamp(
-    width * 0.046,
-    16,
-    19
-  );
-
-  const buttonFontSize = clamp(
-    width * 0.051,
-    18,
-    22
-  );
-
-  const inputHeight = isVerySmall
-    ? 38
-    : isSmall
-    ? 40
-    : isTablet
-    ? 56
-    : 48;
-
-  const iconSize = clamp(
-    width * 0.059,
-    21,
-    25
-  );
-
-  const smallFontSize = clamp(
-    width * 0.038,
-    13,
-    16
-  );
-
-  const forgotFontSize = clamp(
-    width * 0.036,
-    13,
-    15
-  );
-
-  // ==================================================
-  // VERTICAL SPACING
-  // ==================================================
-
-  const topPadding = isVeryShort
-    ? 30
-    : isShort
-    ? 40
-    : isTablet
-    ? 110
-    : 95;
-
-  const headerMargin = isVeryShort
-    ? 2
-    : isShort
-    ? 0
-    : 35;
-
-  const titleMargin = isVeryShort
-    ? 2
-    : isShort
-    ? 0
-    : 22;
-
-  const inputMargin = isVerySmall
-    ? 7
-    : isVeryShort
-    ? 9
-    : isShort
-    ? 12
-    : 16;
-
-  const buttonMargin = isVeryShort
-    ? 10
-    : isShort
-    ? 10
-    : 22;
-
-  const orMargin = isVeryShort
-    ? 4
-    : isShort
-    ? 11
-    : 15;
-
-  // ==================================================
-  // LOGIN
-  // ==================================================
+  const {
+    isVerySmall,
+    contentWidth,
+    titleSize,
+    labelSize,
+    inputFontSize,
+    buttonFontSize,
+    inputHeight,
+    iconSize,
+    smallFontSize,
+    forgotFontSize,
+    topPadding,
+    headerMargin,
+    titleMargin,
+    fieldMargin: inputMargin,
+    labelMargin,
+    primaryButtonMargin: buttonMargin,
+    orMargin,
+    clamp,
+  } = getAuthLayoutMetrics(width, height, "login");
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -176,44 +61,20 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
-      const response = await fetch(
-        "http://192.168.0.194:5000/api/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+      await loginUser({
+        email,
+        password,
+      });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Home" }],
-        });
-
-        return;
-      }
-
-      const errorMessage =
-        data.error ||
-        data.message ||
-        "Login failed.";
-
-      Alert.alert(
-        "Error",
-        errorMessage
-      );
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
     } catch (error) {
       Alert.alert(
         "Error",
-        "An error occurred. Please try again later."
+        error.message ||
+          "An error occurred. Please try again later."
       );
 
       console.error(
@@ -600,183 +461,3 @@ export default function LoginScreen({ navigation }) {
     </ImageBackground>
   );
 }
-
-// ==================================================
-// STYLES
-// ==================================================
-
-const styles = StyleSheet.create({
-
-  // ==================================================
-  // BACKGROUND
-  // ==================================================
-
-  background: {
-    flex: 1,
-width: "100%",
-  height: "100%",
-  },
-
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor:
-      "rgba(0,0,0,0.5)",
-  },
-
-  // ==================================================
-  // CONTAINER
-  // ==================================================
-
-  container: {
-    flex: 1,
-  },
-
-  contentWrapper: {
-    flexGrow: 1,
-  },
-
-  // ==================================================
-  // HEADER
-  // ==================================================
-
-  header: {
-    alignItems: "flex-start",
-  },
-
-  // ==================================================
-  // TITLE
-  // ==================================================
-
-  title: {
-    width: "100%",
-    textAlign: "center",
-    fontWeight: "500",
-    color: "#CF928A",
-  },
-
-  // ==================================================
-  // FORM
-  // ==================================================
-
-  content: {
-    width: "100%",
-  },
-
-  // ==================================================
-  // LABEL
-  // ==================================================
-
-  label: {
-    color: "#F5F1D1",
-  },
-
-  // ==================================================
-  // INPUT
-  // ==================================================
-
-  input: {
-    width: "100%",
-
-    borderWidth: 3,
-    borderColor: "#CF928A",
-
-    backgroundColor:
-      "rgba(207,146,138,0.3)",
-
-    color: "#F5F1D1",
-  },
-
-  // ==================================================
-  // PASSWORD
-  // ==================================================
-
-  passwordBox: {
-    width: "100%",
-
-    borderWidth: 3,
-    borderColor: "#CF928A",
-
-    backgroundColor:
-      "rgba(207,146,138,0.3)",
-
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  passwordInput: {
-    flex: 1,
-    color: "#F5F1D1",
-    padding: 0,
-  },
-
-  // ==================================================
-  // FORGOT
-  // ==================================================
-
-  forgot: {
-    color: "#F5F1D1",
-  },
-
-  // ==================================================
-  // BUTTONS
-  // ==================================================
-
-  actionButton: {
-    width: "100%",
-
-    borderWidth: 3,
-    borderColor: "#CF928A",
-
-    backgroundColor:
-      "rgba(207,146,138,0.3)",
-
-    flexDirection: "row",
-
-    justifyContent: "center",
-    alignItems: "center",
-
-    gap: 8,
-  },
-
-  buttonText: {
-    color: "#fffde8",
-  },
-
-  // ==================================================
-  // OR
-  // ==================================================
-
-  or: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  line: {
-    flex: 1,
-    backgroundColor: "#c99591",
-  },
-
-  orText: {
-    color: "#c99591",
-    fontStyle: "italic",
-  },
-
-  // ==================================================
-  // REGISTER
-  // ==================================================
-
-  register: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  smallText: {
-    color: "#fffde8",
-  },
-
-  registerText: {
-    color: "#fffde8",
-    fontWeight: "600",
-  },
-});
