@@ -9,20 +9,29 @@ import {
   KeyboardAvoidingView,
   Platform,
   useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
+
+import * as WebBrowser from "expo-web-browser";
+import * as AuthSession from "expo-auth-session";
+import { supabase } from "../utils/supabase";
 
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import HelloText from "../components/HelloText";
-import authStyles from "../styles/authStyles";
+import styles from "../styles/authStyles";
 import { getAuthLayoutMetrics } from "../utils/authLayout";
 import { registerUser } from "../services/authService";
 
-const styles = authStyles;
+
+WebBrowser.maybeCompleteAuthSession();
+
+
 
 export default function RegisterScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -82,6 +91,57 @@ export default function RegisterScreen({ navigation }) {
       );
     }
   };
+  // ADDED THIS WHOLE FUNCTION:
+const handleGoogleSignIn = async () => {
+  try {
+    setIsLoading(true);
+
+    const redirectTo = AuthSession.makeRedirectUri({
+      scheme: "locus",
+      path: "auth/callback",
+    });
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo,
+        skipBrowserRedirect: true,
+      },
+    });
+
+    if (error) throw error;
+
+    const res = await WebBrowser.openAuthSessionAsync(
+      data?.url,
+      redirectTo
+    );
+
+    if (res.type === "success") {
+      const url = new URL(res.url);
+      const accessToken = url.searchParams.get("access_token");
+      const refreshToken = url.searchParams.get("refresh_token");
+
+      if (accessToken && refreshToken) {
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+
+        if (sessionError) throw sessionError;
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Google Sign-In Error:", error.message);
+    Alert.alert("Authentication Error", error.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // ==================================================
   // UI
@@ -411,30 +471,35 @@ export default function RegisterScreen({ navigation }) {
                   styles.actionButton,
                   {
                     height: inputHeight,
-                    borderRadius:
-                      inputHeight / 2,
+                    borderRadius: inputHeight / 2,
                   },
                 ]}
                 activeOpacity={0.8}
-                
+                onPress={handleGoogleSignIn}
+                disabled={isLoading}
               >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    {
-                      fontSize:
-                        buttonFontSize,
-                    },
-                  ]}
-                >
-                  Continue with Google
-                </Text>
+                {isLoading ? (
+                  <ActivityIndicator color="#F5F1D1" />
+                ) : (
+                  <>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        {
+                          fontSize: buttonFontSize,
+                        },
+                      ]}
+                    >
+                      Continue with Google
+                    </Text>
 
-                <FontAwesome
-                  name="google"
-                  size={iconSize}
-                  color="#F5F1D1"
-                />
+                    <FontAwesome
+                      name="google"
+                      size={iconSize}
+                      color="#F5F1D1"
+                    />
+                  </>
+                )}
               </TouchableOpacity>
 
               {/* ==================================================
