@@ -1,32 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  ImageBackground,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Keyboard,
-  Platform,
-  useWindowDimensions,
-} from "react-native";
-
-import HelloText from "../components/HelloText";
-import verificationStyles from "../styles/verificationStyles";
-import React, { useState, useRef, useEffect } from "react";
-import {
-  ImageBackground,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Keyboard,
-  Platform,
-  useWindowDimensions,
-} from "react-native";
-
 import HelloText from "../components/HelloText";
 import verificationStyles from "../styles/verificationStyles";
 import { getVerificationLayoutMetrics } from "../utils/verificationLayout";
+import {
+  ImageBackground,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+  Platform,
+  useWindowDimensions,
+} from "react-native";
 
 const styles = verificationStyles;
 const CODE_LENGTH = 4;

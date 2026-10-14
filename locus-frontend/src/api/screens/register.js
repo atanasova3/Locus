@@ -416,6 +416,7 @@ export default function RegisterScreen({ navigation }) {
                   },
                 ]}
                 activeOpacity={0.8}
+                
               >
                 <Text
                   style={[
