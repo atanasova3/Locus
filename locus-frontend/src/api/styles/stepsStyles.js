@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     elevation: 20,
   },
   closeText: {
-    color: "#e99a9a",
+    color: "#CF928A",
     fontWeight: "300",
     lineHeight: 20,
   },
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontStyle: "italic",
     fontWeight: "500",
-    color: "#e39b99",
+    color: "#CF928A",
     marginTop: 0,
   },
   underline: {

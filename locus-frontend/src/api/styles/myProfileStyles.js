@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.20)",
   },
+  outsideTap: {
+    ...StyleSheet.absoluteFillObject,
+  },
   safeArea: {
     flex: 1,
     width: "100%",
@@ -123,6 +126,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     maxWidth: "48%",
     gap: 4,
+  },
+  switchTrack: {
+    justifyContent: "center",
+    alignSelf: "center",
+    marginHorizontal: 2,
+  },
+  switchThumb: {
+    backgroundColor: "#F5F1D1",
   },
   rowValue: {
     color: "rgba(245,241,209,0.70)",

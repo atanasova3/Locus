@@ -7,47 +7,30 @@ import {
   Text,
   ScrollView,
   Pressable,
-  StyleSheet,
   useWindowDimensions,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import yourGuideStyles from "../styles/yourGuideStyles";
+import {
+  getGuideScrollMetrics,
+  getYourGuideLayoutMetrics,
+} from "../utils/yourGuideLayout";
+
+const styles = yourGuideStyles;
 
 export default function YourGuide({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
-
-const scrollRef = useRef(null);
-const [scrollMetrics, setScrollMetrics] = useState({
-  contentHeight: 1,
-  viewportHeight: 1,
-  offsetY: 0,
-});
-
-const thumbHeight = Math.max(
-  28,
-  (scrollMetrics.viewportHeight /
-    scrollMetrics.contentHeight) *
-    scrollMetrics.viewportHeight
-);
-
-const maxThumbTravel = Math.max(
-  0,
-  scrollMetrics.viewportHeight - thumbHeight
-);
-
-const thumbTop =
-  scrollMetrics.contentHeight > scrollMetrics.viewportHeight
-    ? (scrollMetrics.offsetY /
-        (scrollMetrics.contentHeight -
-          scrollMetrics.viewportHeight)) *
-      maxThumbTravel
-    : 0;
-
-
-  const small = width < 380;
-  const panelWidth = Math.min(width - 32, 430);
-  const panelHeight = Math.min(height * 0.86, 760);
+  const scrollRef = useRef(null);
+  const [scrollMetrics, setScrollMetrics] = useState({
+    contentHeight: 1,
+    viewportHeight: 1,
+    offsetY: 0,
+  });
+  const { thumbHeight, thumbTop } = getGuideScrollMetrics(scrollMetrics);
+  const { panelWidth, panelHeight, panelRadius } =
+    getYourGuideLayoutMetrics(width, height);
 
   return (
     <Modal
@@ -62,7 +45,7 @@ const thumbTop =
         <BlurView
           intensity={45}
           tint="dark"
-          style={StyleSheet.absoluteFill}
+          style={styles.backgroundBlur}
         />
 
         {/* Dark overlay */}
@@ -87,7 +70,7 @@ const thumbTop =
             {
               width: panelWidth,
               height: panelHeight,
-              borderRadius: small ? 28 : 34,
+              borderRadius: panelRadius,
             },
           ]}
         >
@@ -247,107 +230,3 @@ const thumbTop =
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 12,
-  },
-
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.22)",
-  },
-
-  panel: {
-    overflow: "hidden",
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 18,
-  },
-
-  backButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-start",
-    gap: 7,
-    marginBottom: 18,
-  },
-
-  backText: {
-    color: "#CF928A",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-
-  title: {
-    color: "#F5F1D1",
-    fontSize: 30,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 2,
-  },
-
-  titleLine: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "#F5F1D1",
-    marginBottom: 17,
-  },
-
- 
-
-  scrollWrapper: {
-    flex: 1,
-    width: "100%",
-    position: "relative",
-  },
-
-  panelScroll: {
-    flex: 1,
-    width: "100%",
-  },
-
-  panelScrollContent: {
-    paddingBottom: 12,
-    paddingRight: 10,
-  },
-
-  scrollTrack: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: 3,
-    borderRadius: 10,
-    backgroundColor: "rgba(245, 241, 209, 0.12)",
-  },
-
-  scrollThumb: {
-    width: 3,
-    borderRadius: 10,
-    backgroundColor: "#CF928A",
-  },
-
-
-sectionTitle: {
-  color: "#F5F1D1",
-  fontSize: 12,
-  fontWeight: "700",
-  fontStyle: "italic",
-  marginBottom: 13,
-  marginTop: 1,
-},
-
-paragraph: {
-  color: "#F5F1D1",
-  fontSize: 12,
-  lineHeight: 15,
-  fontStyle: "italic",
-  marginBottom: 17,
-},
-
-
-
-});

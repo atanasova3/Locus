@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Modal,
@@ -11,8 +12,10 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 import Timeline from "./timeline";
+import Step4 from "../components/step4";
+
 import stepsStyles from "../styles/stepsStyles";
-import { clamp } from "../utils/verificationLayout";
+import { getStepsLayoutMetrics } from "../utils/stepsLayout";
 
 const styles = stepsStyles;
 
@@ -21,20 +24,22 @@ export default function Steps({ visible, onClose }) {
 
   const [currentStep, setCurrentStep] = useState(1);
 
-  const handleNext = () => {
-    if (currentStep < 3) {
-      setCurrentStep((prev) => prev + 1);
-    } else {
+  const handleClose = () => {
+    setCurrentStep(1);
+    if (onClose) {
       onClose();
     }
   };
 
+  const handleNext = () => {
+    if (currentStep < 3) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      setCurrentStep(4);
+    }
+  };
+
   const {
-    isVerySmall,
-    isSmall,
-    isTablet,
-    isVeryShort,
-    isShort,
     modalHorizontalPadding,
     modalWidth,
     modalHeight,
@@ -47,113 +52,7 @@ export default function Steps({ visible, onClose }) {
     closeTop,
     questionHeight,
     questionGap,
-  } = (() => {
-    const isVerySmallValue = width < 350;
-    const isSmallValue = width < 380;
-    const isTabletValue = width >= 600;
-    const isVeryShortValue = height < 620;
-    const isShortValue = height < 700;
-
-    const modalHorizontalPaddingValue = isTabletValue
-      ? Math.min(width * 0.08, 70)
-      : isSmallValue
-      ? 16
-      : 24;
-
-    const modalWidthValue = isTabletValue
-      ? Math.min(width * 0.72, 650)
-      : width - modalHorizontalPaddingValue * 2;
-
-    const modalHeightValue = isVeryShortValue
-      ? 320
-      : isShortValue
-      ? 350
-      : isTabletValue
-      ? 470
-      : isSmallValue
-      ? 390
-      : 400;
-
-    const modalRadiusValue = isVerySmallValue
-      ? 24
-      : isTabletValue
-      ? 36
-      : 32;
-
-    const modalTopPaddingValue = isVeryShortValue
-      ? 38
-      : isShortValue
-      ? 43
-      : isTabletValue
-      ? 55
-      : 45;
-
-    const modalSidePaddingValue = isVerySmallValue
-      ? 14
-      : isSmallValue
-      ? 16
-      : isTabletValue
-      ? 25
-      : 18;
-
-    const closeSizeValue = isVerySmallValue
-      ? 26
-      : isTabletValue
-      ? 34
-      : 30;
-
-    const closeFontSizeValue = isVerySmallValue
-      ? 24
-      : isTabletValue
-      ? 32
-      : 28;
-
-    const closeRightValue = isVerySmallValue
-      ? 12
-      : isTabletValue
-      ? 20
-      : 17;
-
-    const closeTopValue = isVeryShortValue
-      ? 7
-      : isTabletValue
-      ? 12
-      : 10;
-
-    const questionHeightValue = isTabletValue
-      ? 48
-      : isVerySmallValue
-      ? 40
-      : 44;
-
-    const questionGapValue = isTabletValue
-      ? 35
-      : isVeryShortValue
-      ? 18
-      : isShortValue
-      ? 25
-      : 30;
-
-    return {
-      isVerySmall: isVerySmallValue,
-      isSmall: isSmallValue,
-      isTablet: isTabletValue,
-      isVeryShort: isVeryShortValue,
-      isShort: isShortValue,
-      modalHorizontalPadding: modalHorizontalPaddingValue,
-      modalWidth: modalWidthValue,
-      modalHeight: modalHeightValue,
-      modalRadius: modalRadiusValue,
-      modalTopPadding: modalTopPaddingValue,
-      modalSidePadding: modalSidePaddingValue,
-      closeSize: closeSizeValue,
-      closeFontSize: closeFontSizeValue,
-      closeRight: closeRightValue,
-      closeTop: closeTopValue,
-      questionHeight: questionHeightValue,
-      questionGap: questionGapValue,
-    };
-  })();
+  } = getStepsLayoutMetrics(width, height);
 
   const getQuestion = (index) => {
     const questions = {
@@ -179,12 +78,27 @@ export default function Steps({ visible, onClose }) {
     };
   };
 
+  // STEP 4
+  if (currentStep === 4) {
+    return (
+      <Step4
+        visible={visible}
+        onClose={handleClose}
+        onNext={(selectedOptions) => {
+          console.log("Avoid preferences:", selectedOptions);
+          handleClose();
+        }}
+      />
+    );
+  }
+
+  // STEPS 1–3
   return (
     <Modal
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <View
         style={[
@@ -215,20 +129,14 @@ export default function Steps({ visible, onClose }) {
             },
           ]}
         >
-          {/* ==================================================
-              DECORATIONS
-          ================================================== */}
-
+          {/* DECORATIONS */}
           <Image
             source={require("./photos/Decorations.png")}
             resizeMode="stretch"
             style={styles.decorations}
           />
 
-          {/* ==================================================
-              CLOSE
-          ================================================== */}
-
+          {/* CLOSE */}
           <Pressable
             style={[
               styles.close,
@@ -239,7 +147,7 @@ export default function Steps({ visible, onClose }) {
                 top: closeTop,
               },
             ]}
-            onPress={onClose}
+            onPress={handleClose}
           >
             <Text
               style={[
@@ -253,30 +161,17 @@ export default function Steps({ visible, onClose }) {
             </Text>
           </Pressable>
 
-          {/* ==================================================
-              CONTENT
-          ================================================== */}
-
+          {/* CONTENT */}
           <SafeAreaView style={styles.content}>
-
-            {/* ==================================================
-                HEADER
-            ================================================== */}
-
+            {/* HEADER */}
             <Text style={styles.step}>
               Step {currentStep}:
             </Text>
 
             <View style={styles.underline} />
 
-            {/* ==================================================
-                QUESTIONS AREA
-            ================================================== */}
-
+            {/* QUESTIONS AREA */}
             <View style={styles.questionsArea}>
-
-           
-
               <Timeline
                 currentStep={currentStep}
                 rowHeight={questionHeight}
@@ -284,7 +179,6 @@ export default function Steps({ visible, onClose }) {
               />
 
               {/* QUESTIONS */}
-
               <View style={styles.questionsColumn}>
                 {[0, 1, 2].map((index) => {
                   const question = getQuestion(index);
@@ -297,9 +191,7 @@ export default function Steps({ visible, onClose }) {
                         {
                           height: questionHeight,
                           marginBottom:
-                            index < 2
-                              ? questionGap
-                              : 0,
+                            index < 2 ? questionGap : 0,
                         },
                       ]}
                     >
@@ -318,24 +210,17 @@ export default function Steps({ visible, onClose }) {
                   );
                 })}
               </View>
-
             </View>
 
-            {/* ==================================================
-                NEXT
-            ================================================== */}
-
+            {/* NEXT */}
             <Pressable
               style={styles.nextButton}
               onPress={handleNext}
             >
               <Text style={styles.nextText}>
-                {currentStep === 3
-                  ? "Done"
-                  : "Next"}
+                Next
               </Text>
             </Pressable>
-
           </SafeAreaView>
         </LinearGradient>
       </View>

@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import YourGuide from "../components/yourGuide";
 import myProfileStyles from "../styles/myProfileStyles";
+import { getMyProfileLayoutMetrics } from "../utils/myProfileLayout";
 
 const styles = myProfileStyles;
 
@@ -25,53 +26,21 @@ export default function MyProfile({ visible, onClose }) {
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [yourGuideVisible, setYourGuideVisible] = useState(false);
-
-  // RESPONSIVE BREAKPOINTS
-  const isVerySmall = width < 350;
-  const isSmall = width < 380;
-  const isTablet = width >= 600;
-  const isVeryShort = height < 620;
-  const isShort = height < 700;
-
-  // RESPONSIVE PANEL WIDTH
-  const horizontalPadding = isTablet
-    ? Math.min(width * 0.08, 70)
-    : isSmall
-    ? 13
-    : 18;
-
-  const contentWidth = Math.min(
-    width - horizontalPadding * 2,
-    isTablet ? 560 : 460
-  );
-
-  // PANEL POSITION AND HEIGHT
-  const topMargin = isVeryShort ? 4 : isShort ? 8 : 12;
-  const bottomMargin = isVeryShort ? 8 : 16;
-
-  const panelHeight = Math.min(
-    height * 0.75,
-    height - topMargin - bottomMargin - 12
-  );
-
-  // SCALE BASED ON BOTH SCREEN WIDTH AND HEIGHT
-  const scale = Math.max(
-    0.70,
-    Math.min(
-      1,
-      width / 390,
-      panelHeight / 740
-    )
-  );
-
-  // RESPONSIVE SIZES
-  const panelPadding = (isTablet ? 25 : isVerySmall ? 12 : 18) * scale;
-const titleSize = (isTablet ? 35 : isVerySmall ? 25 : 31) * scale;
-const rowTextSize = (isTablet ? 21 : isVerySmall ? 16 : 19) * scale;
-const sectionTextSize = (isVerySmall ? 14 : 16) * scale;
-  const rowHeight = (isVeryShort ? 29 : isShort ? 33 : 37) * scale;
-  const sectionGap = (isVeryShort ? 7 : isShort ? 10 : 14) * scale;
-  const panelRadius = (isTablet ?  45 : 40) * scale;
+  const {
+    horizontalPadding,
+    contentWidth,
+    topMargin,
+    bottomMargin,
+    panelHeight,
+    scale,
+    panelPadding,
+    titleSize,
+    rowTextSize,
+    sectionTextSize,
+    rowHeight,
+    sectionGap,
+    panelRadius,
+  } = getMyProfileLayoutMetrics(width, height);
 
   const openItem = (label) => {
     console.log(`${label} pressed`);
@@ -159,25 +128,27 @@ const sectionTextSize = (isVerySmall ? 14 : 16) * scale;
     onPress={() => onSwitchChange(!switchValue)}
     accessibilityRole="switch"
     accessibilityState={{ checked: switchValue }}
-    style={{
-      width: 42 * scale,
-      height: 22 * scale,
-      borderRadius: 20 * scale,
-      backgroundColor: switchValue ? "#CF928A" : "#827B70",
-      justifyContent: "center",
-      padding: 3 * scale,
-      alignSelf: "center",
-      marginHorizontal: 2,
-    }}
+    style={[
+      styles.switchTrack,
+      {
+        width: 42 * scale,
+        height: 22 * scale,
+        borderRadius: 20 * scale,
+        backgroundColor: switchValue ? "#CF928A" : "#827B70",
+        padding: 3 * scale,
+      },
+    ]}
   >
     <View
-      style={{
-        width: 18 * scale,
-        height: 16 * scale,
-        borderRadius: 12 * scale,
-        backgroundColor: "#F5F1D1",
-        alignSelf: switchValue ? "flex-end" : "flex-start",
-      }}
+      style={[
+        styles.switchThumb,
+        {
+          width: 18 * scale,
+          height: 16 * scale,
+          borderRadius: 12 * scale,
+          alignSelf: switchValue ? "flex-end" : "flex-start",
+        },
+      ]}
     />
   </Pressable>
 ) : null}
@@ -208,7 +179,7 @@ const sectionTextSize = (isVerySmall ? 14 : 16) * scale;
 
         {/* CLOSE WHEN TAPPING OUTSIDE */}
         <Pressable
-          style={StyleSheet.absoluteFillObject}
+          style={styles.outsideTap}
           onPress={onClose}
           accessibilityLabel="Close profile"
         />
@@ -469,4 +440,3 @@ const sectionTextSize = (isVerySmall ? 14 : 16) * scale;
     </Modal>
   );
 }
-

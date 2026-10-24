@@ -1,66 +1,24 @@
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
-  StyleSheet,
   View,
   useWindowDimensions,
 } from "react-native";
+import helloTextStyles from "../styles/helloTextStyles";
+import { getHelloTextLayoutMetrics } from "../utils/helloTextLayout";
+
+const styles = helloTextStyles;
 
 export default function HelloText({ animated = true }) {
   const { width, height } = useWindowDimensions();
-
-  // ==================================================
-  // SCREEN SIZE
-  // ==================================================
-
-  const isVerySmall = width < 350;
-  const isSmall = width < 380;
-
-  const isVeryShort = height < 620;
-  const isShort = height < 700;
-
-  // ==================================================
-  // RESPONSIVE SIZES
-  // NO SCALING
-  // ==================================================
-
-  const titleSize = isVerySmall
-    ? 48
-    : isSmall
-    ? 55
-    : 64;
-
-  const logoWidth = isVerySmall
-    ? 225
-    : isSmall
-    ? 250
-    : 280;
-
-  const logoHeight = isVerySmall
-    ? 52
-    : isSmall
-    ? 58
-    : 65;
-
-  const subtitleSize = isVerySmall
-    ? 18
-    : isSmall
-    ? 21
-    : 24;
-
-  // ==================================================
-  // SPACING
-  // ==================================================
-
-  const logoMarginTop = isVerySmall
-    ? -2
-    : 0;
-
-  const subtitleMarginTop = isVeryShort
-    ? -2
-    : isShort
-    ? 0
-    : 0;
+  const {
+    titleSize,
+    logoWidth,
+    logoHeight,
+    subtitleSize,
+    logoMarginTop,
+    subtitleMarginTop,
+  } = getHelloTextLayoutMetrics(width, height);
 
   // ==================================================
   // ANIMATION VALUES
@@ -245,31 +203,3 @@ export default function HelloText({ animated = true }) {
     </View>
   );
 }
-
-// ==================================================
-// STYLES
-// ==================================================
-
-const styles = StyleSheet.create({
-  header: {
-    alignItems: "flex-start",
-  },
-
-  title: {
-    fontFamily: "Inter",
-    color: "#F5F1D1",
-    fontWeight: "300",
-    textAlign: "left",
-  },
-
-  logo: {
-    alignSelf: "flex-start",
-  },
-
-  subtitle: {
-    fontFamily: "Inter",
-    color: "#F5F1D1",
-    fontWeight: "400",
-    textAlign: "left",
-  },
-});

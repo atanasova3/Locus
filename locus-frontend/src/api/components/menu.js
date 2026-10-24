@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  StyleSheet,
   View,
   Pressable,
   Image,
@@ -8,96 +7,21 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
+import menuStyles from "../styles/menuStyles";
+import { getMenuLayoutMetrics } from "../utils/menuLayout";
+
+const styles = menuStyles;
 
 export default function Menu() {
-  const { width, height } =
-    useWindowDimensions();
-
-  // ==================================================
-  // SCREEN SIZE
-  // ==================================================
-
-  const isVerySmall = width < 350;
-  const isSmall = width < 380;
-
-  const isTablet = width >= 600;
-
-  const isVeryShort = height < 620;
-  const isShort = height < 700;
-
-  // ==================================================
-  // MENU SIZE
-  // ==================================================
-
-  const menuHeight = isVerySmall
-    ? 47
-    : isSmall
-    ? 53
-    : isTablet
-    ? 68
-    : 60;
-
-  // ==================================================
-  // ICON SIZE
-  // ==================================================
-
-  const logoSize = isVerySmall
-    ? 26
-    : isSmall
-    ? 29
-    : isTablet
-    ? 40
-    : 35;
-
-  const iconSize = isVerySmall
-    ? 35
-    : isSmall
-    ? 39
-    : isTablet
-    ? 50
-    : 45;
-
-  // ==================================================
-  // GAP
-  // ==================================================
-
-  const menuGap = isVerySmall
-    ? 18
-    : isSmall
-    ? 13
-    : isTablet
-    ? 35
-    : 20;
-
-  // ==================================================
-  // MENU WIDTH
-  // ==================================================
-
-  const horizontalPadding =
-    isTablet
-      ? Math.min(width * 0.08, 70)
-      : isVerySmall
-      ? 12
-      : isSmall
-      ? 16
-      : 25;
-
-  const menuWidth =
-    width -
-    horizontalPadding * 5;
-
-  // ==================================================
-  // BOTTOM
-  // ==================================================
-
-  const bottomPosition =
-    isVeryShort
-      ? height * 0.025
-      : isShort
-      ? height * 0.035
-      : isTablet
-      ? height * 0.055
-      : height * 0.06;
+  const { width, height } = useWindowDimensions();
+  const {
+    menuHeight,
+    logoSize,
+    iconSize,
+    menuGap,
+    menuWidth,
+    bottomPosition,
+  } = getMenuLayoutMetrics(width, height);
 
   // ==================================================
   // UI
@@ -243,37 +167,3 @@ export default function Menu() {
     </View>
   );
 }
-
-// ==================================================
-// STYLES
-// ==================================================
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-
-    alignItems: "center",
-
-    zIndex: 100,
-  },
-
-  menu: {
-    width: "100%",
-
-    flexDirection: "row",
-
-    alignItems: "center",
-
-    justifyContent: "center",
-
-    overflow: "hidden",
-  },
-
-  item: {
-    alignItems: "center",
-
-    justifyContent: "center",
-
-    height: "100%",
-  },
-});
