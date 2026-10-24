@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(137, 154, 92, 0.75),", // Adds the semi-transparent green circle
   },
   buttonText: {
     fontFamily: "Inter",
