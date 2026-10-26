@@ -12,7 +12,7 @@ import { getAddTripCardLayoutMetrics } from "../utils/addTripCardLayout";
 
 const styles = addTripCardStyles;
 
-export default function AddTripCard() {
+export default function AddTripCard({ layoutWidth, layoutHeight } = {}) {
   const { width, height } = useWindowDimensions();
     const [StepOneVisible, setStepOneVisible] = useState(false);
   const {
@@ -38,8 +38,8 @@ export default function AddTripCard() {
       style={[
         styles.addTripCard,
         {
-          width: cardWidth,
-          height: cardHeight,
+          width: layoutWidth ?? cardWidth,
+          height: layoutHeight ?? cardHeight,
           borderRadius: cardRadius,
           marginTop: cardMarginTop,
           borderWidth: 4,

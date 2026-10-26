@@ -111,7 +111,7 @@ export default function HomeScreen() {
               CONTENT CONTAINER
           ================================================== */}
 
-          <View
+          <ScrollView
             style={[
               styles.content,
               {
@@ -119,6 +119,11 @@ export default function HomeScreen() {
                 alignSelf: "center",
               },
             ]}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingBottom: Math.max(90, height * 0.12),
+            }}
+            showsVerticalScrollIndicator={false}
           >
             {/* ==================================================
                 HEADER
@@ -468,7 +473,7 @@ export default function HomeScreen() {
 
             </View>
             </ScrollView>
-          </View>
+          </ScrollView>
       </SafeAreaView>
       <TripPopup
   visible={tripPopupVisible}

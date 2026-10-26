@@ -11,7 +11,7 @@ import { getTripCardLayoutMetrics } from "../utils/tripCardLayout";
 
 const styles = tripCardStyles;
 
-export default function TripCard() {
+export default function TripCard({ layoutWidth, layoutHeight } = {}) {
   const { width, height } = useWindowDimensions();
   const {
     cardWidth,
@@ -36,8 +36,8 @@ export default function TripCard() {
       style={[
         styles.cardContainer,
         {
-          width: cardWidth,
-          height: cardHeight,
+          width: layoutWidth ?? cardWidth,
+          height: layoutHeight ?? cardHeight,
           borderRadius: cardRadius,
           marginTop: cardMarginTop,
           borderWidth: 4,

@@ -1,20 +1,22 @@
+import { getResponsiveScale } from "./responsiveLayout";
+
 export function getTripCardLayoutMetrics(width, height) {
-  const isVerySmall = width < 350;
-  const isSmall = width < 380;
+  const scale = getResponsiveScale(width, height);
   const isTablet = width >= 600;
   const isVeryShort = height < 620;
   const isShort = height < 700;
+  const cardWidth = Math.min(220 * scale, width - 40);
 
   return {
-    cardWidth: isVerySmall ? 175 : isSmall ? 187 : isTablet ? 240 : 220,
-    cardHeight: isVerySmall ? 200 : isSmall ? 205 : 270,
-    cardRadius: isVerySmall ? 25 : 30,
-    titleSize: isVerySmall ? 16 : isTablet ? 20 : 18,
-    locationSize: isVerySmall ? 13 : isTablet ? 16 : 15,
-    ratingSize: isVerySmall ? 11 : isTablet ? 14 : 13,
-    cardMarginTop: isVeryShort ? 3 : isShort ? 5 : 10,
-    infoMargin: isVerySmall ? 7 : 10,
-    infoPadding: isVerySmall ? 9 : 12,
-    infoRadius: isVerySmall ? 16 : 20,
+    cardWidth: isTablet ? Math.min(cardWidth, 240) : cardWidth,
+    cardHeight: Math.min(270 * scale, height * 0.34),
+    cardRadius: 30 * scale,
+    titleSize: (isTablet ? 20 : 18) * scale,
+    locationSize: 15 * scale,
+    ratingSize: 13 * scale,
+    cardMarginTop: isVeryShort ? 3 * scale : isShort ? 5 * scale : 10 * scale,
+    infoMargin: 10 * scale,
+    infoPadding: 12 * scale,
+    infoRadius: 20 * scale,
   };
 }

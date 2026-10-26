@@ -36,6 +36,7 @@ export default function TripPopup({ visible, onClose }) {
     cardsPaddingTop,
     cardsGap,
     cardWidth,
+    cardHeight,
   } = getTripPopupLayoutMetrics(width, height);
 
   return (
@@ -149,19 +150,31 @@ export default function TripPopup({ visible, onClose }) {
             decelerationRate="fast"
           >
             <View style={{ width: cardWidth }}>
-              <AddTripCard />
+              <AddTripCard
+                layoutWidth={cardWidth}
+                layoutHeight={cardHeight}
+              />
             </View>
 
             <View style={{ width: cardWidth }}>
-              <TripCard />
+              <TripCard
+                layoutWidth={cardWidth}
+                layoutHeight={cardHeight}
+              />
             </View>
 
             <View style={{ width: cardWidth }}>
-              <TripCard />
+              <TripCard
+                layoutWidth={cardWidth}
+                layoutHeight={cardHeight}
+              />
             </View>
 
             <View style={{ width: cardWidth }}>
-              <TripCard />
+              <TripCard
+                layoutWidth={cardWidth}
+                layoutHeight={cardHeight}
+              />
             </View>
           </ScrollView>
         </LinearGradient>

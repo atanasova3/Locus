@@ -1,18 +1,15 @@
 
 import React, { useState } from "react";
 import {
-  Modal,
   View,
   Text,
   Pressable,
-  Image,
   SafeAreaView,
   useWindowDimensions,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 import styles from "../styles/step4Styles";
-import { getStepsLayoutMetrics } from "../utils/stepsLayout";
+import { getStep4LayoutMetrics } from "../utils/step4Layout";
 
 const OPTIONS = [
   "Large crowds",
@@ -23,27 +20,14 @@ const OPTIONS = [
   "Long drives",
 ];
 
-export default function Step4({ visible, onClose, onNext }) {
+export default function Step4({ onClose, onNext, onBack }) {
   const { width, height } = useWindowDimensions();
-  const {
-    modalHorizontalPadding,
-    modalWidth,
-    modalHeight,
-    modalRadius,
-    modalTopPadding,
-    modalSidePadding,
-    closeSize,
-    closeFontSize,
-    closeRight,
-    closeTop,
-  } = getStepsLayoutMetrics(width, height);
-
+  const layout = getStep4LayoutMetrics(width, height);
   const [selectedOptions, setSelectedOptions] = useState([
     "Expensive restaurants",
     "Public transport",
     "Long drives",
   ]);
-
 
   const toggleOption = (option) => {
     setSelectedOptions((previous) =>
@@ -62,120 +46,119 @@ export default function Step4({ visible, onClose, onNext }) {
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      onRequestClose={onClose}
-      statusBarTranslucent
-    >
+    <SafeAreaView style={styles.content}>
+
+      {/* HEADER */}
+      <Text style={[styles.step, { fontSize: layout.stepFontSize }]}>
+        Step 4:
+      </Text>
+
       <View
         style={[
-          styles.overlay,
-          { paddingHorizontal: modalHorizontalPadding },
+          styles.underline,
+          {
+            width: layout.underlineWidth,
+            height: layout.underlineHeight,
+            marginTop: layout.underlineMarginTop,
+            marginBottom: layout.underlineMarginBottom,
+          },
+        ]}
+      />
+
+      <Text
+        style={[
+          styles.question,
+          {
+            fontSize: layout.questionFontSize,
+            marginBottom: layout.questionMarginBottom,
+          },
         ]}
       >
-        <LinearGradient
-          colors={[
-            "#405D38",
-            "#806959",
-            "#9C6E68",
-            "#996C66",
-          ]}
-          locations={[0, 0.54, 0.67, 0.92]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
+        What would you like to avoid?
+      </Text>
+
+      {/* OPTIONS */}
+      <View style={styles.options}>
+        {OPTIONS.map((option) => {
+          const checked = selectedOptions.includes(option);
+
+          return (
+            <Pressable
+              key={option}
+              style={[
+                styles.option,
+                {
+                  minHeight: layout.optionHeight,
+                  marginBottom: layout.optionMarginBottom,
+                },
+              ]}
+              onPress={() => toggleOption(option)}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked }}
+            >
+              <View
+                style={[
+                  styles.checkbox,
+                  {
+                    width: layout.checkboxSize,
+                    height: layout.checkboxSize,
+                    borderWidth: layout.checkboxBorderWidth,
+                    borderRadius: layout.checkboxRadius,
+                    marginRight: layout.checkboxMarginRight,
+                  },
+                  checked && styles.checkboxChecked,
+                ]}
+              >
+                {checked && (
+                  <Text
+                    style={[
+                      styles.checkmark,
+                      {
+                        fontSize: layout.checkmarkFontSize,
+                        lineHeight: layout.checkmarkFontSize,
+                      },
+                    ]}
+                  >
+                    ✓
+                  </Text>
+                )}
+              </View>
+
+              <Text
+                style={[
+                  styles.optionText,
+                  { fontSize: layout.optionFontSize },
+                ]}
+              >
+                {option}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      {/* NEXT */}
+      <Pressable
+        style={[
+          styles.nextButton,
+          {
+            height: layout.buttonHeight,
+            bottom: layout.buttonBottom,
+            borderRadius: layout.buttonRadius,
+            borderWidth: layout.buttonBorderWidth,
+          },
+        ]}
+        onPress={handleNext}
+      >
+        <Text
           style={[
-            styles.modal,
-            {
-              width: modalWidth,
-              height: modalHeight,
-              borderRadius: modalRadius,
-              paddingTop: modalTopPadding,
-              paddingHorizontal: modalSidePadding,
-            },
+            styles.nextText,
+            { fontSize: layout.buttonFontSize },
           ]}
         >
-          <Image
-            source={require("./photos/Decorations.png")}
-            resizeMode="stretch"
-            style={styles.decorations}
-          />
-
-          <Pressable
-            style={[
-              styles.close,
-              {
-                width: closeSize,
-                height: closeSize,
-                right: closeRight,
-                top: closeTop,
-              },
-            ]}
-            onPress={onClose}
-            accessibilityLabel="Close"
-          >
-            <Text
-              style={[
-                styles.closeText,
-                { fontSize: closeFontSize },
-              ]}
-            >
-              ×
-            </Text>
-          </Pressable>
-
-          <SafeAreaView style={styles.content}>
-            <Text style={styles.step}>Step 4:</Text>
-
-            <View style={styles.underline} />
-
-            <Text style={styles.question}>
-              What would you like to avoid?
-            </Text>
-
-            <View style={styles.options}>
-              {OPTIONS.map((option) => {
-                const checked =
-                  selectedOptions.includes(option);
-
-                return (
-                  <Pressable
-                    key={option}
-                    style={styles.option}
-                    onPress={() => toggleOption(option)}
-                    accessibilityRole="checkbox"
-                    accessibilityState={{ checked }}
-                  >
-                    <View
-                      style={[
-                        styles.checkbox,
-                        checked && styles.checkboxChecked,
-                      ]}
-                    >
-                      {checked && (
-                        <Text style={styles.checkmark}>
-                          ✓
-                        </Text>
-                      )}
-                    </View>
-
-                    <Text style={styles.optionText}>
-                      {option}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            <Pressable
-              style={styles.nextButton}
-              onPress={handleNext}
-            >
-              <Text style={styles.nextText}>Next</Text>
-            </Pressable>
-          </SafeAreaView>
-        </LinearGradient>
-      </View>
-    </Modal>
+          Next
+        </Text>
+      </Pressable>
+    </SafeAreaView>
   );
 }

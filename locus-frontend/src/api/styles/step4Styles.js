@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
   },
 
   step: {
-    fontSize: 36,
     fontStyle: "italic",
     fontWeight: "500",
     color: "#CF928A",
@@ -59,18 +58,12 @@ const styles = StyleSheet.create({
   },
 
   underline: {
-    width: 183,
-    height: 2,
     backgroundColor: "#dc9997",
-    marginTop: 2,
-    marginBottom: 15,
   },
 
   question: {
     color: "#CF928A",
-    fontSize: 20,
     fontWeight: "600",
-    marginBottom: 12,
   },
 
   options: {
@@ -81,17 +74,10 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: "row",
     alignItems: "center",
-    minHeight: 14,
-    marginBottom: 0,
   },
 
   checkbox: {
-    width: 15,
-    height: 15,
-    borderWidth: 2,
     borderColor: "#CF928A",
-    borderRadius: 3,
-    marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -102,25 +88,19 @@ const styles = StyleSheet.create({
 
   checkmark: {
     color: "#FFF4D9",
-    fontSize: 15,
-    lineHeight: 15,
     fontWeight: "400",
   },
 
   optionText: {
     color: "#CF928A",
-    fontSize: 18,
     fontWeight: "500",
+    flexShrink: 1,
   },
 
   nextButton: {
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 10,
-    height: 40,
-    borderRadius: 40,
-    borderWidth: 2,
     borderColor: "#dc9997",
     alignItems: "center",
     justifyContent: "center",
@@ -128,7 +108,6 @@ const styles = StyleSheet.create({
   },
   nextText: {
     color: "#fff4d9",
-    fontSize: 20,
     fontWeight: "500",
   },
 });

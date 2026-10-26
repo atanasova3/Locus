@@ -28,9 +28,27 @@ export default function YourGuide({ visible, onClose }) {
     viewportHeight: 1,
     offsetY: 0,
   });
-  const { thumbHeight, thumbTop } = getGuideScrollMetrics(scrollMetrics);
-  const { panelWidth, panelHeight, panelRadius } =
-    getYourGuideLayoutMetrics(width, height);
+  const layout = getYourGuideLayoutMetrics(width, height);
+  const { thumbHeight, thumbTop } = getGuideScrollMetrics(
+    scrollMetrics,
+    layout.scrollThumbHeight
+  );
+  const sectionTitleStyle = [
+    styles.sectionTitle,
+    {
+      fontSize: layout.sectionTitleSize,
+      marginBottom: layout.sectionTitleMarginBottom,
+      marginTop: layout.scale,
+    },
+  ];
+  const paragraphStyle = [
+    styles.paragraph,
+    {
+      fontSize: layout.paragraphSize,
+      lineHeight: layout.paragraphLineHeight,
+      marginBottom: layout.paragraphMarginBottom,
+    },
+  ];
 
   return (
     <Modal
@@ -40,7 +58,12 @@ export default function YourGuide({ visible, onClose }) {
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      <View style={styles.root}>
+      <View
+        style={[
+          styles.root,
+          { paddingVertical: 12 * layout.scale },
+        ]}
+      >
         {/* Blurred background */}
         <BlurView
           intensity={45}
@@ -68,33 +91,60 @@ export default function YourGuide({ visible, onClose }) {
           style={[
             styles.panel,
             {
-              width: panelWidth,
-              height: panelHeight,
-              borderRadius: panelRadius,
+              width: layout.panelWidth,
+              height: layout.panelHeight,
+              borderRadius: layout.panelRadius,
+              paddingHorizontal: layout.panelPadding,
+              paddingTop: 20 * layout.scale,
+              paddingBottom: 18 * layout.scale,
             },
           ]}
         >
           {/* Back button */}
           <Pressable
             onPress={onClose}
-            style={styles.backButton}
+            style={[
+              styles.backButton,
+              {
+                gap: layout.backGap,
+                marginBottom: layout.backMarginBottom,
+              },
+            ]}
           >
             <Ionicons
               name="arrow-back"
-              size={22}
+              size={layout.backIconSize}
               color="#CF928A"
             />
-            <Text style={styles.backText}>
+            <Text
+              style={[
+                styles.backText,
+                { fontSize: layout.backTextSize },
+              ]}
+            >
               Back to my profile
             </Text>
           </Pressable>
 
           {/* Title */}
-          <Text style={styles.title}>
+          <Text
+            style={[
+              styles.title,
+              {
+                fontSize: layout.titleSize,
+                marginBottom: layout.titleMarginBottom,
+              },
+            ]}
+          >
             Your guide
           </Text>
 
-          <View style={styles.titleLine} />
+          <View
+            style={[
+              styles.titleLine,
+              { marginBottom: layout.lineMarginBottom },
+            ]}
+          />
 
           {/* Scrollable guide */}
          
@@ -103,7 +153,13 @@ export default function YourGuide({ visible, onClose }) {
   <ScrollView
     ref={scrollRef}
     style={styles.panelScroll}
-    contentContainerStyle={styles.panelScrollContent}
+    contentContainerStyle={[
+      styles.panelScrollContent,
+      {
+        paddingBottom: layout.scrollContentPaddingBottom,
+        paddingRight: layout.scrollContentPaddingRight,
+      },
+    ]}
     showsVerticalScrollIndicator={false}
     bounces={false}
     nestedScrollEnabled
@@ -127,8 +183,8 @@ export default function YourGuide({ visible, onClose }) {
     }
     scrollEventThrottle={16}
   >
-    <Text style={styles.sectionTitle}>Overview</Text>
-  <Text style={styles.paragraph}>
+    <Text style={sectionTitleStyle}>Overview</Text>
+  <Text style={paragraphStyle}>
     Locus is a mobile application with a nature-inspired
     interface designed to provide a simple and intuitive
     user experience. The app allows users to create an
@@ -136,15 +192,15 @@ export default function YourGuide({ visible, onClose }) {
     through a clean and minimal design.
   </Text>
 
-  <Text style={styles.sectionTitle}>Getting Started</Text>
-  <Text style={styles.paragraph}>
+  <Text style={sectionTitleStyle}>Getting Started</Text>
+  <Text style={paragraphStyle}>
     When you open the app, you will see the welcome screen.
     From here, you can proceed to log in or create a new
     account.
   </Text>
 
-  <Text style={styles.sectionTitle}>Login</Text>
-  <Text style={styles.paragraph}>
+  <Text style={sectionTitleStyle}>Login</Text>
+  <Text style={paragraphStyle}>
     To access your account, enter your email address and
     password in the provided fields. After entering your
     credentials, tap the login button to continue. If your
@@ -152,35 +208,35 @@ export default function YourGuide({ visible, onClose }) {
     app.
   </Text>
 
-  <Text style={styles.paragraph}>
+  <Text style={paragraphStyle}>
     You also have the option to sign in using your Google
     account. Select the Google login option and follow the
     on-screen instructions.
   </Text>
 
-  <Text style={styles.sectionTitle}>Registration</Text>
-  <Text style={styles.paragraph}>
+  <Text style={sectionTitleStyle}>Registration</Text>
+  <Text style={paragraphStyle}>
     To create a new account, navigate to the registration
     screen. Enter your email address, create a password,
     and confirm your password. Once all fields are completed,
     tap the register button.
   </Text>
 
-  <Text style={styles.paragraph}>
+  <Text style={paragraphStyle}>
     Make sure your password is secure and matches in both
     fields before submitting.
   </Text>
 
-  <Text style={styles.sectionTitle}>Navigation</Text>
-  <Text style={styles.paragraph}>
+  <Text style={sectionTitleStyle}>Navigation</Text>
+  <Text style={paragraphStyle}>
     After logging in, you can navigate through the app
     using the available buttons and interface elements.
     The design is structured to be simple and easy to use,
     allowing quick access to different sections.
   </Text>
 
-  <Text style={styles.sectionTitle}>Features</Text>
-  <Text style={styles.paragraph}>
+  <Text style={sectionTitleStyle}>Features</Text>
+  <Text style={paragraphStyle}>
     The app includes a secure authentication system with
     login and registration functionality. It supports both
     manual login and Google sign-in. The interface is
@@ -188,21 +244,21 @@ export default function YourGuide({ visible, onClose }) {
     consistent and calming experience.
   </Text>
 
-  <Text style={styles.sectionTitle}>Troubleshooting</Text>
-  <Text style={styles.paragraph}>
+  <Text style={sectionTitleStyle}>Troubleshooting</Text>
+  <Text style={paragraphStyle}>
     If you are unable to log in, verify that your email and
     password are entered correctly. If the issue persists,
     try resetting your password if that option is available.
   </Text>
 
-  <Text style={styles.paragraph}>
+  <Text style={paragraphStyle}>
     If Google login does not work, check your internet
     connection and ensure your Google account is properly
     configured on your device.
   </Text>
 
-  <Text style={styles.sectionTitle}>Best Practices</Text>
-  <Text style={styles.paragraph}>
+  <Text style={sectionTitleStyle}>Best Practices</Text>
+  <Text style={paragraphStyle}>
     Use a strong and unique password to keep your account
     secure. Keep the app updated to ensure the best
     performance and access to new features.
@@ -210,11 +266,22 @@ export default function YourGuide({ visible, onClose }) {
   </ScrollView>
 
   {scrollMetrics.contentHeight > scrollMetrics.viewportHeight && (
-    <View style={styles.scrollTrack} pointerEvents="none">
+    <View
+      style={[
+        styles.scrollTrack,
+        {
+          width: layout.scrollTrackWidth,
+          borderRadius: layout.scrollTrackRadius,
+        },
+      ]}
+      pointerEvents="none"
+    >
       <View
         style={[
           styles.scrollThumb,
           {
+            width: layout.scrollTrackWidth,
+            borderRadius: layout.scrollTrackRadius,
             height: thumbHeight,
             transform: [{ translateY: thumbTop }],
           },
