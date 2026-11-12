@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     color: "#F5F1D1",
     fontWeight: "300",
     textAlign: "left",
+    lineHeight: 60,
   },
   logo: {
     alignSelf: "flex-start",

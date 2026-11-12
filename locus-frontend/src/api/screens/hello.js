@@ -66,7 +66,7 @@ export default function HelloScreen() {
       }),
     ]).start(({ finished }) => {
       if (finished) {
-        navigation.navigate("GeneratingTrip");
+        navigation.navigate("Trip");
       }
     });
   };

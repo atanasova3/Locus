@@ -62,6 +62,8 @@ export function getHelloLayoutMetrics(width, height) {
     ? height * 0.2
     : height * 0.2;
 
+  const logoTopOffset = clamp(height * 0.06, 32, 72);
+
   const headerHorizontalPadding = isTablet
     ? Math.min(width * 0.08, 70)
     : width * 0.05;
@@ -83,6 +85,7 @@ export function getHelloLayoutMetrics(width, height) {
     arrowLargeSize,
     bottomPosition,
     headerTop,
+    logoTopOffset,
     headerHorizontalPadding,
     containerRadius,
     buttonRadius,

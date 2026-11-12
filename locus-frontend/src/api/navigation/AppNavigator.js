@@ -7,6 +7,8 @@ import HomeScreen from "../screens/home";
 import RegisterScreen from "../screens/register";
 import VerificationScreen from "../screens/verification";
 import GeneratingTripScreen from "../screens/generating";
+import StartScreen from "../screens/startTrip";
+import ReadyTripScreen from "../screens/trip";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +43,14 @@ export default function AppNavigator() {
       <Stack.Screen
         name="GeneratingTrip"
         component={GeneratingTripScreen}
+      />
+       <Stack.Screen
+        name="StartTrip"
+        component={StartScreen}
+      />
+       <Stack.Screen
+        name="Trip"
+        component={ReadyTripScreen}
       />
 
     </Stack.Navigator>

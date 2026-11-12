@@ -9,6 +9,7 @@ export default function Timeline({
   currentStep = 1,
   rowHeight = 44,
   rowGap = 45,
+  pointCount = 3,
 }) {
   const { passed, totalHeight } = getTimelineLayoutMetrics(
     currentStep,
@@ -41,9 +42,9 @@ export default function Timeline({
           {
             top: rowHeight / 2,
 
-            height:
-              rowHeight * 2 +
-              rowGap * 2,
+           height:
+  rowHeight * (pointCount - 1) +
+  rowGap * (pointCount - 1),
           },
         ]}
       >
@@ -69,7 +70,7 @@ export default function Timeline({
           POINTS
       ================================================== */}
 
-      {[0, 1, 2].map((index) => (
+      {Array.from({ length: pointCount }).map((_, index) => (
         <View
           key={index}
           style={[
@@ -78,9 +79,9 @@ export default function Timeline({
               height: rowHeight,
 
               marginBottom:
-                index < 2
-                  ? rowGap
-                  : 0,
+  index < pointCount - 1
+    ? rowGap
+    : 0,
             },
           ]}
         >
