@@ -118,8 +118,19 @@ const handleGoogleSignIn = async () => {
 
     if (res.type === "success") {
       const url = new URL(res.url);
-      const accessToken = url.searchParams.get("access_token");
-      const refreshToken = url.searchParams.get("refresh_token");
+      const hashParams = new URLSearchParams(
+        (res.url.split("#")[1] || "").replace(/\+/g, "%20")
+      );
+
+      const accessToken =
+        url.searchParams.get("access_token") ||
+        hashParams.get("access_token");
+      const refreshToken =
+        url.searchParams.get("refresh_token") ||
+        hashParams.get("refresh_token");
+      const code =
+        url.searchParams.get("code") ||
+        hashParams.get("code");
 
       if (accessToken && refreshToken) {
         const { error: sessionError } = await supabase.auth.setSession({
@@ -128,12 +139,20 @@ const handleGoogleSignIn = async () => {
         });
 
         if (sessionError) throw sessionError;
+      } else if (code) {
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
+          code
+        );
 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Home" }],
-        });
+        if (exchangeError) throw exchangeError;
+      } else {
+        throw new Error("Authentication completed, but no session was returned.");
       }
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
     }
   } catch (error) {
     console.error("Google Sign-In Error:", error.message);

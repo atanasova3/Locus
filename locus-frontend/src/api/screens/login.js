@@ -9,7 +9,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
+
+import * as WebBrowser from "expo-web-browser";
+import * as AuthSession from "expo-auth-session";
+import { supabase } from "../utils/supabase";
 
 import {
   Ionicons,
@@ -23,10 +28,13 @@ import { loginUser } from "../services/authService";
 
 const styles = authStyles;
 
+WebBrowser.maybeCompleteAuthSession();
+
 export default function LoginScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {
@@ -81,6 +89,76 @@ export default function LoginScreen({ navigation }) {
         "Login error:",
         error
       );
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+
+      const redirectTo = AuthSession.makeRedirectUri({
+        scheme: "locus",
+        path: "auth/callback",
+      });
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo,
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error) throw error;
+
+      const res = await WebBrowser.openAuthSessionAsync(
+        data?.url,
+        redirectTo
+      );
+
+      if (res.type === "success") {
+        const url = new URL(res.url);
+        const hashParams = new URLSearchParams(
+          (res.url.split("#")[1] || "").replace(/\+/g, "%20")
+        );
+
+        const accessToken =
+          url.searchParams.get("access_token") ||
+          hashParams.get("access_token");
+        const refreshToken =
+          url.searchParams.get("refresh_token") ||
+          hashParams.get("refresh_token");
+        const code =
+          url.searchParams.get("code") ||
+          hashParams.get("code");
+
+        if (accessToken && refreshToken) {
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (sessionError) throw sessionError;
+        } else if (code) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(
+            code
+          );
+
+          if (exchangeError) throw exchangeError;
+        } else {
+          throw new Error("Authentication completed, but no session was returned.");
+        }
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        });
+      }
+    } catch (error) {
+      console.error("Google Sign-In Error:", error.message);
+      Alert.alert("Authentication Error", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -389,24 +467,32 @@ export default function LoginScreen({ navigation }) {
                   },
                 ]}
                 activeOpacity={0.8}
+                onPress={handleGoogleSignIn}
+                disabled={isLoading}
               >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    {
-                      fontSize:
-                        buttonFontSize,
-                    },
-                  ]}
-                >
-                  Continue with Google
-                </Text>
+                {isLoading ? (
+                  <ActivityIndicator color="#F5F1D1" />
+                ) : (
+                  <>
+                    <Text
+                      style={[
+                        styles.buttonText,
+                        {
+                          fontSize:
+                            buttonFontSize,
+                        },
+                      ]}
+                    >
+                      Continue with Google
+                    </Text>
 
-                <FontAwesome
-                  name="google"
-                  size={iconSize}
-                  color="#F5F1D1"
-                />
+                    <FontAwesome
+                      name="google"
+                      size={iconSize}
+                      color="#F5F1D1"
+                    />
+                  </>
+                )}
               </TouchableOpacity>
 
               {/* ==================================================

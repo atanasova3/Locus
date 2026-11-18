@@ -2,6 +2,7 @@
   "expo": {
     "name": "locus-frontend",
     "slug": "locus-frontend",
+    "scheme": "locus",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
