@@ -9,11 +9,12 @@ export function getTripLayoutMetrics(width, height) {
   const isShort = height < 700;
   const baseScale = Math.min(getResponsiveScale(width, height), 1);
 
-const scale = width < 350
-  ? baseScale * 1.10
-  : width < 380
-  ? baseScale * 1.07
-  : baseScale;
+  const scale =
+    width < 350
+      ? baseScale * 1.1
+      : width < 380
+      ? baseScale * 1.07
+      : baseScale;
   const modalHorizontalPadding = isTablet
     ? Math.min(width * 0.08, 70)
     : isSmall
@@ -39,14 +40,14 @@ const scale = width < 350
     modalHeight: Math.min(
       height - 32,
       isVeryShort
-        ? 620
+        ? 640
         : isShort
-        ? 620
+        ? 640
         : isTablet
-        ? 740
+        ? 760
         : isSmall
-        ? 660
-        : 700
+        ? 680
+        : 720
     ),
     modalRadius: (isVerySmall ? 24 : isTablet ? 36 : 32) * scale,
     modalTopPadding: isVeryShort
@@ -84,7 +85,7 @@ const scale = width < 350
     messageFontSize: Math.max(10, (isTablet ? 12 : 11) * scale),
     messageLineHeight: Math.max(12, 12 * scale),
     mascotWidth,
-    mascotHeight: 150 * scale,
+    mascotHeight: 130 * scale,
     mascotRight: 5 * scale,
     mascotBottom: 30 * scale,
     inputInset: assistantPadding,
@@ -94,5 +95,47 @@ const scale = width < 350
     inputPaddingHorizontal: 10 * scale,
     inputFontSize: Math.max(12, 13 * scale),
     sendButtonSize: Math.max(18, 21 * scale),
+    backButtonTop: 10 * scale,
+    backButtonLeft: 12 * scale,
+    backButtonPadding: 5,
+    backButtonIconSize: 23 * scale,
+    chatScrollMarginTop: 28 * scale,
+    chatScrollMarginBottom: 110 * scale,
+    chatBubbleRadius: 22 * scale,
+    chatBubblePadding: 12 * scale,
+    welcomeBubbleMarginBottom: 35 * scale,
+    chatBubbleMarginBottom: 25 * scale,
+    chatTextFontSize: 15 * scale,
+    chatTextLineHeight: 21 * scale,
+    quickActionsLeft: 15 * scale,
+    quickActionsBottom: 65 * scale,
+    quickActionsGap: 9 * scale,
+    quickActionRadius: 30,
+    quickActionPaddingHorizontal: 11 * scale,
+    quickActionPaddingVertical: 3 * scale,
+    quickActionIconSize: 17 * scale,
+    quickActionTextSize: 15 * scale,
+    quickActionTextMarginLeft: 6 * scale,
+    timelineCloseTop: 10 * scale,
+    timelineCloseRight: 12 * scale,
+    timelineClosePadding: 5 * scale,
+    voiceContainerMarginTop: 20 * scale,
+    voiceContainerMarginBottom: 25 * scale,
+    voiceOrbWidth: 230 * scale,
+    voiceOrbHeight: 190 * scale,
+    voiceWaveBaseWidth: 35 * scale,
+    voiceWaveWidthStep: 12 * scale,
+    voiceWaveBaseHeight: 90 * scale,
+    voiceWaveHeightStep: 15 * scale,
+    voiceWaveLeftBase: 50 * scale,
+    voiceWaveSideStep: 5 * scale,
+    voiceWaveBorderWidth: 2.5 * scale,
+    voiceWaveTopRadius: 100,
+    voiceWaveBottomRadius: 100,
+    microphoneSize: 120 * scale,
+    microphoneRadius: 100,
+    microphoneIconSize: 70 * scale,
+    speakingTextFontSize: 15 * scale,
+    speakingTextMarginTop: 5 * scale,
   };
 }

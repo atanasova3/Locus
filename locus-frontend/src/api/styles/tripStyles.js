@@ -17,12 +17,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     zIndex: 10,
   },
+  timelinePressable: {
+    width: "100%",
+  },
+  timelineCloseButton: {
+    position: "absolute",
+    zIndex: 20,
+  },
   closeText: {
     color: "#e99a9a",
     fontWeight: "300",
     lineHeight: 30,
   },
   content: {
+    flex: 1,
     paddingBottom: 12,
   },
   pinkPanel: {
@@ -30,6 +38,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(207, 146, 138, 0.3)",
     backgroundColor: "rgba(180,130,120,0.12)",
     alignItems: "flex-start",
+    overflow: "hidden",
   },
   buttonsRow: {
     flexDirection: "row",
@@ -53,6 +62,8 @@ const styles = StyleSheet.create({
     borderColor: "rgba(207, 146, 138, 0.3)",
     position: "relative",
     backgroundColor: "rgba(180,130,120,0.10)",
+    width: "100%",
+    overflow: "hidden",
   },
   message: {
     width: "100%",
@@ -77,6 +88,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(230,166,151,0.5)",
     flexDirection: "row",
     alignItems: "center",
+    zIndex: 5,
   },
   input: {
     flex: 1,
@@ -85,6 +97,93 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     color: "#D99A91",
+  },
+  assistantPressable: {
+    width: "100%",
+  },
+  backButton: {
+    position: "absolute",
+    zIndex: 10,
+  },
+  chatScroll: {
+    flex: 1,
+  },
+  chatBubble: {
+    maxWidth: "85%",
+    backgroundColor: "rgba(205,146,138,0.35)",
+    borderWidth: 1.5,
+    borderColor: "#CF928A",
+  },
+  welcomeChatBubble: {
+    alignSelf: "flex-start",
+  },
+  userChatBubble: {
+    alignSelf: "flex-end",
+  },
+  assistantChatBubble: {
+    alignSelf: "flex-start",
+  },
+  chatText: {
+    color: "#F5E8CF",
+    fontStyle: "italic",
+  },
+  quickActions: {
+    position: "absolute",
+    zIndex: 3,
+  },
+  quickAction: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    borderWidth: 1.5,
+    borderColor: "#F0C5B5",
+    backgroundColor: "rgba(255,255,255,0.06)",
+  },
+  quickActionActive: {
+    borderColor: "#F5E8CF",
+    backgroundColor: "rgba(207,146,138,0.38)",
+  },
+  quickActionText: {
+    color: "#E8C8B5",
+  },
+  quickActionTextActive: {
+    color: "#F5E8CF",
+  },
+  voiceContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  voiceOrb: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  voiceWave: {
+    position: "absolute",
+    borderColor: "#CF928A",
+  },
+  voiceWaveLeft: {
+    borderLeftWidth: 2.5,
+    borderTopWidth: 2.5,
+    borderBottomWidth: 2.5,
+    borderTopLeftRadius: 100,
+    borderBottomLeftRadius: 100,
+  },
+  voiceWaveRight: {
+    borderRightWidth: 2.5,
+    borderTopWidth: 2.5,
+    borderBottomWidth: 2.5,
+    borderTopRightRadius: 100,
+    borderBottomRightRadius: 100,
+  },
+  microphoneCircle: {
+    backgroundColor: "#B98079",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  speakingText: {
+    color: "#F5F1D1",
+    fontStyle: "italic",
   },
 });
 
