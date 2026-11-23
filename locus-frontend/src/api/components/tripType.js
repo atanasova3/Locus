@@ -6,50 +6,29 @@ import {
   Modal,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-
-const { width } = Dimensions.get('window');
+import styles from '../styles/tripTypeStyles';
+import { getTripTypeLayoutMetrics } from '../utils/tripTypeLayout';
 
 export default function TripType() {
+  const { width, height } = useWindowDimensions();
+  const layout = getTripTypeLayoutMetrics(width, height);
   const [visible, setVisible] = useState(true);
   const [selectedType, setSelectedType] = useState('Hotel');
   const [rating, setRating] = useState(9);
-  const [step, setStep] = useState(1);
-
-  const [selectedFilters, setSelectedFilters] = useState([
-    'Pool',
-    'Balcony',
-  ]);
 
   const types = [
-    'Hotel',
-    'Hostel',
-    'Villa',
-    'Camping',
-    'Apartment',
-    'Guest House',
+    'Plane',
+    'Car',
+    'Train',
+    'Bus',
+    'Cruise',
+    'Ferry',
   ];
-
-  const filters = [
-    'Free Parking',
-    'Balcony',
-    'Pool',
-    'Kitchen',
-    'Smoking',
-    'Spa',
-  ];
-
-  const toggleFilter = (filter) => {
-    setSelectedFilters((prev) =>
-      prev.includes(filter)
-        ? prev.filter((item) => item !== filter)
-        : [...prev, filter]
-    );
-  };
 
   return (
     <Modal
@@ -75,17 +54,31 @@ export default function TripType() {
           locations={[0, 0.54, 0.67, 0.92]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
-          style={styles.popup}
+          style={[
+            styles.popup,
+            {
+              width: layout.popupWidth,
+              paddingHorizontal: layout.horizontalPadding,
+              paddingVertical: layout.verticalPadding,
+              borderRadius: layout.popupRadius,
+            },
+          ]}
         >
 
           {/* ACCOMMODATION TYPES */}
 
-          <View style={styles.grid}>
+          <View style={[styles.grid, { rowGap: layout.gridRowGap }]}>
             {types.map((type) => (
               <TouchableOpacity
                 key={type}
                 style={[
                   styles.typeButton,
+                  {
+                    width: layout.buttonWidth,
+                    height: layout.typeButtonHeight,
+                    borderRadius: layout.typeButtonRadius,
+                    borderWidth: layout.typeButtonBorderWidth,
+                  },
                   selectedType === type && styles.selectedType,
                 ]}
                 onPress={() => setSelectedType(type)}
@@ -93,6 +86,7 @@ export default function TripType() {
                 <Text
                   style={[
                     styles.typeText,
+                    { fontSize: layout.typeButtonFontSize },
                     selectedType === type && styles.selectedText,
                   ]}
                 >
@@ -104,217 +98,79 @@ export default function TripType() {
 
           {/* DIVIDER */}
 
-          <View style={styles.divider} />
+          <View
+            style={[
+              styles.divider,
+              {
+                height: layout.dividerHeight,
+                marginTop: layout.dividerMarginTop,
+                marginBottom: layout.dividerMarginBottom,
+              },
+            ]}
+          />
 
           {/* STEP 1 - RATING */}
 
           
-              <Text style={styles.heading}>
-                What star rating do you prefer?
-              </Text>
+              <Text style={[styles.heading, { fontSize: layout.headingFontSize, marginBottom: layout.headingMarginBottom }]}>
+  How would you prefer to travel?
+</Text>
 
-              {[7, 8, 9].map((stars) => (
-                <TouchableOpacity
-                  key={stars}
-                  style={styles.ratingRow}
-                  onPress={() => setRating(stars)}
-                >
-                  <View style={styles.radio}>
-                    {rating === stars && (
-                      <View style={styles.radioInner} />
-                    )}
-                  </View>
+{[
+  "Direct flights only",
+  "Cheapest option",
+  "Fastest option",
+].map((option, index) => (
+  <TouchableOpacity
+    key={index}
+    style={[styles.ratingRow, { marginBottom: layout.optionSpacing }]}
+    onPress={() => setRating(index + 1)}
+    activeOpacity={0.7}
+  >
+    <View
+      style={[
+        styles.radio,
+        {
+          width: layout.radioSize,
+          height: layout.radioSize,
+          borderRadius: layout.radioSize,
+          borderWidth: layout.radioBorderWidth,
+          marginRight: layout.radioMarginRight,
+        },
+      ]}
+    >
+      {rating === index + 1 && (
+        <View style={[styles.radioInner, { width: layout.radioInnerSize, height: layout.radioInnerSize, borderRadius: layout.radioInnerSize }]} />
+      )}
+    </View>
 
-                  <Text style={styles.stars}>
-                    ★
-                  </Text>
+    <Text style={[styles.ratingLabel, { fontSize: layout.optionFontSize }]}>
+      {option}
+    </Text>
+  </TouchableOpacity>
+))}
+            
 
-                  <Text style={styles.ratingLabel}>
-                    {stars}+
-                  </Text>
-                </TouchableOpacity>
-              ))}
-           
-          
+          {/* NEXT BUTTON */}
+
+          <TouchableOpacity
+            style={[
+              styles.nextButton,
+              {
+                height: layout.buttonHeight,
+                borderRadius: layout.buttonRadius,
+                borderWidth: layout.buttonBorderWidth,
+                marginTop: layout.buttonMarginTop,
+              },
+            ]}
+          >
+            <Text style={[styles.nextText, { fontSize: layout.buttonFontSize }]}>
+              Next
+            </Text>
+          </TouchableOpacity>
 
         </LinearGradient>
       </View>
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.25)',
-  },
-
-  popup: {
-    width: width * 0.86,
-    paddingHorizontal: 26,
-    paddingVertical: 28,
-    borderRadius: 48,
-  },
-
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    rowGap: 19,
-  },
-
-  typeButton: {
-    width: '46%',
-    height: 49,
-    borderRadius: 30,
-    borderWidth: 2.5,
-    borderColor: '#CF928A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(190,140,130,0.25)',
-  },
-
-  selectedType: {
-    borderColor: '#F1EFCD',
-  },
-
-  typeText: {
-    color: '#F1EFCD',
-    fontSize: 21,
-  },
-
-  selectedText: {
-    color: '#CF928A',
-  },
-
-  divider: {
-    height: 2,
-    backgroundColor: '#CF928A',
-    marginTop: 27,
-    marginBottom: 16,
-  },
-
-  heading: {
-    fontSize: 21,
-    fontWeight: '600',
-    color: '#CF928A',
-    marginBottom: 13,
-  },
-
-  // STEP 1
-
-  ratingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-
-  radio: {
-    width: 18,
-    height: 18,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#CF928A',
-    marginRight: 7,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  radioInner: {
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    backgroundColor: '#CF928A',
-  },
-
-  stars: {
-    color: '#F1EFCD',
-    fontSize: 22,
-    letterSpacing: 1,
-  },
-
-  ratingLabel: {
-    color: '#CF928A',
-    fontSize: 18,
-    fontStyle: 'italic',
-    marginLeft: 5,
-  },
-
-  // STEP 2
-
-  filtersGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    rowGap: 5,
-  },
-
-  filterItem: {
-    width: '46%',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  checkbox: {
-    width: 19,
-    height: 19,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: '#CF928A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 6,
-  },
-
-  checkboxSelected: {
-    borderColor: '#CF928A',
-  },
-
-  checkmark: {
-    color: '#F1EFCD',
-    fontSize: 20,
-    fontWeight: '500',
-    lineHeight: 21,
-    marginTop: -2,
-  },
-
-  filterText: {
-    color: '#CF928A',
-    fontSize: 18,
-    fontStyle: 'italic',
-  },
-
-  // STEP INDICATOR
-
-  stepContainer: {
-    alignSelf: 'flex-end',
-    marginTop: 2,
-    marginBottom: 8,
-  },
-
-  step: {
-    color: '#F1EFCD',
-    fontSize: 14,
-  },
-
-  // NEXT BUTTON
-
-  nextButton: {
-    height: 40,
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: '#CF928A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(210,150,140,0.25)',
-  },
-
-  nextText: {
-    color: '#F1EFCD',
-    fontSize: 20,
-    fontWeight: '500',
-  },
-});

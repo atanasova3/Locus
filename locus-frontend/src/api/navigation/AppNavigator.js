@@ -9,7 +9,6 @@ import VerificationScreen from "../screens/verification";
 import GeneratingTripScreen from "../screens/generating";
 import StartScreen from "../screens/startTrip";
 import ReadyTripScreen from "../screens/trip";
-import TripType from "../components/tripType";
 
 
 const Stack = createNativeStackNavigator();
@@ -54,10 +53,7 @@ export default function AppNavigator() {
         name="Trip"
         component={ReadyTripScreen}
       />
-      <Stack.Screen
-        name="Hotel1Popup"
-        component={TripType}
-      />
+     
       
     </Stack.Navigator>
   );
