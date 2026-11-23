@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    borderColor: "#dc9997",
+    borderColor: "#CF928A",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(207, 146, 138, 0.3)",
