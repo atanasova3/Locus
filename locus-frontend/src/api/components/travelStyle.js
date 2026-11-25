@@ -15,10 +15,9 @@ import { BlurView } from 'expo-blur';
 import styles from '../styles/travelStyleStyles';
 import { getTravelStyleLayoutMetrics } from '../utils/travelStyleLayout';
 
-export default function TravelStyle() {
+export default function TravelStyle({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
   const layout = getTravelStyleLayoutMetrics(width, height);
-  const [visible, setVisible] = useState(true);
   const [selectedType, setSelectedType] = useState([
   'Beaches',
   'Relaxation',
@@ -55,7 +54,7 @@ export default function TravelStyle() {
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={() => setVisible(false)}
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <BlurView
@@ -129,6 +128,7 @@ export default function TravelStyle() {
           {/* NEXT BUTTON */}
 
           <TouchableOpacity
+            onPress={onClose}
             style={[
               styles.nextButton,
               {

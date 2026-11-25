@@ -6,17 +6,24 @@ import {
   Modal,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
+import styles from '../styles/hotelPopupStyles';
+import { getHotelPopupLayoutMetrics } from '../utils/hotelPopupLayout';
 
-const { width } = Dimensions.get('window');
-
-export default function Hotel2Popup() {
-  const [visible, setVisible] = useState(true);
-  const [selectedType, setSelectedType] = useState('Hotel');
+export default function Hotel2Popup({
+  visible,
+  onClose,
+  selectedType,
+  onBackToHotel1,
+  onSelectType,
+}) {
+  const { width, height } = useWindowDimensions();
+  const layout = getHotelPopupLayoutMetrics(width, height);
   const [rating, setRating] = useState(9);
   const [step, setStep] = useState(1);
 
@@ -56,7 +63,7 @@ export default function Hotel2Popup() {
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={() => setVisible(false)}
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <BlurView
@@ -75,24 +82,51 @@ export default function Hotel2Popup() {
           locations={[0, 0.54, 0.67, 0.92]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
-          style={styles.popup}
+          style={[
+            styles.popup,
+            {
+              width: layout.popupWidth,
+              maxHeight: layout.popupMaxHeight,
+              paddingHorizontal: layout.horizontalPadding,
+              paddingVertical: layout.verticalPadding,
+              borderRadius: layout.popupRadius,
+            },
+          ]}
         >
+          <ScrollView
+            style={{ maxHeight: layout.contentMaxHeight }}
+            showsVerticalScrollIndicator={false}
+          >
 
           {/* ACCOMMODATION TYPES */}
 
-          <View style={styles.grid}>
+          <View style={[styles.grid, { rowGap: layout.gridRowGap }]}>
             {types.map((type) => (
               <TouchableOpacity
                 key={type}
                 style={[
                   styles.typeButton,
+                  {
+                    width: layout.typeButtonWidth,
+                    height: layout.typeButtonHeight,
+                    borderRadius: layout.typeButtonRadius,
+                    borderWidth: layout.typeButtonBorderWidth,
+                  },
                   selectedType === type && styles.selectedType,
                 ]}
-                onPress={() => setSelectedType(type)}
+                onPress={() => {
+  onSelectType(type);
+
+  if (type === 'Hotel') {
+    onClose();
+    onBackToHotel1();
+  }
+}}
               >
                 <Text
                   style={[
                     styles.typeText,
+                    { fontSize: layout.typeFontSize },
                     selectedType === type && styles.selectedText,
                   ]}
                 >
@@ -104,33 +138,73 @@ export default function Hotel2Popup() {
 
           {/* DIVIDER */}
 
-          <View style={styles.divider} />
+          <View
+            style={[
+              styles.divider,
+              {
+                height: layout.dividerHeight,
+                marginTop: layout.dividerMarginTop,
+                marginBottom: layout.dividerMarginBottom,
+              },
+            ]}
+          />
 
           {/* STEP 1 - RATING */}
 
           {step === 1 ? (
             <>
-              <Text style={styles.heading}>
+              <Text
+                style={[
+                  styles.heading,
+                  {
+                    fontSize: layout.headingFontSize,
+                    marginBottom: layout.headingMarginBottom,
+                  },
+                ]}
+              >
                 What star rating do you prefer?
               </Text>
 
               {[7, 8, 9].map((stars) => (
                 <TouchableOpacity
                   key={stars}
-                  style={styles.ratingRow}
+                  style={[
+                    styles.ratingRow,
+                    { marginBottom: layout.ratingRowMarginBottom },
+                  ]}
                   onPress={() => setRating(stars)}
                 >
-                  <View style={styles.radio}>
+                  <View
+                    style={[
+                      styles.radio,
+                      {
+                        width: layout.radioSize,
+                        height: layout.radioSize,
+                        borderRadius: layout.radioSize,
+                        borderWidth: layout.radioBorderWidth,
+                        marginRight: layout.radioMarginRight,
+                      },
+                    ]}
+                  >
                     {rating === stars && (
-                      <View style={styles.radioInner} />
+                      <View
+                        style={[
+                          styles.radioInner,
+                          {
+                            width: layout.radioInnerSize,
+                            height: layout.radioInnerSize,
+                            borderRadius: layout.radioInnerSize,
+                          },
+                        ]}
+                      />
                     )}
                   </View>
 
-                  <Text style={styles.stars}>
+                  <Text style={[styles.stars, { fontSize: layout.starsFontSize }]}>
                     ★
                   </Text>
 
-                  <Text style={styles.ratingLabel}>
+                  <Text style={[styles.ratingLabel, { fontSize: layout.ratingFontSize }]}>
                     {stars}+
                   </Text>
                 </TouchableOpacity>
@@ -141,31 +215,64 @@ export default function Hotel2Popup() {
             /* STEP 2 - FILTERS */
 
             <>
-              <Text style={styles.heading}>
+              <Text
+                style={[
+                  styles.heading,
+                  {
+                    fontSize: layout.headingFontSize,
+                    marginBottom: layout.headingMarginBottom,
+                  },
+                ]}
+              >
                 Which filters do you prefer?
               </Text>
 
-              <View style={styles.filtersGrid}>
+              <View
+                style={[
+                  styles.filtersGrid,
+                  { rowGap: layout.filterRowGap },
+                ]}
+              >
                 {filters.map((filter) => (
                   <TouchableOpacity
                     key={filter}
-                    style={styles.filterItem}
+                    style={[
+                      styles.filterItem,
+                      { width: layout.filterItemWidth },
+                    ]}
                     onPress={() => toggleFilter(filter)}
                     activeOpacity={0.7}
                   >
                     <View
                       style={[
                         styles.checkbox,
+                        {
+                          width: layout.checkboxSize,
+                          height: layout.checkboxSize,
+                          borderRadius: layout.checkboxRadius,
+                          borderWidth: layout.checkboxBorderWidth,
+                          marginRight: layout.checkboxMarginRight,
+                        },
                         selectedFilters.includes(filter) &&
                           styles.checkboxSelected,
                       ]}
                     >
                       {selectedFilters.includes(filter) && (
-                        <Text style={styles.checkmark}>✓</Text>
+                        <Text
+                          style={[
+                            styles.checkmark,
+                            {
+                              fontSize: layout.checkmarkFontSize,
+                              lineHeight: layout.checkmarkLineHeight,
+                            },
+                          ]}
+                        >
+                          ✓
+                        </Text>
                       )}
                     </View>
 
-                    <Text style={styles.filterText}>
+                    <Text style={[styles.filterText, { fontSize: layout.filterFontSize }]}>
                       {filter}
                     </Text>
                   </TouchableOpacity>
@@ -177,11 +284,17 @@ export default function Hotel2Popup() {
           {/* STEP INDICATOR */}
 
           <TouchableOpacity
-            style={styles.stepContainer}
+            style={[
+              styles.stepContainer,
+              {
+                marginTop: layout.stepMarginTop,
+                marginBottom: layout.stepMarginBottom,
+              },
+            ]}
             onPress={() => setStep(step === 1 ? 2 : 1)}
             activeOpacity={0.7}
           >
-            <Text style={styles.step}>
+            <Text style={[styles.step, { fontSize: layout.stepFontSize }]}>
               {step === 2 ? '‹ ' : ''}
               {step}/2
               {step === 1 ? ' ›' : ''}
@@ -191,191 +304,24 @@ export default function Hotel2Popup() {
           {/* NEXT BUTTON */}
 
           <TouchableOpacity
-            style={styles.nextButton}
+          onPress={onClose}
+            style={[
+              styles.nextButton,
+              {
+                height: layout.nextButtonHeight,
+                borderRadius: layout.nextButtonRadius,
+                borderWidth: layout.nextButtonBorderWidth,
+              },
+            ]}
           >
-            <Text style={styles.nextText}>
-              Next
+            <Text style={[styles.nextText, { fontSize: layout.nextTextFontSize }]}>
+              Select
             </Text>
           </TouchableOpacity>
 
+          </ScrollView>
         </LinearGradient>
       </View>
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.25)',
-  },
-
-  popup: {
-    width: width * 0.86,
-    paddingHorizontal: 26,
-    paddingVertical: 28,
-    borderRadius: 48,
-  },
-
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    rowGap: 19,
-  },
-
-  typeButton: {
-    width: '46%',
-    height: 49,
-    borderRadius: 30,
-    borderWidth: 2.5,
-    borderColor: '#CF928A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(190,140,130,0.25)',
-  },
-
-  selectedType: {
-    borderColor: '#F1EFCD',
-  },
-
-  typeText: {
-    color: '#F1EFCD',
-    fontSize: 21,
-  },
-
-  selectedText: {
-    color: '#CF928A',
-  },
-
-  divider: {
-    height: 2,
-    backgroundColor: '#CF928A',
-    marginTop: 27,
-    marginBottom: 16,
-  },
-
-  heading: {
-    fontSize: 21,
-    fontWeight: '600',
-    color: '#CF928A',
-    marginBottom: 13,
-  },
-
-  // STEP 1
-
-  ratingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-
-  radio: {
-    width: 18,
-    height: 18,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#CF928A',
-    marginRight: 7,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  radioInner: {
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    backgroundColor: '#CF928A',
-  },
-
-  stars: {
-    color: '#F1EFCD',
-    fontSize: 22,
-    letterSpacing: 1,
-  },
-
-  ratingLabel: {
-    color: '#CF928A',
-    fontSize: 18,
-    fontStyle: 'italic',
-    marginLeft: 5,
-  },
-
-  // STEP 2
-
-  filtersGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    rowGap: 5,
-  },
-
-  filterItem: {
-    width: '46%',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  checkbox: {
-    width: 19,
-    height: 19,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: '#CF928A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 6,
-  },
-
-  checkboxSelected: {
-    borderColor: '#CF928A',
-  },
-
-  checkmark: {
-    color: '#F1EFCD',
-    fontSize: 20,
-    fontWeight: '500',
-    lineHeight: 21,
-    marginTop: -2,
-  },
-
-  filterText: {
-    color: '#CF928A',
-    fontSize: 18,
-    fontStyle: 'italic',
-  },
-
-  // STEP INDICATOR
-
-  stepContainer: {
-    alignSelf: 'flex-end',
-    marginTop: 2,
-    marginBottom: 8,
-  },
-
-  step: {
-    color: '#F1EFCD',
-    fontSize: 14,
-  },
-
-  // NEXT BUTTON
-
-  nextButton: {
-    height: 40,
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: '#CF928A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(210,150,140,0.25)',
-  },
-
-  nextText: {
-    color: '#F1EFCD',
-    fontSize: 20,
-    fontWeight: '500',
-  },
-});

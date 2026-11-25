@@ -14,10 +14,9 @@ import { BlurView } from 'expo-blur';
 import styles from '../styles/travelPaceStyles';
 import { getTravelPaceLayoutMetrics } from '../utils/travelPaceLayout';
 
-export default function TravelPace() {
+export default function TravelPace({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
   const layout = getTravelPaceLayoutMetrics(width, height);
-  const [visible, setVisible] = useState(true);
   const [rating, setRating] = useState(1);
 
   return (
@@ -25,7 +24,7 @@ export default function TravelPace() {
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={() => setVisible(false)}
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <BlurView
@@ -100,6 +99,7 @@ export default function TravelPace() {
           {/* NEXT BUTTON */}
 
           <TouchableOpacity
+          onPress={onClose}
             style={[
               styles.nextButton,
               {

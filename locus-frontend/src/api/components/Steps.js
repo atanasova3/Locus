@@ -17,6 +17,13 @@ import Step5 from "../components/step5";
 
 import stepsStyles from "../styles/stepsStyles";
 import { getStepsLayoutMetrics } from "../utils/stepsLayout";
+import TravelStyle from "../components/travelStyle";
+import Budget from "../components/budget";
+import TripType from "../components/tripType";
+import Hotel1Popup from "../components/hotel1";
+import Hotel2Popup from "../components/hotel2";
+import Interests from "../components/interests";
+import TravelPace from "../components/travelPace";
 
 const styles = stepsStyles;
 
@@ -104,6 +111,14 @@ const handleClose = () => {
     };
   };
 
+  const [showTravelStyle, setShowTravelStyle] = useState(false);
+  const [showBudget, setShowBudget] = useState(false);
+  const [showTripType, setShowTripType] = useState(false);
+  const [showHotel1Popup, setShowHotel1Popup] = useState(false);
+  const [showHotel2Popup, setShowHotel2Popup] = useState(false);
+const [selectedAccommodation, setSelectedAccommodation] = useState(null);
+const [showInterests, setShowInterests] = useState(false);
+const [showTravelPace, setShowTravelPace] = useState(false);
   return (
     <Modal
       visible={visible}
@@ -199,68 +214,90 @@ const handleClose = () => {
                   ]}
                 />
 
-                {/* QUESTIONS AREA */}
-                <View style={styles.questionsArea}>
-                  <Timeline
-                    currentStep={currentStep}
-                    rowHeight={questionHeight}
-                    rowGap={questionGap}
-                  />
+               
+{/* QUESTIONS AREA */}
+<View style={styles.questionsArea}>
+  <Timeline
+    currentStep={currentStep}
+    rowHeight={questionHeight}
+    rowGap={questionGap}
+  />
 
-                  <View style={styles.questionsColumn}>
-                    {[0, 1, 2].map((index) => {
-                      const question = getQuestion(index);
+  <View style={styles.questionsColumn}>
+    {[0, 1, 2].map((index) => {
+      const question = getQuestion(index);
 
-                      return (
-                        <View
-                          key={index}
-                          style={[
-                            styles.questionRow,
-                            {
-                              height: questionHeight,
-                              marginBottom:
-                                index < 2 ? questionGap : 0,
-                            },
-                          ]}
-                        >
-                          <View
-                            style={[
-                              styles.input,
-                              {
-                                borderRadius: inputBorderRadius,
-                                borderWidth: inputBorderWidth,
-                                paddingHorizontal: inputPaddingHorizontal,
-                              },
-                            ]}
-                          >
-                          <Text
-                            style={[
-                              styles.inputText,
-                              { fontSize: inputFontSize },
-                            ]}
-                          >
-                              {question.title}
-                            </Text>
+      return (
+        <View
+          key={index}
+          style={[
+            styles.questionRow,
+            {
+              height: questionHeight,
+              marginBottom:
+                index < 2 ? questionGap : 0,
+            },
+          ]}
+        >
+          <Pressable
+            style={[
+              styles.input,
+              {
+                borderRadius: inputBorderRadius,
+                borderWidth: inputBorderWidth,
+                paddingHorizontal: inputPaddingHorizontal,
+              },
+            ]}
+            onPress={() => {
+              if (currentStep === 2 && index === 0) {
+                setShowTravelStyle(true);
+              }
+              if (currentStep === 2 && index === 1) {
+                setShowBudget(true);
+              }
+              if (currentStep === 2 && index === 2) {
+                setShowTripType(true);
+              }
+              if (currentStep === 3 && index === 0) {
+                setShowHotel1Popup(true);
+              }
+              if (currentStep === 3 && index === 1) {
+                setShowInterests(true);
+              }
+              if (currentStep === 3 && index === 2) {
+                setShowTravelPace(true);
+              }
+            }}
+          >
+            <Text
+              style={[
+                styles.inputText,
+                { fontSize: inputFontSize },
+              ]}
+            >
+              {question.title}
+            </Text>
 
-                            {question.value && (
-                              <Text
-                                style={[
-                                  styles.valueText,
-                                  {
-                                    fontSize: valueFontSize,
-                                    marginLeft: 5 * (valueFontSize / 17),
-                                  },
-                                ]}
-                              >
-                                {question.value}
-                              </Text>
-                            )}
-                          </View>
-                        </View>
-                      );
-                    })}
-                  </View>
-                </View>
+            {question.value && (
+              <Text
+                style={[
+                  styles.valueText,
+                  {
+                    fontSize: valueFontSize,
+                    marginLeft: 5 * (valueFontSize / 17),
+                  },
+                ]}
+              >
+                {question.value}
+              </Text>
+            )}
+          </Pressable>
+        </View>
+      );
+    })}
+  </View>
+</View>
+
 
                 {/* NEXT */}
                 <Pressable
@@ -313,6 +350,45 @@ const handleClose = () => {
               />
             )}
           </SafeAreaView>
+
+   <TravelStyle
+  visible={showTravelStyle}
+  onClose={() => setShowTravelStyle(false)}
+/>
+  <Budget
+  visible={showBudget}
+  onClose={() => setShowBudget(false)}
+/>
+  <TripType
+  visible={showTripType}
+  onClose={() => setShowTripType(false)}
+/>
+<Hotel1Popup
+  visible={showHotel1Popup}
+  onClose={() => setShowHotel1Popup(false)}
+  onOpenHotel2={(type) => {
+    setSelectedAccommodation(type);
+    setShowHotel2Popup(true);
+  }}
+/>
+<Hotel2Popup
+  visible={showHotel2Popup}
+  onClose={() => setShowHotel2Popup(false)}
+  selectedType={selectedAccommodation}
+  onSelectType={(type) => setSelectedAccommodation(type)}
+  onBackToHotel1={() => {
+    setShowHotel2Popup(false);
+    setShowHotel1Popup(true);
+  }}
+/>
+<Interests
+  visible={showInterests}
+  onClose={() => setShowInterests(false)}
+/>
+<TravelPace
+  visible={showTravelPace}
+  onClose={() => setShowTravelPace(false)}
+/>
         </LinearGradient>
       </View>
     </Modal>

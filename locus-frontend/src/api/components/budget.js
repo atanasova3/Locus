@@ -15,10 +15,9 @@ import { BlurView } from 'expo-blur';
 import styles from '../styles/budgetStyles';
 import { getBudgetLayoutMetrics } from '../utils/budgetLayout';
 
-export default function Budget() {
+export default function Budget({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
   const layout = getBudgetLayoutMetrics(width, height);
-  const [visible, setVisible] = useState(true);
   const [budget, setBudget] = useState(2500);
 
   return (
@@ -26,7 +25,7 @@ export default function Budget() {
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={() => setVisible(false)}
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <BlurView
@@ -86,6 +85,7 @@ export default function Budget() {
           {/* SELECT BUTTON */}
 
           <TouchableOpacity
+          onPress={onClose}
             style={[
               styles.selectButton,
               {
@@ -95,11 +95,8 @@ export default function Budget() {
               },
             ]}
             activeOpacity={0.7}
-            onPress={() => {
-              console.log('Selected budget:', budget);
-              setVisible(false);
-            }}
           >
+            
             <Text style={[styles.selectText, { fontSize: layout.buttonFontSize }]}>
               Select
             </Text>

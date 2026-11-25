@@ -14,10 +14,9 @@ import { BlurView } from 'expo-blur';
 import styles from '../styles/tripTypeStyles';
 import { getTripTypeLayoutMetrics } from '../utils/tripTypeLayout';
 
-export default function TripType() {
+export default function TripType({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
   const layout = getTripTypeLayoutMetrics(width, height);
-  const [visible, setVisible] = useState(true);
   const [selectedType, setSelectedType] = useState('Hotel');
   const [rating, setRating] = useState(9);
 
@@ -35,7 +34,7 @@ export default function TripType() {
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={() => setVisible(false)}
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <BlurView
@@ -154,6 +153,7 @@ export default function TripType() {
           {/* NEXT BUTTON */}
 
           <TouchableOpacity
+          onPress={onClose}
             style={[
               styles.nextButton,
               {
@@ -165,7 +165,7 @@ export default function TripType() {
             ]}
           >
             <Text style={[styles.nextText, { fontSize: layout.buttonFontSize }]}>
-              Next
+              Select
             </Text>
           </TouchableOpacity>
 

@@ -15,10 +15,9 @@ import { BlurView } from 'expo-blur';
 import styles from '../styles/interestsStyles';
 import { getInterestsLayoutMetrics } from '../utils/interestsLayout';
 
-export default function Interests() {
+export default function Interests({ visible, onClose }) {
   const { width, height } = useWindowDimensions();
   const layout = getInterestsLayoutMetrics(width, height);
-  const [visible, setVisible] = useState(true);
   const [selectedType, setSelectedType] = useState([
   'Zoos',
   'Cafes & Bars',
@@ -64,7 +63,7 @@ export default function Interests() {
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={() => setVisible(false)}
+      onRequestClose={onClose}
     >
       <View style={styles.overlay}>
         <BlurView
@@ -138,6 +137,7 @@ export default function Interests() {
           {/* NEXT BUTTON */}
 
           <TouchableOpacity
+          onPress={onClose}
             style={[
               styles.nextButton,
               {
