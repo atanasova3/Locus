@@ -10,6 +10,7 @@ import {
 
 import styles from "../styles/step5Styles";
 import { getStep5LayoutMetrics } from "../utils/step5Layout";
+import { useNavigation } from "@react-navigation/native";
 
 const OPTIONS = [
   "Save money",
@@ -20,18 +21,21 @@ const OPTIONS = [
   "Fun and entertainment",
 ];
 
-export default function Step5({ onClose, onNext, onBack }) {
+export default function Step5({ onClose}) {
   const { width, height } = useWindowDimensions();
   const layout = getStep5LayoutMetrics(width, height);
   const [selectedOption, setSelectedOption] = useState(null);
+  const navigation = useNavigation();
 
-  const handleNext = () => {
-    if (onNext) {
-      onNext(selectedOption);
-    } else if (onClose) {
-      onClose();
-    }
-  };
+ const handleNext = () => {
+  if (!selectedOption) return;
+
+  onClose?.();
+
+  navigation.navigate("GeneratingTrip", {
+    selectedOption: selectedOption,
+  });
+};
 
   return (
     <SafeAreaView style={styles.content}>
@@ -122,7 +126,7 @@ export default function Step5({ onClose, onNext, onBack }) {
         })}
       </View>
 
-      {/* NEXT */}
+      {/* SAVE */}
       <Pressable
         style={[
           styles.nextButton,

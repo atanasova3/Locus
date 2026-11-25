@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Pressable,
   Image,
   useWindowDimensions,
+  Modal
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
 import menuStyles from "../styles/menuStyles";
 import { getMenuLayoutMetrics } from "../utils/menuLayout";
+import { useNavigation } from "@react-navigation/native";
+import Steps from "../components/Steps.js";
+import SideMenu from "../components/sideMenu.js";
 
 const styles = menuStyles;
+
 
 export default function Menu() {
   const { width, height } = useWindowDimensions();
@@ -22,6 +27,9 @@ export default function Menu() {
     menuWidth,
     bottomPosition,
   } = getMenuLayoutMetrics(width, height);
+  const navigation = useNavigation();
+  const [StepOneVisible, setStepOneVisible] = useState(false);
+  const [SideMenuVisible, setSideMenuVisible] = useState(false);
 
   // ==================================================
   // UI
@@ -66,21 +74,20 @@ export default function Menu() {
             LOGO
         ================================================== */}
 
-        <Pressable
-          style={styles.item}
-          hitSlop={10}
-        >
-          <Image
-            source={require(
-              "../components/photos/Asset 1.png"
-            )}
-            style={{
-              width: logoSize,
-              height: logoSize,
-            }}
-            resizeMode="contain"
-          />
-        </Pressable>
+    <Pressable
+  style={styles.item}
+  hitSlop={10}
+  onPress={() => navigation.navigate("HomeScreen")}
+>
+  <Image
+    source={require("../components/photos/Asset 1.png")}
+    style={{
+      width: logoSize,
+      height: logoSize,
+    }}
+    resizeMode="contain"
+  />
+</Pressable>
 
         {/* ==================================================
             PAPER PLANE
@@ -113,6 +120,7 @@ export default function Menu() {
         <Pressable
           style={styles.item}
           hitSlop={10}
+          onPress={() => setStepOneVisible(true)}
         >
           <Svg
             width={iconSize}
@@ -135,6 +143,7 @@ export default function Menu() {
         <Pressable
           style={styles.item}
           hitSlop={10}
+          onPress={() => setSideMenuVisible(true)}
         >
           <Svg
             width={iconSize}
@@ -163,6 +172,28 @@ export default function Menu() {
             />
           </Svg>
         </Pressable>
+
+        <Modal
+  visible={StepOneVisible}
+  transparent
+  animationType="fade"
+  onRequestClose={() => setStepOneVisible(false)}
+>
+  <Steps
+    onClose={() => setStepOneVisible(false)}
+  />
+</Modal>
+
+<SideMenu
+  visible={SideMenuVisible}
+  onClose={() => setSideMenuVisible(false)}
+  onItemPress={(key) => {
+    console.log("Selected:", key);
+  }}
+  onLogout={() => {
+    console.log("Logout");
+  }}
+/>
       </LinearGradient>
     </View>
   );

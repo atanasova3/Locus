@@ -23,14 +23,14 @@ export function getTripPopupLayoutMetrics(width, height) {
     modalHorizontalPadding,
     modalWidth,
     modalHeight: Math.min(height - 32, isVeryShort
-      ? 350
+      ? 400
       : isShort
-      ? 350
+      ? 420
       : isTablet
-      ? 470
+      ? 530
       : isSmall
-      ? 390
-      : 430),
+      ? 460
+      : 470),
     modalRadius: (isVerySmall ? 24 : isTablet ? 36 : 32) * scale,
     modalTopPadding: isVeryShort
       ? 38
@@ -51,10 +51,6 @@ export function getTripPopupLayoutMetrics(width, height) {
     emptyMarginTop: (isVeryShort ? 7 : isShort ? 9 : 11) * scale,
     cardsPaddingTop: (isVeryShort ? 3 : isShort ? 4 : 5) * scale,
     cardsGap: (isVerySmall ? 16 : isSmall ? 20 : isTablet ? 10 : 25) * scale,
-    cardWidth: Math.min(
-      isVerySmall ? 175 : isSmall ? 187 : isTablet ? 260 : 220,
-      modalWidth - (isVerySmall ? 14 : isSmall ? 16 : isTablet ? 25 : 18) * 2
-    ),
-    cardHeight: Math.min(270 * scale, height * 0.34),
+  
   };
 }
