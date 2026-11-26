@@ -8,10 +8,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   backgroundBlur: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: "rgba(0,0,0,0.22)",
   },
   panel: {

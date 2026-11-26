@@ -7,11 +7,12 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   blur: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: "rgba(0,0,0,0.5)",
+
   },
   safeArea: {
     flex: 1,

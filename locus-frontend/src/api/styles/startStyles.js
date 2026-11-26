@@ -5,14 +5,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     width: "100%",
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   header: {

@@ -8,11 +8,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.20)",
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: "rgba(0,0,0,0.20)",
   },
   outsideTap: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   safeArea: {
     flex: 1,
