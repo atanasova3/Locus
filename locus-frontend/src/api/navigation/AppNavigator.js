@@ -9,6 +9,7 @@ import VerificationScreen from "../screens/verification";
 import GeneratingTripScreen from "../screens/generating";
 import StartScreen from "../screens/startTrip";
 import ReadyTripScreen from "../screens/trip";
+import Contacts from "../components/socialMedia";
 
 
 const Stack = createNativeStackNavigator();
@@ -53,8 +54,11 @@ export default function AppNavigator() {
         name="Trip"
         component={ReadyTripScreen}
       />
-     
-      
+      <Stack.Screen
+        name="Contacts"
+        component={Contacts}
+      />
+
     </Stack.Navigator>
   );
 }

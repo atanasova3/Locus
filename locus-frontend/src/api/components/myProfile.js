@@ -15,6 +15,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import YourGuide from "../components/yourGuide";
+import Contacts from "../components/socialMedia";
 import myProfileStyles from "../styles/myProfileStyles";
 import { getMyProfileLayoutMetrics } from "../utils/myProfileLayout";
 
@@ -26,6 +27,7 @@ export default function MyProfile({ visible, onClose }) {
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [yourGuideVisible, setYourGuideVisible] = useState(false);
+  const [contactsVisible, setContactsVisible] = useState(false);
   const {
     horizontalPadding,
     contentWidth,
@@ -425,7 +427,7 @@ export default function MyProfile({ visible, onClose }) {
                   label="Contact us"
                   showChevron
                   isLast
-                  onPress={() => openItem("Contact us")}
+                  onPress={() => setContactsVisible(true)}
                 />
               </View>
 
@@ -436,6 +438,10 @@ export default function MyProfile({ visible, onClose }) {
             </ScrollView>
           </LinearGradient>
         </SafeAreaView>
+        <Contacts
+          visible={contactsVisible}
+          onBack={() => setContactsVisible(false)}
+        />
       </View>
     </Modal>
   );
